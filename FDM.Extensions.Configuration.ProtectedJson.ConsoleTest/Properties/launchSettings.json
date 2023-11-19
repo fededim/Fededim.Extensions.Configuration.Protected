@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "FDM.Extensions.Configuration.ProtectedJson.ConsoleTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
