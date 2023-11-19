@@ -45,6 +45,7 @@ public class Program
 
 
         // generate the encrypted values
+        var encryptedInt = dataProtector.Protect("98765");
         var encryptedServerName = dataProtector.Protect("local");
         var encryptedDatabaseName = dataProtector.Protect("databaseName");
         var encryptedUserId = dataProtector.Protect("userIdNew");
