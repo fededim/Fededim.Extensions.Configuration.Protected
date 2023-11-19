@@ -23,6 +23,7 @@ public class Program
 
     public static void Main(string[] args)
     {
+        // define the application configuration
         var configuration = new ConfigurationBuilder()
                 .AddCommandLine(args)
                 .AddProtectedJsonFile("appsettings.json", ConfigureDataProtection)
@@ -30,15 +31,15 @@ public class Program
                 .AddEnvironmentVariables()
                 .Build();
 
+        // define the DI services: Data Protection API and configure strongly typed AppSettings configuration class
         var services = new ServiceCollection();
         ConfigureDataProtection(services.AddDataProtection());
         services.Configure<AppSettings>(configuration);
-
         var serviceProvider = services.BuildServiceProvider();
 
-        var dataProtector = serviceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
-        var environment = serviceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
 
+        // retrieve IDataProtector interface for encrypting data and the strongly typed AppSettings configuration class
+        var dataProtector = serviceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
         var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
 
 
