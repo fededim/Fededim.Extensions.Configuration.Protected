@@ -39,8 +39,6 @@ public class Program
         var dataProtector = serviceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
         var environment = serviceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
 
-        var test = dataProtector.Protect("Data Source=localhost; Initial Catalog=DB name; User ID=sa; Password=pass1234; MultipleActiveResultSets=True;");
-
         var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
 
 
