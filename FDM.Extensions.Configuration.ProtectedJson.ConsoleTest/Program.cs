@@ -44,6 +44,8 @@ public class Program
 
 
         // generate the encrypted values
+        var encryptedDateTime = dataProtector.Protect("2016-10-01T18:23:45.789Z");
+        var encryptedBool = dataProtector.Protect("false");
         var encryptedInt = dataProtector.Protect("98765");
         var encryptedServerName = dataProtector.Protect("local");
         var encryptedDatabaseName = dataProtector.Protect("databaseName");
