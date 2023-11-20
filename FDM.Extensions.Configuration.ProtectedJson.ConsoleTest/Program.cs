@@ -17,7 +17,7 @@ public class Program
             EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
             ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
 
-        }).SetDefaultKeyLifetime(TimeSpan.FromDays(365*15)).PersistKeysToFileSystem(new DirectoryInfo("..\\..\\Keys"));
+        }).SetDefaultKeyLifetime(TimeSpan.FromDays(365*15)).PersistKeysToFileSystem(new DirectoryInfo("..\\..\\..\\Keys"));
     }
 
 
