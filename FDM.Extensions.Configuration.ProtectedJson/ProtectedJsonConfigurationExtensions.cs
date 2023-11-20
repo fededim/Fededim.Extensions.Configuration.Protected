@@ -139,7 +139,7 @@ namespace FDM.Extensions.Configuration.ProtectedJson
                     if (backupOriginalFile)
                         File.Copy(f, f + ".bak");
 
-                    File.WriteAllText(f, fileContent);
+                    File.WriteAllText(f, replacedContent);
 
                     result.Add(f);
                 }
