@@ -17,13 +17,24 @@ public class Program
             EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
             ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
 
-        }).PersistKeysToFileSystem(new DirectoryInfo("..\\..\\Keys"));
+        }).SetDefaultKeyLifetime(TimeSpan.FromDays(365*15)).PersistKeysToFileSystem(new DirectoryInfo("..\\..\\Keys"));
     }
 
 
     public static void Main(string[] args)
     {
-        // define the application configuration
+        // define the DI services: Data Protection API
+        var servicesDataProtection = new ServiceCollection();
+        ConfigureDataProtection(servicesDataProtection.AddDataProtection());
+        var serviceProviderDataProtection = servicesDataProtection.BuildServiceProvider();
+
+        // retrieve IDataProtector interface for encrypting data
+        var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
+
+        // encrypt all Protect:{<data>} token tags of all .json files (must be done before reading the configuration)
+        var encryptedFiles = dataProtector.ProtectFiles(".");
+
+        // define the application configuration and read .json files
         var configuration = new ConfigurationBuilder()
                 .AddCommandLine(args)
                 .AddProtectedJsonFile("appsettings.json", ConfigureDataProtection)
@@ -31,27 +42,12 @@ public class Program
                 .AddEnvironmentVariables()
                 .Build();
 
-        // define the DI services: Data Protection API and configure strongly typed AppSettings configuration class
+        // define other DI services: configure strongly typed AppSettings configuration class (must be done after having read the configuration)
         var services = new ServiceCollection();
-        ConfigureDataProtection(services.AddDataProtection());
         services.Configure<AppSettings>(configuration);
-        var serviceProvider = services.BuildServiceProvider();
+        var serviceProvider = servicesDataProtection.BuildServiceProvider();
 
-
-        // retrieve IDataProtector interface for encrypting data and the strongly typed AppSettings configuration class
-        var dataProtector = serviceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedJsonConfigurationProvider.DataProtectionPurpose);
-        var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
-
-
-        // generate the encrypted values
-        var encryptedDateTime = dataProtector.Protect("2016-10-01T18:23:45.789Z");
-        var encryptedBool = dataProtector.Protect("false");
-        var encryptedInt = dataProtector.Protect("98765");
-        var encryptedServerName = dataProtector.Protect("local");
-        var encryptedDatabaseName = dataProtector.Protect("databaseName");
-        var encryptedUserId = dataProtector.Protect("userIdNew");
-        var encryptedPassword = dataProtector.Protect("passwordNew");
-        var encryptedFullConnectionString = dataProtector.Protect(appSettings.ConnectionStrings["PlainTextConnectionString"]);
-
+        // retrieve the strongly typed AppSettings configuration class
+        var appSettings = serviceProviderDataProtection.GetRequiredService<IOptions<AppSettings>>().Value;
     }
 }

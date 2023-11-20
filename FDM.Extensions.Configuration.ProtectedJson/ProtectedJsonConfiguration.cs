@@ -56,8 +56,8 @@ namespace FDM.Extensions.Configuration.ProtectedJson
         public ProtectedJsonStreamConfigurationSource(String? protectedRegexString = null)
         {
             var protectedRegex = new Regex(protectedRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectedRegexString);
-            if (!protectedRegex.GetGroupNames().Contains("protectedSection"))
-                throw new ArgumentException("Regex must contain a group named protectedSection!", nameof(protectedRegexString));
+            if (!protectedRegex.GetGroupNames().Contains("protectedData"))
+                throw new ArgumentException("Regex must contain a group named protectedData!", nameof(protectedRegexString));
 
             ProtectedRegex = protectedRegex;
         }
@@ -100,7 +100,7 @@ namespace FDM.Extensions.Configuration.ProtectedJson
             {
                 if (!String.IsNullOrEmpty(kvp.Value))
                     Data[kvp.Key] = protectedSource.ProtectedRegex.Replace(kvp.Value, me => {
-                        return DataProtector.Unprotect(me.Groups["protectedSection"].Value);
+                        return DataProtector.Unprotect(me.Groups["protectedData"].Value);
                         });
             }
         }
@@ -109,7 +109,8 @@ namespace FDM.Extensions.Configuration.ProtectedJson
 
     public class ProtectedJsonConfigurationSource : JsonConfigurationSource
     {
-        public const string DefaultProtectedRegexString = "Protected:{(?<protectedSection>.+?)}";
+        public const string DefaultProtectedRegexString = "Protected:{(?<protectedData>.+?)}";
+        public const string DefaultProtectRegexString = "Protect:{(?<protectData>.+?)}";
 
         public Regex ProtectedRegex { get; set; }
         public Action<IDataProtectionBuilder>? DataProtectionBuildAction { get; set; }
@@ -118,8 +119,8 @@ namespace FDM.Extensions.Configuration.ProtectedJson
         public ProtectedJsonConfigurationSource(String? protectedRegexString = null)
         {
             var protectedRegex = new Regex(protectedRegexString ?? DefaultProtectedRegexString);
-            if (!protectedRegex.GetGroupNames().Contains("protectedSection"))
-                throw new ArgumentException("Regex must contain a group named protectedSection!", nameof(protectedRegexString));
+            if (!protectedRegex.GetGroupNames().Contains("protectedData"))
+                throw new ArgumentException("Regex must contain a group named protectedData!", nameof(protectedRegexString));
 
             ProtectedRegex = protectedRegex;
         }

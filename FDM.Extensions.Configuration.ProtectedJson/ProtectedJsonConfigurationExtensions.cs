@@ -2,6 +2,7 @@
 using Microsoft.Extensions.FileProviders;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.DataProtection;
+using System.Threading.Tasks.Sources;
 
 namespace FDM.Extensions.Configuration.ProtectedJson
 {
@@ -52,9 +53,9 @@ namespace FDM.Extensions.Configuration.ProtectedJson
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentException("Invalid file path", nameof(path));
 
-            var protectedRegex = new Regex(protectedRegexString??ProtectedJsonConfigurationSource.DefaultProtectedRegexString);
-            if (!protectedRegex.GetGroupNames().Contains("protectedSection"))
-                throw new ArgumentException("Regex must contain a group named protectedSection!", nameof(protectedRegexString));
+            var protectedRegex = new Regex(protectedRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectedRegexString);
+            if (!protectedRegex.GetGroupNames().Contains("protectedData"))
+                throw new ArgumentException("Regex must contain a group named protectedData!", nameof(protectedRegexString));
 
             return builder.AddProtectedJsonFile(s =>
             {
@@ -76,8 +77,8 @@ namespace FDM.Extensions.Configuration.ProtectedJson
             configureSource(configurationSource);
             return builder.Add(configurationSource);
         }
-            
-              
+
+
 
         public static IConfigurationBuilder AddProtectedJsonStream(this IConfigurationBuilder builder, Action<ProtectedJsonStreamConfigurationSource> configureSource)
         {
@@ -93,16 +94,58 @@ namespace FDM.Extensions.Configuration.ProtectedJson
                 throw new ArgumentException("Either serviceProvider or dataProtectionConfigureAction must not be null", serviceProvider == null ? nameof(serviceProvider) : nameof(dataProtectionConfigureAction));
 
             var protectedRegex = new Regex(protectedRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectedRegexString);
-            if (!protectedRegex.GetGroupNames().Contains("protectedSection"))
-                throw new ArgumentException("Regex must contain a group named protectedSection!", nameof(protectedRegexString));
+            if (!protectedRegex.GetGroupNames().Contains("protectedData"))
+                throw new ArgumentException("Regex must contain a group named protectedData!", nameof(protectedRegexString));
 
-            return builder.Add<ProtectedJsonStreamConfigurationSource>(s => {
+            return builder.Add<ProtectedJsonStreamConfigurationSource>(s =>
+            {
                 s.Stream = stream;
                 s.ProtectedRegex = protectedRegex;
                 s.DataProtectionBuildAction = dataProtectionConfigureAction;
                 s.ServiceProvider = serviceProvider;
             }
             );
+        }
+
+
+        /// <summary>
+        /// Perform wildcard search of files in path encrypting any data enclosed by protectRegexString the inside files with the protectedReplaceString
+        /// </summary>
+        /// <param name="path">directory to be searched</param>
+        /// <param name="searchPattern">wildcard pattern to filter files</param>
+        /// <param name="searchOption">search options</param>
+        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
+        /// <param name="protectedReplaceString">a string expression used to generate the final encrypted string using ${protectedData} as a placeholder parameter for encrypted data</param>
+        /// <param name="backupOriginalFile">boolean which indicates whether to make a backupof original file with extension .bak</param>
+        /// <returns>a list of filenames which have been successfully encrypted</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static IList<String> ProtectFiles(this IDataProtector dataProtector, string path, string searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, String? protectRegexString = null, String protectedReplaceString = "Protected{${protectedData}}", bool backupOriginalFile = true)
+        {
+            var protectRegex = new Regex(protectRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectRegexString);
+            if (!protectRegex.GetGroupNames().Contains("protectData"))
+                throw new ArgumentException("Regex must contain a group named protectData!", nameof(protectRegexString));
+
+            var result = new List<String>();
+
+            foreach (var f in Directory.EnumerateFiles(path, searchPattern, searchOption))
+            {
+                var fileContent = File.ReadAllText(f);
+
+                var replacedContent = protectRegex.Replace(fileContent, (me) =>
+                        protectedReplaceString.Replace("${protectedData}", dataProtector.Protect(me.Groups["protectData"].Value)));
+
+                if (replacedContent != fileContent)
+                {
+                    if (backupOriginalFile)
+                        File.Copy(f, f + ".bak");
+
+                    File.WriteAllText(f, fileContent);
+
+                    result.Add(f);
+                }
+            }
+
+            return result;
         }
     }
 }
