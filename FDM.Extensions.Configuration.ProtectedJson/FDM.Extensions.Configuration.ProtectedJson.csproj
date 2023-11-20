@@ -4,6 +4,17 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <PublishSingleFile>true</PublishSingleFile>
+    <Version>1.0.0</Version>
+    <SourceRevisionId>build_$([System.DateTime]::UtcNow.ToString("yyyy_MM_dd_HH_mm_ss"))</SourceRevisionId>
+    <Authors>Federico Di Marco</Authors>
+    <Description>An improved Json configuration provider which allows partial or full encryption of values in appsettings.json</Description>
+    <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
+    <RepositoryUrl>https://github.com/fededim/FDM.Extensions.Configuration.ProtectedJson</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/fededim/FDM.Extensions.Configuration.ProtectedJson</PackageProjectUrl>
+    <Title>$(AssemblyName)</Title>
   </PropertyGroup>
 
   <ItemGroup>
