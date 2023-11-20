@@ -45,9 +45,9 @@ public class Program
         // define other DI services: configure strongly typed AppSettings configuration class (must be done after having read the configuration)
         var services = new ServiceCollection();
         services.Configure<AppSettings>(configuration);
-        var serviceProvider = servicesDataProtection.BuildServiceProvider();
+        var serviceProvider = services.BuildServiceProvider();
 
         // retrieve the strongly typed AppSettings configuration class
-        var appSettings = serviceProviderDataProtection.GetRequiredService<IOptions<AppSettings>>().Value;
+        var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
     }
 }

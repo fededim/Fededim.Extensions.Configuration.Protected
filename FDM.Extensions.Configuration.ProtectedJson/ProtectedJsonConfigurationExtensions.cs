@@ -119,7 +119,7 @@ namespace FDM.Extensions.Configuration.ProtectedJson
         /// <param name="backupOriginalFile">boolean which indicates whether to make a backupof original file with extension .bak</param>
         /// <returns>a list of filenames which have been successfully encrypted</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IList<String> ProtectFiles(this IDataProtector dataProtector, string path, string searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, String? protectRegexString = null, String protectedReplaceString = "Protected{${protectedData}}", bool backupOriginalFile = true)
+        public static IList<String> ProtectFiles(this IDataProtector dataProtector, string path, string searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, String? protectRegexString = null, String protectedReplaceString = "Protected:{${protectedData}}", bool backupOriginalFile = true)
         {
             var protectRegex = new Regex(protectRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectRegexString);
             if (!protectRegex.GetGroupNames().Contains("protectData"))
@@ -137,7 +137,7 @@ namespace FDM.Extensions.Configuration.ProtectedJson
                 if (replacedContent != fileContent)
                 {
                     if (backupOriginalFile)
-                        File.Copy(f, f + ".bak");
+                        File.Copy(f, f + ".bak",true);
 
                     File.WriteAllText(f, replacedContent);
 
