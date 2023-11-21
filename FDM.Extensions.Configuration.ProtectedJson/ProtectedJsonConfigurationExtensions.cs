@@ -2,7 +2,6 @@
 using Microsoft.Extensions.FileProviders;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.DataProtection;
-using System.Threading.Tasks.Sources;
 
 namespace FDM.Extensions.Configuration.ProtectedJson
 {
