@@ -1,4 +1,22 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿# About
+FDM.Extensions.Configuration.ProtectedJson is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.
+
+# Key Features
+- Encrypt partially or fully a configuration value
+- Trasparent in memory decryption of encrypted values without almost any additional line of code
+
+# How to Use
+
+- Modify appsettings JSON files by enclose with the encryption tokenization tag (e.g. Protect:{<data to be encrypted}) all the values or part of values you would like to encrypt
+- Configure the data protection api in a helper method (e.g. ConfigureDataProtection)
+- Encrypt all appsettings values by calling IDataProtect.ProtectFiles extension method (use ProtectedJsonConfigurationProvider.DataProtectionPurpose as CreateProtector purpose)
+- Define the application configuration using ConfigurationBuilder and adding encrypted json files using AddProtectedJsonFile extension method
+- Call ConfigurationBuilder.Build to automatically decrypt the encrypted values and retrieve the cleartext ones.
+- Map the Configuration object to a strongly typed hierarchical class using DI Configure
+
+```csharp
+
+using Microsoft.Extensions.Configuration;
 using FDM.Extensions.Configuration.ProtectedJson;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.DataProtection;
@@ -50,3 +68,15 @@ public class Program
         var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
     }
 }
+
+```
+
+The main types provided by this library are:
+
+- FDM.Extensions.Configuration.ProtectedJson.ProtectedJsonStreamConfigurationProvider
+- FDM.Extensions.Configuration.ProtectedJson.ProtectedJsonStreamConfigurationSource
+- FDM.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationProvider
+- FDM.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationSource
+
+# Feedback & Contributing
+FDM.Extensions.Configuration.ProtectedJson is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/FDM.Extensions.Configuration.ProtectedJson).
