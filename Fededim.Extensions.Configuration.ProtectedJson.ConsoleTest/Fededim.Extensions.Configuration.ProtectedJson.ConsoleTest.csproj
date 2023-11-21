@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FDM.Extensions.Configuration.ProtectedJson\FDM.Extensions.Configuration.ProtectedJson.csproj" />
+    <ProjectReference Include="..\Fededim.Extensions.Configuration.ProtectedJson\Fededim.Extensions.Configuration.ProtectedJson.csproj" />
   </ItemGroup>
 
   <ItemGroup>

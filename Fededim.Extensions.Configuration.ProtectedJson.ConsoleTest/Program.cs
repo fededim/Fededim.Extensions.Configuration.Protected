@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
-using FDM.Extensions.Configuration.ProtectedJson;
+using Fededim.Extensions.Configuration.ProtectedJson;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
-using FDM.Extensions.Configuration.ProtectedJson.ConsoleTest;
+using Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest;
 using Microsoft.Extensions.Options;
 
 public class Program

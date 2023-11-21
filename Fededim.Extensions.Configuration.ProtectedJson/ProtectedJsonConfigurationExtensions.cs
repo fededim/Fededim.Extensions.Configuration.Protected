@@ -3,7 +3,7 @@ using Microsoft.Extensions.FileProviders;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.DataProtection;
 
-namespace FDM.Extensions.Configuration.ProtectedJson
+namespace Fededim.Extensions.Configuration.ProtectedJson
 {
     public static class ProtectedJsonConfigurationExtensions
     {

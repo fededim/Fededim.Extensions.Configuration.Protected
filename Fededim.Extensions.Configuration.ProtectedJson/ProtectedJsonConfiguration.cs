@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.RegularExpressions;
 
-namespace FDM.Extensions.Configuration.ProtectedJson
+namespace Fededim.Extensions.Configuration.ProtectedJson
 {
     public class ProtectedJsonStreamConfigurationProvider : JsonStreamConfigurationProvider
     {

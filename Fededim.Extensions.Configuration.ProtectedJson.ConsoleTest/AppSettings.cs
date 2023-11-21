@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FDM.Extensions.Configuration.ProtectedJson.ConsoleTest
+namespace Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest
 {
     public class NullableSettings
     {

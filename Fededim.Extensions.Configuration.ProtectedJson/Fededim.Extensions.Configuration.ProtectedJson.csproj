@@ -11,19 +11,24 @@
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>ProtectedJson is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
-    <RepositoryUrl>https://github.com/fededim/FDM.Extensions.Configuration.ProtectedJson</RepositoryUrl>
+    <RepositoryUrl>https://github.com/fededim/Fededim.Extensions.Configuration.ProtectedJson</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/fededim/FDM.Extensions.Configuration.ProtectedJson</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.ProtectedJson</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Title>$(AssemblyName)</Title>
+    <PackageTags>configuration;dataprotection;appsettings;json;encrypted</PackageTags>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>
+      v1.0.0
+      - Initial commit  
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="docs\README.md" Pack="true" PackagePath="README.md" />
-    <None Include="licenses\LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
+    <None Include="docs\README.md" Pack="true" PackagePath="\" />
+    <None Include="licenses\LICENSE.txt" Pack="true" PackagePath="\" />
 
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
