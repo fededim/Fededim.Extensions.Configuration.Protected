@@ -4,11 +4,11 @@ ProtectedJson is an improved JSON configuration provider which allows partial or
 
 For information and usage check my article on CodeProject: [ProtectedJson: integrating ASP.NET Core Configuration and Data Protection](https://www.codeproject.com/Articles/5372873/ProtectedJson-integrating-ASP-NET-Core-Configurati)
 
-Key Features
+## Key Features
 Encrypt partially or fully a configuration value
 Trasparent in memory decryption of encrypted values without almost any additional line of code
 
-How to Use
+## How to Use
 
   - Modify appsettings JSON files by enclose with the encryption tokenization tag (e.g. Protect:{<data to be encrypted}) all the values or part of values you would like to encrypt
   - Configure the data protection api in a helper method (e.g. ConfigureDataProtection)
