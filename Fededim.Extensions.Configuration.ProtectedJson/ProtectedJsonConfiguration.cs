@@ -8,7 +8,7 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
 {
     public class ProtectedJsonStreamConfigurationProvider : JsonStreamConfigurationProvider
     {
-        IDataProtector DataProtector { get; set; }
+        protected IDataProtector DataProtector { get; set; }
 
         public ProtectedJsonStreamConfigurationProvider(ProtectedJsonStreamConfigurationSource source) : base(source)
         {
@@ -72,7 +72,7 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
     {
         public const String DataProtectionPurpose = "ProtectedJsonConfigurationProvider";
 
-        IDataProtector DataProtector { get; set; }
+        protected IDataProtector DataProtector { get; set; }
 
         public ProtectedJsonConfigurationProvider(ProtectedJsonConfigurationSource source) : base(source)
         {
