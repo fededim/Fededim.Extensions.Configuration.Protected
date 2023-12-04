@@ -102,9 +102,7 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
             foreach (var key in Data.Keys.ToList())
             {
                 if (!String.IsNullOrEmpty(Data[key]))
-                    Data[key] = protectedSource.ProtectedRegex.Replace(Data[key], me => {
-                        return DataProtector.Unprotect(me.Groups["protectedData"].Value);
-                        });
+                    Data[key] = protectedSource.ProtectedRegex.Replace(Data[key], me => DataProtector.Unprotect(me.Groups["protectedData"].Value));
             }
         }
     }
