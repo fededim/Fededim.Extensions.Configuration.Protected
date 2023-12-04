@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    
+    <TargetFrameworks>net6.0;netstandard2.0;net462</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <SourceRevisionId>build_$([System.DateTime]::UtcNow.ToString("yyyy_MM_dd_HH_mm_ss"))</SourceRevisionId>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>ProtectedJson is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
@@ -22,7 +21,10 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReleaseNotes>
       v1.0.0
-      - Initial commit  
+      - Initial commit
+
+      v1.0.1
+      - Targeting multi frameworks: net6.0, netstandard2.0 and net462
     </PackageReleaseNotes>
   </PropertyGroup>
 

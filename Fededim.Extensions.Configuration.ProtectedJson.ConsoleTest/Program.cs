@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationM
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest;
 using Microsoft.Extensions.Options;
+using System;
+using System.IO;
 
 public class Program
 {

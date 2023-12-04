@@ -2,6 +2,10 @@
 using Microsoft.Extensions.FileProviders;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.DataProtection;
+using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Fededim.Extensions.Configuration.ProtectedJson
 {
@@ -43,9 +47,12 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
 
 
 
-        public static IConfigurationBuilder AddProtectedJsonFile(this IConfigurationBuilder builder, IFileProvider? provider, string path, bool optional, bool reloadOnChange, String? protectedRegexString = null, IServiceProvider? serviceProvider = null, Action<IDataProtectionBuilder>? dataProtectionConfigureAction = null)
+        public static IConfigurationBuilder AddProtectedJsonFile(this IConfigurationBuilder builder, IFileProvider provider, string path, bool optional, bool reloadOnChange, String protectedRegexString = null, IServiceProvider serviceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null)
         {
-            ArgumentNullException.ThrowIfNull(builder);
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+
+
             if (serviceProvider == null && dataProtectionConfigureAction == null)
                 throw new ArgumentException("Either serviceProvider or dataProtectionConfigureAction must not be null", serviceProvider == null ? nameof(serviceProvider) : nameof(dataProtectionConfigureAction));
 
@@ -86,9 +93,11 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
             return builder.Add(configurationSource);
         }
 
-        public static IConfigurationBuilder AddProtectedJsonStream(this IConfigurationBuilder builder, Stream stream, string protectedRegexString = ProtectedJsonConfigurationSource.DefaultProtectedRegexString, IServiceProvider? serviceProvider = null, Action<IDataProtectionBuilder>? dataProtectionConfigureAction = null)
+        public static IConfigurationBuilder AddProtectedJsonStream(this IConfigurationBuilder builder, Stream stream, string protectedRegexString = ProtectedJsonConfigurationSource.DefaultProtectedRegexString, IServiceProvider serviceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null)
         {
-            ArgumentNullException.ThrowIfNull(builder);
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+
             if (serviceProvider == null && dataProtectionConfigureAction == null)
                 throw new ArgumentException("Either serviceProvider or dataProtectionConfigureAction must not be null", serviceProvider == null ? nameof(serviceProvider) : nameof(dataProtectionConfigureAction));
 
@@ -118,7 +127,7 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
         /// <param name="backupOriginalFile">boolean which indicates whether to make a backupof original file with extension .bak</param>
         /// <returns>a list of filenames which have been successfully encrypted</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IList<String> ProtectFiles(this IDataProtector dataProtector, string path, string searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, String? protectRegexString = null, String protectedReplaceString = "Protected:{${protectedData}}", bool backupOriginalFile = true)
+        public static IList<String> ProtectFiles(this IDataProtector dataProtector, string path, string searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, String protectRegexString = null, String protectedReplaceString = "Protected:{${protectedData}}", bool backupOriginalFile = true)
         {
             var protectRegex = new Regex(protectRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectRegexString);
             if (!protectRegex.GetGroupNames().Contains("protectData"))

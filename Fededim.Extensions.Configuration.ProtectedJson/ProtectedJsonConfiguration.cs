@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Fededim.Extensions.Configuration.ProtectedJson
@@ -44,8 +47,8 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
     public class ProtectedJsonStreamConfigurationSource : JsonStreamConfigurationSource
     {
         public Regex ProtectedRegex { get; set; }
-        public Action<IDataProtectionBuilder>? DataProtectionBuildAction { get; set; }
-        public IServiceProvider? ServiceProvider { get; set; }
+        public Action<IDataProtectionBuilder> DataProtectionBuildAction { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
 
         public ProtectedJsonStreamConfigurationSource():this(null)
@@ -53,7 +56,7 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
 
         }
 
-        public ProtectedJsonStreamConfigurationSource(String? protectedRegexString = null)
+        public ProtectedJsonStreamConfigurationSource(String protectedRegexString = null)
         {
             var protectedRegex = new Regex(protectedRegexString ?? ProtectedJsonConfigurationSource.DefaultProtectedRegexString);
             if (!protectedRegex.GetGroupNames().Contains("protectedData"))
@@ -96,10 +99,10 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
             var protectedSource = (ProtectedJsonConfigurationSource)Source;
 
             // decrypt needed values
-            foreach (var kvp in Data)
+            foreach (var key in Data.Keys.ToList())
             {
-                if (!String.IsNullOrEmpty(kvp.Value))
-                    Data[kvp.Key] = protectedSource.ProtectedRegex.Replace(kvp.Value, me => {
+                if (!String.IsNullOrEmpty(Data[key]))
+                    Data[key] = protectedSource.ProtectedRegex.Replace(Data[key], me => {
                         return DataProtector.Unprotect(me.Groups["protectedData"].Value);
                         });
             }
@@ -113,10 +116,10 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
         public const string DefaultProtectRegexString = "Protect:{(?<protectData>.+?)}";
 
         public Regex ProtectedRegex { get; set; }
-        public Action<IDataProtectionBuilder>? DataProtectionBuildAction { get; set; }
-        public IServiceProvider? ServiceProvider { get; set; }
+        public Action<IDataProtectionBuilder> DataProtectionBuildAction { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
-        public ProtectedJsonConfigurationSource(String? protectedRegexString = null)
+        public ProtectedJsonConfigurationSource(String protectedRegexString = null)
         {
             var protectedRegex = new Regex(protectedRegexString ?? DefaultProtectedRegexString);
             if (!protectedRegex.GetGroupNames().Contains("protectedData"))
