@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fededim.Extensions.Configuration.ProtectedJson\Fededim.Extensions.Configuration.ProtectedJson.csproj" />
+    <!--<PackageReference Include="Fededim.Extensions.Configuration.ProtectedJson" Version="1.0.1" />-->
   </ItemGroup>
 
   <ItemGroup>

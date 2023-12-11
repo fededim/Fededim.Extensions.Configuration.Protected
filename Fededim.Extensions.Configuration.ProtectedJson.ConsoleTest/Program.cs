@@ -38,8 +38,8 @@ public class Program
         // define the application configuration and read .json files
         var configuration = new ConfigurationBuilder()
                 .AddCommandLine(args)
-                .AddProtectedJsonFile("appsettings.json", ConfigureDataProtection)
-                .AddProtectedJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", ConfigureDataProtection)
+                .AddProtectedJsonFile("appsettings.json", serviceProviderDataProtection)
+                .AddProtectedJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", serviceProviderDataProtection)
                 .AddEnvironmentVariables()
                 .Build();
 
