@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <SecretXmlKey>OtherProtect:{Xml Secret Key}</SecretXmlKey>
+  <TransientFaultHandlingOptions>
+    <Enabled>true</Enabled>
+    <AutoRetryDelay>OtherProtect:{00:00:07}</AutoRetryDelay>
+  </TransientFaultHandlingOptions>
+  <Logging>
+    <LogLevel>
+      <Default>Information</Default>
+      <Microsoft>OtherProtect:{Warning}</Microsoft>
+    </LogLevel>
+  </Logging>
+</configuration>
