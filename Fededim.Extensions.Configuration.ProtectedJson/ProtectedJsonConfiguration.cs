@@ -110,8 +110,8 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
 
     public class ProtectedJsonConfigurationSource : JsonConfigurationSource
     {
-        public const string DefaultProtectedRegexString = "Protected:{(?<protectedData>.+?)}";
-        public const string DefaultProtectRegexString = "Protect:{(?<protectData>.+?)}";
+        public const String DefaultProtectedRegexString = "Protected:{(?<protectedData>.+?)}";
+        public const String DefaultProtectRegexString = "Protect:{(?<protectData>.+?)}";
 
         public Regex ProtectedRegex { get; set; }
         public Action<IDataProtectionBuilder> DataProtectionBuildAction { get; set; }

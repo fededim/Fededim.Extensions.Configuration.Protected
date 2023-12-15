@@ -22,7 +22,7 @@ public class Program
     }
 
 
-    public static void Main(string[] args)
+    public static void Main(String[] args)
     {
         // define the DI services: Data Protection API
         var servicesDataProtection = new ServiceCollection();

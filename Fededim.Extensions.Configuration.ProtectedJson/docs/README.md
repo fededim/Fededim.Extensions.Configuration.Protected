@@ -38,7 +38,7 @@ public class Program
     }
 
 
-    public static void Main(string[] args)
+    public static void Main(String[] args)
     {
         // define the DI services: Data Protection API
         var servicesDataProtection = new ServiceCollection();
@@ -79,4 +79,4 @@ The main types provided by this library are:
 - Fededim.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationSource
 
 # Feedback & Contributing
-Fededim.Extensions.Configuration.ProtectedJson is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.ProtectedJson).
+Fededim.Extensions.Configuration.ProtectedJson is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected).

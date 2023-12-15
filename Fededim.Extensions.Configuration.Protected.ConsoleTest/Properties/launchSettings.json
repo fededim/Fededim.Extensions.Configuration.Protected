@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Fededim.Extensions.Configuration.Protected.ConsoleTest": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
