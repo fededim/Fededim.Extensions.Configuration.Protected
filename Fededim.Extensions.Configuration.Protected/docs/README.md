@@ -46,34 +46,21 @@ public class Program
     }
 
 
-    private static void AnotherConfigureDataProtection(IDataProtectionBuilder builder)
-    {
-        builder.UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration
-        {
-            EncryptionAlgorithm = EncryptionAlgorithm.AES_128_GCM,
-            ValidationAlgorithm = ValidationAlgorithm.HMACSHA512,
-
-        }).SetDefaultKeyLifetime(TimeSpan.FromDays(365 * 15)).PersistKeysToFileSystem(new DirectoryInfo("..\\..\\..\\Keys"));
-    }
-
 
     public static void Main(String[] args)
     {
         args = new String[] { "--password Protect:{secretArgPassword!}" };
         
-        // define the DI services: setup global Data Protection API
+        // define the DI services: setup Data Protection API
         var servicesDataProtection = new ServiceCollection();
         ConfigureDataProtection(servicesDataProtection.AddDataProtection());
         var serviceProviderDataProtection = servicesDataProtection.BuildServiceProvider();
 
         // define the DI services: setup a Data Protection API custom tailored for a particular providers (InMemory and Environment Variables)
-        var servicesAdditionalDataProtection = new ServiceCollection();
-        AnotherConfigureDataProtection(servicesAdditionalDataProtection.AddDataProtection());
-        var serviceProviderAdditionalDataProtection = servicesAdditionalDataProtection.BuildServiceProvider();
 
         // retrieve IDataProtector interfaces for encrypting data
-        var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose);
-        var dataProtectorAdditional = serviceProviderAdditionalDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose);
+        var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose());
+        var dataProtectorAdditional = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose(2));
 
 
         // define in-memory configuration key-value pairs to be encrypted
@@ -113,8 +100,8 @@ public class Program
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json")
                 .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected:{(?<protectedData>.+?)}")
-                .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderAdditionalDataProtection)
-                .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionConfigureAction: AnotherConfigureDataProtection)
+                .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
+                .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
                 .Build();
 
         // define other DI services: configure strongly typed AppSettings configuration class (must be done after having read the configuration)
