@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 public class Program
 {
@@ -28,7 +30,7 @@ public class Program
     public static void Main(String[] args)
     {
         args = new String[] { "--password Protect:{secretArgPassword!}" };
-        
+
         // define the DI services: setup Data Protection API
         var servicesDataProtection = new ServiceCollection();
         ConfigureDataProtection(servicesDataProtection.AddDataProtection());
@@ -76,7 +78,7 @@ public class Program
         var configuration = new ProtectedConfigurationBuilder(dataProtectionServiceProvider: serviceProviderDataProtection)
                 .AddCommandLine(encryptedArgs)
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json")
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", false, true)
                 .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected:{(?<protectedData>.+?)}")
                 .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
                 .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
@@ -87,10 +89,26 @@ public class Program
         services.Configure<AppSettings>(configuration);
         var serviceProvider = services.BuildServiceProvider();
 
-        // retrieve the strongly typed AppSettings configuration class
-        var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
+        // retrieve the strongly typed AppSettings configuration class, we use IOptionsMonitor in order to be notified on any reloads of appSettings
+        var optionsMonitor = serviceProvider.GetRequiredService<IOptionsMonitor<AppSettings>>();
+        optionsMonitor.OnChange(appSettingsReloaded => {
+            // this breakpoint gets hit when the appsettings have changed due to a configuration reload, please check that the value of "Int" property inside appSettingsReloaded class is different from the one inside appSettings class
+            Console.WriteLine($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json has been reloaded!");
+            Debugger.Break();
+        });
+        var appSettings = optionsMonitor.CurrentValue;
 
-        // please check that all values inside appSettings class are actually decrypted with the right value.
+        // please check that all values inside appSettings class are actually decrypted with the right value, make a note of the value of "Int" property it will change on the next second breakpoint
+        Debugger.Break();
+
+        // configuration reload example, updates inside appsettings.<environment>.json the property "Int": <whatever>, --> "Int": "Protected:{<random number>},"
+        var environmentAppSettings = File.ReadAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json");
+        environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{dataProtector.ProtectConfigurationValue($"Protect:{{{new Random().Next(0, 100000)}}}")}\",");
+        File.WriteAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", environmentAppSettings);
+
+        // wait 3 seconds for the reload to take place, please check on this breakpoint that the value of "Int" property has changed in appSettings class and it is the same of appSettingsReloaded
+        Thread.Sleep(5000);
+        appSettings = optionsMonitor.CurrentValue;
         Debugger.Break();
     }
 }

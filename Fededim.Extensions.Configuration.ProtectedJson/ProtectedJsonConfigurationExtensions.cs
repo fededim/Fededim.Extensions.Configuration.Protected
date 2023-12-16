@@ -123,7 +123,7 @@ namespace Fededim.Extensions.Configuration.ProtectedJson
         /// <param name="searchPattern">wildcard pattern to filter files</param>
         /// <param name="searchOption">search options</param>
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String expression used to generate the final encrypted String using ${protectedData} as a placeholder parameter for encrypted data</param>
+        /// <param name="protectedReplaceString">a string expression used to generate the final encrypted String using ${protectedData} as a placeholder parameter for encrypted data</param>
         /// <param name="backupOriginalFile">boolean which indicates whether to make a backupof original file with extension .bak</param>
         /// <returns>a list of filenames which have been successfully encrypted</returns>
         /// <exception cref="ArgumentException"></exception>

@@ -8,6 +8,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Supports a global ConfigurationBuilder configuration and an eventual custom override for any ConfigurationSource
 - Supports almost any NET framework (net6.0, netstandard2.0 and net462)
 - Pluggable into any project with almost no changes to original NET / NET Core.
+- Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
 
 # How to Use
 
@@ -32,6 +33,8 @@ using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 public class Program
 {
@@ -50,7 +53,7 @@ public class Program
     public static void Main(String[] args)
     {
         args = new String[] { "--password Protect:{secretArgPassword!}" };
-        
+
         // define the DI services: setup Data Protection API
         var servicesDataProtection = new ServiceCollection();
         ConfigureDataProtection(servicesDataProtection.AddDataProtection());
@@ -98,7 +101,7 @@ public class Program
         var configuration = new ProtectedConfigurationBuilder(dataProtectionServiceProvider: serviceProviderDataProtection)
                 .AddCommandLine(encryptedArgs)
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json")
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", false, true)
                 .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected:{(?<protectedData>.+?)}")
                 .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
                 .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
@@ -109,10 +112,26 @@ public class Program
         services.Configure<AppSettings>(configuration);
         var serviceProvider = services.BuildServiceProvider();
 
-        // retrieve the strongly typed AppSettings configuration class
-        var appSettings = serviceProvider.GetRequiredService<IOptions<AppSettings>>().Value;
+        // retrieve the strongly typed AppSettings configuration class, we use IOptionsMonitor in order to be notified on any reloads of appSettings
+        var optionsMonitor = serviceProvider.GetRequiredService<IOptionsMonitor<AppSettings>>();
+        optionsMonitor.OnChange(appSettingsReloaded => {
+            // this breakpoint gets hit when the appsettings have changed due to a configuration reload, please check that the value of "Int" property inside appSettingsReloaded class is different from the one inside appSettings class
+            Console.WriteLine($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json has been reloaded!");
+            Debugger.Break();
+        });
+        var appSettings = optionsMonitor.CurrentValue;
 
-        // please check that all values inside appSettings class are actually decrypted with the right value.
+        // please check that all values inside appSettings class are actually decrypted with the right value, make a note of the value of "Int" property it will change on the next second breakpoint
+        Debugger.Break();
+
+        // configuration reload example, updates inside appsettings.<environment>.json the property "Int": <whatever>, --> "Int": "Protected:{<random number>},"
+        var environmentAppSettings = File.ReadAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json");
+        environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{dataProtector.ProtectConfigurationValue($"Protect:{{{new Random().Next(0, 100000)}}}")}\",");
+        File.WriteAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", environmentAppSettings);
+
+        // wait 3 seconds for the reload to take place, please check on this breakpoint that the value of "Int" property has changed in appSettings class and it is the same of appSettingsReloaded
+        Thread.Sleep(5000);
+        appSettings = optionsMonitor.CurrentValue;
         Debugger.Break();
     }
 }
@@ -124,6 +143,17 @@ The main types provided by this library are:
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationData
+- Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
+
+
+# Version History
+v1.0.0
+- Initial commit: it does not support re-decryption on configuration reload
+     
+v1.0.1
+- Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
+- Cleaned code and added documentation on most methods.
+
 
 # Feedback & Contributing
-Fededim.Extensions.Configuration.Protected is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected).
+Fededim.Extensions.Configuration.Protected is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected).

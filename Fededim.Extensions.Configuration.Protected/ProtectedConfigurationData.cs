@@ -1,15 +1,15 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
+
+    /// <summary>
+    /// ProtectedConfigurationData is a custom data structure which stores all configuration options needed by ProtectedConfigurationBuilder and ProtectConfigurationProvider
+    /// </summary>
     public class ProtectedConfigurationData
     {
         public IDataProtector DataProtector { get; }
@@ -53,7 +53,12 @@ namespace Fededim.Extensions.Configuration.Protected
 
         public bool IsValid => (DataProtector != null) && (ProtectedRegex?.GetGroupNames()?.Contains("protectedData") == true);
 
-
+        /// <summary>
+        /// Merge calculates the merge of the local and global protected configuration data
+        /// </summary>
+        /// <param name="global"></param>
+        /// <param name="local"></param>
+        /// <returns></returns>
         public static ProtectedConfigurationData Merge(ProtectedConfigurationData global, ProtectedConfigurationData local)
         {
             if (local == null)
