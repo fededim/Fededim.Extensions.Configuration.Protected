@@ -5,12 +5,12 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <SourceRevisionId>build_$([System.DateTime]::UtcNow.ToString("yyyy_MM_dd_HH_mm_ss"))</SourceRevisionId>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
-    <RepositoryUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</RepositoryUrl>
+    <RepositoryUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -21,23 +21,24 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReleaseNotes>
       v1.0.0
-      - Initial commit:
-      - Known limitations: it does not support ReloadOnChange for FileConfigurationProviders, the code needs to be refactored to switch from composition to dynamically create at runtime using Codedom a new type derived from an existing IConfigurationProvider which overrides the Load method with the decryption function. It everything works out, it will be done in the next release.
+      - Initial commit: it does not support re-decryption on configuration reload
+      
+      v1.0.1
+      - Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
+      - Cleaned code and added documentation on most methods.
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="docs\README.md" Pack="true" PackagePath="\" />
-    <None Include="licenses\LICENSE.txt" Pack="true" PackagePath="\" />
 
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="licenses\" />
+    <None Update="license\LICENSE.txt" Pack="true" PackagePath="\" />
+    <None Update="docs\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

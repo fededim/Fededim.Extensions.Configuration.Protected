@@ -1,6 +1,8 @@
 ﻿# About
 Fededim.Extensions.Configuration.ProtectedJson is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.
 
+This package is however deprecated in favour of the more versatile [Fededim.Extensions.Configuration.Protected](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected).
+
 # Key Features
 - Encrypt partially or fully a configuration value
 - Trasparent in memory decryption of encrypted values without almost any additional line of code
@@ -79,4 +81,4 @@ The main types provided by this library are:
 - Fededim.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationSource
 
 # Feedback & Contributing
-Fededim.Extensions.Configuration.ProtectedJson is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected).
+Fededim.Extensions.Configuration.ProtectedJson is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.ProtectedJson).

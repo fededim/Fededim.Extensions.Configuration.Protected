@@ -5,14 +5,14 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <SourceRevisionId>build_$([System.DateTime]::UtcNow.ToString("yyyy_MM_dd_HH_mm_ss"))</SourceRevisionId>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>ProtectedJson is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
-    <RepositoryUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</RepositoryUrl>
+    <RepositoryUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.ProtectedJson</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.ProtectedJson</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Title>$(AssemblyName)</Title>
@@ -25,21 +25,22 @@
 
       v1.0.1
       - Targeting multi frameworks: net6.0, netstandard2.0 and net462
+
+      v1.0.2
+      - Renamed GitHub repository, just updated the NuGet README file. This package is however deprecated in favour of the more versatile [Fededim.Extensions.Configuration.Protected](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected).
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="docs\README.md" Pack="true" PackagePath="\" />
-    <None Include="licenses\LICENSE.txt" Pack="true" PackagePath="\" />
 
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="licenses\" />
+    <None Update="license\LICENSE.txt" Pack="true" PackagePath="\" />
+    <None Update="docs\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
