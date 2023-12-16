@@ -3,9 +3,9 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 
 # Key Features
 - Encrypt partially or fully a configuration value
-- Works with any existant and (hopefully) future ConfigurationSource and ConfigurationProvider (tested with CommandLine, EnvironmentVariables, Json, Xml and InMemoryCollection)
+- Works with any existing and (hopefully) future ConfigurationSource and ConfigurationProvider (tested with CommandLine, EnvironmentVariables, Json, Xml and InMemoryCollection)
 - Trasparent in memory decryption of encrypted values without almost any additional line of code
-- Supports a global ConfigurationBuilder configuration and an eventual custom override for any ConfigurationSource
+- Supports a global configuration and an eventual custom override for any ConfigurationSource
 - Supports almost any NET framework (net6.0, netstandard2.0 and net462)
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
