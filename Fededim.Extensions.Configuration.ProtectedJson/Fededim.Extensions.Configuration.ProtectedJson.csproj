@@ -17,6 +17,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Title>$(AssemblyName)</Title>
     <PackageTags>configuration;dataprotection;appsettings;json;encrypted</PackageTags>
+    <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReleaseNotes>
@@ -39,8 +40,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="license\LICENSE.txt" Pack="true" PackagePath="\" />
-    <None Update="docs\README.md" Pack="true" PackagePath="\" />
+    <None Include="docs\README.md" Pack="true" PackagePath="\" />
+    <None Include="license\LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
