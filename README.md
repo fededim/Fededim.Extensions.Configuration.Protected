@@ -1,6 +1,6 @@
 # Overview
 
-In this repository you will find the sources of two my NuGet packages
+In this repository you will find the sources of my two NuGet packages
 
 # Fededim.Extensions.Configuration.ProtectedJson
 
