@@ -1,20 +1,21 @@
-# Fededim.Extensions.Configuration.ProtectedJson © 2023 Federico Di Marco
+# Overview
 
-ProtectedJson is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.
+In this repository you will find the sources of two my NuGet packages
 
-## Key Features
-  - Encrypt partially or fully a configuration value
-  - Trasparent in memory decryption of encrypted values without almost any additional line of code
+# Fededim.Extensions.Configuration.ProtectedJson
 
-## How to Use
+Fededim.Extensions.Configuration.ProtectedJson is my first package and it is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.
 
-  - Modify appsettings JSON files by enclose with the encryption tokenization tag (e.g. Protect:{<data to be encrypted}) all the values or part of values you would like to encrypt
-  - Configure the data protection api in a helper method (e.g. ConfigureDataProtection)
-  - Encrypt all appsettings values by calling IDataProtect.ProtectFiles extension method (use ProtectedJsonConfigurationProvider.DataProtectionPurpose as CreateProtector purpose)
-  - Define the application configuration using ConfigurationBuilder and adding encrypted json files using AddProtectedJsonFile extension method
-  - Call ConfigurationBuilder.Build to automatically decrypt the encrypted values and retrieve the cleartext ones.
-  - Map the Configuration object to a strongly typed hierarchical class using DI Configure
+You can find the source code here [Fededim.Extensions.Configuration.ProtectedJson](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.ProtectedJson) but this package is 
+however deprecated in favour of the more versatile [Fededim.Extensions.Configuration.Protected](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected).
 
-For code check the [Programs.cs of TestConsole app](https://github.com/fededim/Fededim.Extensions.Configuration.ProtectedJson/blob/master/Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest/Program.cs)
+You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5372873/ProtectedJson-Integrating-ASP-NET-Core-Configurati) explaning the origin, how to use it and the main point of the implementation.
 
-For detailed information check my article on CodeProject: [ProtectedJson: integrating ASP.NET Core Configuration and Data Protection](https://www.codeproject.com/Articles/5372873/ProtectedJson-integrating-ASP-NET-Core-Configurati)
+
+# Fededim.Extensions.Configuration.ProtectedJson
+
+Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.
+
+You can find the source code here [Fededim.Extensions.Configuration.Protected](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected)
+
+You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
