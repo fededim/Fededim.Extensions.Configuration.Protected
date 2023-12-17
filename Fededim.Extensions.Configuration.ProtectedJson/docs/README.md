@@ -80,5 +80,9 @@ The main types provided by this library are:
 - Fededim.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationProvider
 - Fededim.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationSource
 
+# Detailed guide
+
+You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5372873/ProtectedJson-Integrating-ASP-NET-Core-Configurati) explaning the origin, how to use it and the main point of the implementation.
+
 # Feedback & Contributing
 Fededim.Extensions.Configuration.ProtectedJson is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.ProtectedJson).
