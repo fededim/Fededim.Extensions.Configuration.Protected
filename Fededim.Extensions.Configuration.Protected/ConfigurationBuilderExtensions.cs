@@ -22,7 +22,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
         /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
         /// <param name="keyNumber">a number specifying the index of the key to use</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
         /// <exception cref="ArgumentException"></exception>
         public static IConfigurationBuilder WithProtectedConfigurationOptions(this IConfigurationBuilder configurationBuilder, String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber=1)
         {
@@ -88,7 +88,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="value">a string literal which needs to be encrypted</param>
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedReplaceString">a string used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData}</param>
-        /// <returns></returns>
+        /// <returns>the encrypted configuration value</returns>
         /// <exception cref="ArgumentException"></exception>
         public static String ProtectConfigurationValue(this IDataProtector dataProtector, String value, String protectRegexString = null, String protectedReplaceString = ProtectedConfigurationBuilder.DefaultProtectedReplaceString)
         {
@@ -125,7 +125,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="arguments">a IEnumerable<string> whose elements need to be encrypted</param>
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedReplaceString">a string used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData}</param>
-        /// <returns></returns>
+        /// <returns>a newer encrypted IEnumerable<String></returns>
         public static IEnumerable<String> ProtectConfigurationValue(this IDataProtector dataProtector, IEnumerable<String> arguments, String protectRegexString = null, String protectedReplaceString = ProtectedConfigurationBuilder.DefaultProtectedReplaceString)
         {
             return arguments?.Select(argument => dataProtector.ProtectConfigurationValue(argument, protectRegexString, protectedReplaceString));
@@ -140,7 +140,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="arguments">a string array whose elements need to be encrypted</param>
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedReplaceString">a string used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData}</param>
-        /// <returns></returns>
+        /// <returns>a newer encrypted String[] array</returns>
         public static String[] ProtectConfigurationValue(this IDataProtector dataProtector, String[] arguments, String protectRegexString = null, String protectedReplaceString = ProtectedConfigurationBuilder.DefaultProtectedReplaceString)
         {
             return arguments?.Select(argument => dataProtector.ProtectConfigurationValue(argument, protectRegexString, protectedReplaceString)).ToArray();
