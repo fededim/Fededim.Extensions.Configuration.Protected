@@ -6,7 +6,6 @@
 
     <PublishSingleFile>true</PublishSingleFile>
     <Version>1.0.3</Version>
-    <SourceRevisionId>build_$([System.DateTime]::UtcNow.ToString("yyyy_MM_dd_HH_mm_ss"))</SourceRevisionId>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
