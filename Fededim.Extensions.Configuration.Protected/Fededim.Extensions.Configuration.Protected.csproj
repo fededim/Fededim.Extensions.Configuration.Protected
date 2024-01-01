@@ -1,17 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net6.0;netstandard2.0;net462</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <SourceRevisionId>build_$([System.DateTime]::UtcNow.ToString("yyyy_MM_dd_HH_mm_ss"))</SourceRevisionId>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
-    <RepositoryUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>false</EmbedUntrackedSources>
     <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
@@ -23,15 +23,20 @@
     <PackageReleaseNotes>
       v1.0.0
       - Initial commit: it does not support re-decryption on configuration reload
-      
+
       v1.0.1
       - Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
       - Cleaned code and added documentation on most methods.
+      
+      v1.0.2
+      - Added more comments on code
+      - Enabled SourceLink support to GitHub for debugging
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
 
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
     <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
