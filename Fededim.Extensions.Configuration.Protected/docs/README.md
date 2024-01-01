@@ -154,6 +154,9 @@ v1.0.1
 - Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
 - Cleaned code and added documentation on most methods.
 
+v1.0.2
+- Added more comments on code
+- Enabled SourceLink support to GitHub for debugging
 
 # Detailed guide
 
