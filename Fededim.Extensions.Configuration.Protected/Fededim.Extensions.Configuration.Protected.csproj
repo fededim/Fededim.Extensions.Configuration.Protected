@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -37,6 +37,9 @@
 
       v1.0.4
       - Commented initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
+
+      v1.0.5
+      - Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
     </PackageReleaseNotes>
   </PropertyGroup>
 

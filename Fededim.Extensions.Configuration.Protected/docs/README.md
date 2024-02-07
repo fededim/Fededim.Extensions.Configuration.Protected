@@ -164,6 +164,9 @@ v1.0.3
 v1.0.4
 - Commented initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
 
+v1.0.5
+- Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
