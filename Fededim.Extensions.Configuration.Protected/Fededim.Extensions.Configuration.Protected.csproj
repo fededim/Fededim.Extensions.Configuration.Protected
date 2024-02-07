@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -16,7 +16,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <Title>$(AssemblyName)</Title>
-    <PackageTags>configuration;dataprotection;appsettings;json;encrypted</PackageTags>
+    <PackageTags>configuration;data;protection;appsettings;json;encrypted</PackageTags>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
@@ -34,6 +34,9 @@
 
       v1.0.3
       - SourceLink bugfix: removed SourceRevisionId tag in csproj
+
+      v1.0.4
+      - Commented initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
     </PackageReleaseNotes>
   </PropertyGroup>
 
