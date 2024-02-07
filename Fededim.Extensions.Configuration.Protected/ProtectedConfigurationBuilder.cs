@@ -138,8 +138,11 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             var providerType = provider.GetType();
 
-            if (!providerType.IsSubclassOf(typeof(ConfigurationProvider)))
-                return provider;
+            // this code is an initial one of when I was thinking of casting IConfigurationProvider to ConfigurationProvider (all MS classes derive from this one)
+            // in order to retrieve all configuration keys inside DecryptChildKeys using the Data property without using the recursive "hack" of GetChildKeys 
+            // it has been commented because it is not needed anymore, but I keep it as workaround of accessing all configuration keys just in case MS changes the implementation of GetChildKeys "forbidding" the actual way
+            //if (!providerType.IsSubclassOf(typeof(ConfigurationProvider)))
+            //    return provider;
 
             // we merge Provider and Global ProtectedDataConfiguration, if it is not valid we return the existing original undecrypted provider
             var actualProtectedConfigurationData = ProtectedProviderConfigurationData.ContainsKey(provider.GetHashCode()) ? ProtectedConfigurationData.Merge(ProtectedGlobalConfigurationData, ProtectedProviderConfigurationData[provider.GetHashCode()]) : ProtectedGlobalConfigurationData;
