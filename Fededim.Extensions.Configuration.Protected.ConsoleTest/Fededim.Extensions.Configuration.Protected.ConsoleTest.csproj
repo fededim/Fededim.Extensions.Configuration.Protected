@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="8.0.0" />
-    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.1" />-->
+    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.5" />-->
   </ItemGroup>
 
   <ItemGroup>
