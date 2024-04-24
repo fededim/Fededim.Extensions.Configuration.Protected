@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-  <SecretXmlKey>OtherProtect:{Xml Secret Key}</SecretXmlKey>
+  <EncryptedXmlSecretKey>OtherProtect:{Xml Secret Key_\&gt;!*+?|{[()^$.#}</EncryptedXmlSecretKey>
+  <PlainTextXmlSecretKey>Xml Secret Key_\&gt;!*+?|{[()^$.#</PlainTextXmlSecretKey>
   <TransientFaultHandlingOptions>
     <Enabled>true</Enabled>
     <AutoRetryDelay>OtherProtect:{00:00:07}</AutoRetryDelay>

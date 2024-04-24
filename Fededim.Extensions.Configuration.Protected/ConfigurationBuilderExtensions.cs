@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
@@ -24,7 +27,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="keyNumber">a number specifying the index of the key to use</param>
         /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IConfigurationBuilder WithProtectedConfigurationOptions(this IConfigurationBuilder configurationBuilder, String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber=1)
+        public static IConfigurationBuilder WithProtectedConfigurationOptions(this IConfigurationBuilder configurationBuilder, String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1)
         {
             var protectedConfigurationBuilder = configurationBuilder as IProtectedConfigurationBuilder;
 
@@ -61,8 +64,30 @@ namespace Fededim.Extensions.Configuration.Protected
             {
                 var fileContent = File.ReadAllText(f);
 
+                var extension = Path.GetExtension(f);
+
                 var replacedContent = protectRegex.Replace(fileContent, (me) =>
-                        protectedReplaceString.Replace("${protectedData}", dataProtector.Protect(me.Groups["protectData"].Value)));
+                {
+                    var value = me.Groups["protectData"].Value;
+
+                    if (extension == ".json")
+                    {
+                        var jsonReader = new Utf8JsonReader(Encoding.UTF8.GetBytes($"\"{value}\""), new JsonReaderOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+                        if (jsonReader.Read())
+                            value = jsonReader.GetString();
+                    }
+                    else if (extension == ".xml")
+                    {
+                        var xmlReader = XmlReader.Create(new StringReader($"<?xml version=\"1.0\"?><a>{value}</a>"));
+                        if (xmlReader.Read())
+                        {
+                            xmlReader.MoveToContent();
+                            value = xmlReader.ReadElementContentAsString();
+                        }
+                    }
+
+                    return protectedReplaceString.Replace("${protectedData}", dataProtector.Protect(value));
+                });
 
                 if (replacedContent != fileContent)
                 {
