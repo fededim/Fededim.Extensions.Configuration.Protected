@@ -70,6 +70,7 @@ namespace Fededim.Extensions.Configuration.Protected
                 {
                     var value = me.Groups["protectData"].Value;
 
+                    // when encrypting files we need to decode the actual string according to the input file format (e.g. either JSON or XML or leave it untouched for other files)
                     if (extension == ".json")
                     {
                         var jsonReader = new Utf8JsonReader(Encoding.UTF8.GetBytes($"\"{value}\""), new JsonReaderOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
