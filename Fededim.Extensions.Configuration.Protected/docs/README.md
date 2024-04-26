@@ -167,6 +167,9 @@ v1.0.4
 v1.0.5
 - Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
 
+v1.0.6
+- Bugfix: the ProtectFiles method simply read the raw files which need to be encrypted using File.ReadAllText, whereas it should also decode the file according to its format. By default two decoders are provided for both JSON and XML files and an extension point (FilesDecoding public property) if additional formats must be supported.
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.

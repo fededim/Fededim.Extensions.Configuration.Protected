@@ -18,6 +18,21 @@ namespace Fededim.Extensions.Configuration.Protected
     public static class ConfigurationBuilderExtensions
     {
         /// <summary>
+        /// it is a configuration list for interpreting and decoding raw input data which must be encrypted with the <see cref="ProtectFiles"/> method. It is a list of couples made up of:
+        /// - a regex on the filename which if matched applies the associated dataToEncryptDecodingFunction
+        /// - a dataToEncryptDecodingFunction which basically interprets the raw string data and decodes it returning a new string
+        /// By default we support two types of decoding one for json files (public JsonDecode method) and one for xml files (public XmlDecode method)
+        /// this list has a public getter so you can add any additional decoding function you want or replace an existing one for your needs
+        /// </summary>
+        public static List<(Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction)> FilesDecoding { get; private set; } = new List<(Regex filenameRegex, Func<string, string> dataToEncryptDecodingFunction)>()
+        {
+            (new Regex("(.*)\\.json"), JsonDecode),
+            (new Regex("(.*)\\.xml"), XmlDecode)
+        };
+
+
+
+        /// <summary>
         /// WithProtectedConfigurationOptions is a helper method which allows to override the global protected configuration data specified in the ProtectedConfigurationBuilder for a particular ConfigurationProvider (the last one added)
         /// </summary>
         /// <param name="configurationBuilder">the IConfigurationBuilder instance</param>
@@ -70,22 +85,14 @@ namespace Fededim.Extensions.Configuration.Protected
                 {
                     var value = me.Groups["protectData"].Value;
 
-                    // when encrypting files we need to decode the actual string according to the input file format (e.g. either JSON or XML or leave it untouched for other files)
-                    if (extension == ".json")
-                    {
-                        var jsonReader = new Utf8JsonReader(Encoding.UTF8.GetBytes($"\"{value}\""), new JsonReaderOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
-                        if (jsonReader.Read())
-                            value = jsonReader.GetString();
-                    }
-                    else if (extension == ".xml")
-                    {
-                        var xmlReader = XmlReader.Create(new StringReader($"<?xml version=\"1.0\"?><a>{value}</a>"));
-                        if (xmlReader.Read())
+                    /// when encrypting files we need to decode the actual string which must be encrypted according to the input file format (e.g. either JSON or XML or whatever file format it is)
+                    /// this method provides an extension point using the public static property <see cref="FilesDecoding"/>
+                    foreach (var protectFileDecode in FilesDecoding)
+                        if (protectFileDecode.filenameRegex.Match(f).Success)
                         {
-                            xmlReader.MoveToContent();
-                            value = xmlReader.ReadElementContentAsString();
+                            value = protectFileDecode.dataToEncryptDecodingFunction(value);
+                            break;
                         }
-                    }
 
                     return protectedReplaceString.Replace("${protectedData}", dataProtector.Protect(value));
                 });
@@ -102,6 +109,40 @@ namespace Fededim.Extensions.Configuration.Protected
             }
 
             return result;
+        }
+
+
+
+        /// <summary>
+        /// decodes a xml string, e.g. converts &amp; into &, &gt; into >, etc.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string XmlDecode(string value)
+        {
+            var xmlReader = XmlReader.Create(new StringReader($"<?xml version=\"1.0\"?><root>{value}</root>"));
+            if (xmlReader.Read())
+            {
+                xmlReader.MoveToContent();
+                value = xmlReader.ReadElementContentAsString();
+            }
+
+            return value;
+        }
+
+
+
+        /// <summary>
+        /// decodes a json string, e.g. converts \\ into \, \u0022 into ", etc.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string JsonDecode(string value)
+        {
+            var jsonReader = new Utf8JsonReader(Encoding.UTF8.GetBytes($"\"{value}\""), new JsonReaderOptions { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip });
+            if (jsonReader.Read())
+                value = jsonReader.GetString();
+            return value;
         }
 
 

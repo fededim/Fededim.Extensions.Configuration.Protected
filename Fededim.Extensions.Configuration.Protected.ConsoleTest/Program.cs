@@ -104,7 +104,7 @@ public class Program
         // please check that all values inside appSettings class are actually decrypted with the right value, make a note of the value of "Int" property it will change on the next second breakpoint
         Debugger.Break();
 
-        // added 4 simple assertions to test that decrypted value is the same as original plaintext one
+        // added some simple assertions to test that decrypted value is the same as original plaintext one
         Debug.Assert(appSettings.EncryptedCommandLinePassword==appSettings.PlainTextCommandLinePassword);
         Debug.Assert(appSettings.EncryptedEnvironmentPassword == appSettings.PlainTextEnvironmentPassword);
         Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
