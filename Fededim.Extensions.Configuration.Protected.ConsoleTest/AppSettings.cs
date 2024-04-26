@@ -40,6 +40,10 @@ namespace Fededim.Extensions.Configuration.Protected.ConsoleTest
 
         public Dictionary<String, String> ConnectionStrings { get; set; }
 
+        public String PlainTextJsonSpecialCharacters { get; set; }
+        public String EncryptedJsonSpecialCharacters { get; set; }
+
+
         public AppSettings()
         {
             IntArray = new Int32[0];
@@ -48,18 +52,27 @@ namespace Fededim.Extensions.Configuration.Protected.ConsoleTest
         }
 
         // settings defined inside XML file
-        public String SecretXmlKey {  get; set; }
+        public String EncryptedXmlSecretKey {  get; set; }
+        public String PlainTextXmlSecretKey {  get; set; }
         public Dictionary<String, String> TransientFaultHandlingOptions { get; set; }
         public Logging Logging { get; set; }
 
 
         // settings defined in InMemoryCollection
-        public String SecretKey { get; set; }
+        public String EncryptedInMemorySecretKey { get; set; }
+        public String PlainTextInMemorySecretKey { get; set; }
+        public String EncryptedInMemorySpecialCharacters { get; set; }
+        public String PlainTextInMemorySpecialCharacters { get; set; }
 
 
         // settings defined in EnvironmentVariables
-        public String SecretEnvironmentPassword { get; set; }
+        public String EncryptedEnvironmentPassword { get; set; }
+        public String PlainTextEnvironmentPassword { get; set; }
 
+
+        // settings defined in Command Line Arguments
+        public String EncryptedCommandLinePassword { get; set; }
+        public String PlainTextCommandLinePassword { get; set; }
 
     }
 }

@@ -52,7 +52,7 @@ public class Program
 
     public static void Main(String[] args)
     {
-        args = new String[] { "--password Protect:{secretArgPassword!}" };
+        args = new String[] { "--EncryptedCommandLinePassword","Protect:{secretArgPassword!\\*+?|{[()^$.#}", "--PlainTextCommandLinePassword","secretArgPassword!\\*+?|{[()^$.#" };
 
         // define the DI services: setup Data Protection API
         var servicesDataProtection = new ServiceCollection();
@@ -69,15 +69,18 @@ public class Program
         // define in-memory configuration key-value pairs to be encrypted
         var memoryConfiguration = new Dictionary<String, String>
         {
-            ["SecretKey"] = "Protect:{InMemory MyKey Value}",
+            ["EncryptedInMemorySecretKey"] = "Protect:{InMemory MyKey Value}",
+            ["PlainTextInMemorySecretKey"] = "InMemory MyKey Value",
             ["TransientFaultHandlingOptions:Enabled"] = bool.FalseString,
-            ["Logging:LogLevel:Default"] = "Protect:{Warning}"
+            ["Logging:LogLevel:Default"] = "Protect:{Warning}",
+            ["UserDomain"] = "Protect:{DOMAIN\\USER}",
+            ["EncryptedInMemorySpecialCharacters"] = "Protect:{\\!*+?|{[()^$.#}",
+            ["PlainTextInMemorySpecialCharacters"] = "\\!*+?|{[()^$.#"
         };
 
         // define an environment variable to be encrypted
-        Environment.SetEnvironmentVariable("SecretEnvironmentPassword", "Protect:{SecretEnvPassword!}");
-
-
+        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}");
+        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#");
 
         // encrypts all configuration sources (must be done before reading the configuration)
 
@@ -124,18 +127,23 @@ public class Program
         // please check that all values inside appSettings class are actually decrypted with the right value, make a note of the value of "Int" property it will change on the next second breakpoint
         Debugger.Break();
 
+        // added some simple assertions to test that decrypted value is the same as original plaintext one
+        Debug.Assert(appSettings.EncryptedCommandLinePassword==appSettings.PlainTextCommandLinePassword);
+        Debug.Assert(appSettings.EncryptedEnvironmentPassword == appSettings.PlainTextEnvironmentPassword);
+        Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
+        Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
+        Debug.Assert(appSettings.EncryptedInMemorySecretKey == appSettings.PlainTextInMemorySecretKey);
+
         // configuration reload example, updates inside appsettings.<environment>.json the property "Int": <whatever>, --> "Int": "Protected:{<random number>},"
         var environmentAppSettings = File.ReadAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json");
         environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{dataProtector.ProtectConfigurationValue($"Protect:{{{new Random().Next(0, 100000)}}}")}\",");
         File.WriteAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", environmentAppSettings);
 
-        // wait 3 seconds for the reload to take place, please check on this breakpoint that the value of "Int" property has changed in appSettings class and it is the same of appSettingsReloaded
+        // wait 5 seconds for the reload to take place, please check on this breakpoint that the value of "Int" property has changed in appSettings class and it is the same of appSettingsReloaded
         Thread.Sleep(5000);
         appSettings = optionsMonitor.CurrentValue;
         Debugger.Break();
     }
-}
-
 ```
 
 The main types provided by this library are:
@@ -166,6 +174,9 @@ v1.0.4
 
 v1.0.5
 - Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
+
+v1.0.6
+- Bugfix: the ProtectFiles method simply read the raw files which need to be encrypted using File.ReadAllText, whereas it should also decode the file according to its format. By default two decoders are now provided for both JSON and XML files and an extension point (FilesDecoding public property) if additional formats must be supported.
 
 # Detailed guide
 
