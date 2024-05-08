@@ -113,8 +113,8 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             Provider.Load();
 
-            // call DecryptChildKeys if the underlying provider does not support configuration reload or it hasn't already been called
-                DecryptChildKeys();
+            // call DecryptChildKeys after Load
+            DecryptChildKeys();
         }
 
 
