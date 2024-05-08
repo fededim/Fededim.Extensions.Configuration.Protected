@@ -20,7 +20,6 @@ namespace Fededim.Extensions.Configuration.Protected
 
         protected ConfigurationReloadToken ReloadToken;
 
-        protected IChangeToken ProviderReloadToken { get; set; }
         protected IDisposable ProviderReloadTokenRegistration { get; set; }
 
 
@@ -28,8 +27,6 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             Provider = provider;
             ProtectedConfigurationData = protectedConfigurationData;
-
-            ReloadToken = new ConfigurationReloadToken();
 
             RegisterReloadCallback();
         }
@@ -41,18 +38,24 @@ namespace Fededim.Extensions.Configuration.Protected
         /// </summary>
         protected void RegisterReloadCallback()
         {
-            ProviderReloadToken = Provider.GetReloadToken();
-            ProviderReloadTokenRegistration = ProviderReloadToken?.RegisterChangeCallback((configurationProvider) =>
+            // check if underlying provider supports reloading
+            if (Provider.GetReloadToken() != null)
             {
-                var protectedConfigurationProvider = configurationProvider as ProtectedConfigurationProvider;
+                // Create our reload token
+                ReloadToken = new ConfigurationReloadToken();
 
-                protectedConfigurationProvider.DecryptChildKeys();
+                // registers Provider on Change event using framework static utility method ChangeToken.OnChange in order to be notified of configuration reload and redecrypts subsequently the needed keys
+                ProviderReloadTokenRegistration = ChangeToken.OnChange(() => Provider.GetReloadToken(), (configurationProvider) =>
+                {
+                    var protectedConfigurationProvider = configurationProvider as ProtectedConfigurationProvider;
 
-                RegisterReloadCallback();
+                    // redecrypts all needed keys
+                    protectedConfigurationProvider.DecryptChildKeys();
 
-                OnReload();
-
-            }, this);
+                    // notifies all subscribes
+                    OnReload();
+                }, this);
+            }
         }
 
 
@@ -111,7 +114,6 @@ namespace Fededim.Extensions.Configuration.Protected
             Provider.Load();
 
             // call DecryptChildKeys if the underlying provider does not support configuration reload or it hasn't already been called
-            if (ProviderReloadToken == null || !ProviderReloadToken.HasChanged)
                 DecryptChildKeys();
         }
 

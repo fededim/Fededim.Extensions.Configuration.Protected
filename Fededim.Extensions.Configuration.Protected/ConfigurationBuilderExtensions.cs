@@ -18,6 +18,16 @@ namespace Fededim.Extensions.Configuration.Protected
     public static class ConfigurationBuilderExtensions
     {
         /// <summary>
+        /// the <see cref="FilesDecoding"/> entry for JsonDecodingFunction
+        /// </summary>
+        public static (Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction) JsonDecodingFunction = (new Regex("(.*)\\.json"), JsonDecode);
+
+        /// <summary>
+        /// the <see cref="FilesDecoding"/> entry for XmlDecodingFunction
+        /// </summary>
+        public static (Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction) XmlDecodingFunction = (new Regex("(.*)\\.xml"), XmlDecode);
+
+        /// <summary>
         /// it is a configuration list for interpreting and decoding raw input data which must be encrypted with the <see cref="ProtectFiles"/> method. It is a list of couples made up of:
         /// - a regex on the filename which if matched applies the associated dataToEncryptDecodingFunction
         /// - a dataToEncryptDecodingFunction which basically interprets the raw string data and decodes it returning a new string
@@ -26,10 +36,9 @@ namespace Fededim.Extensions.Configuration.Protected
         /// </summary>
         public static List<(Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction)> FilesDecoding { get; private set; } = new List<(Regex filenameRegex, Func<string, string> dataToEncryptDecodingFunction)>()
         {
-            (new Regex("(.*)\\.json"), JsonDecode),
-            (new Regex("(.*)\\.xml"), XmlDecode)
+         JsonDecodingFunction,
+         XmlDecodingFunction
         };
-
 
 
         /// <summary>
