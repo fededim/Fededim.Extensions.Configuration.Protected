@@ -11,6 +11,32 @@ using System.Xml;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
+    /// <summary>
+    /// FileDecodingOptions is a class used to specify the decoding option used by <see cref="ConfigurationBuilderExtensions.ProtectFiles"/> method. Essentially it is a decoding function (<see cref="DataToEncryptDecodingFunction"/>) which translates raw string data of an input file 
+    /// according to its encoding conventions (<see cref="ConfigurationBuilderExtensions.JsonDecode"/> and <see cref="ConfigurationBuilderExtensions.XmlDecode"/>) when the filename matches the provided regular expression (<see cref="FilenameRegex"/>)
+    /// </summary>
+    public class FileDecodingOptions
+    {
+        /// <summary>
+        /// Specifies the regex on the filename which if matched applies the associated DataToEncryptDecodingFunction
+        /// </summary>
+        public Regex FilenameRegex { get; private set; }
+
+        /// <summary>
+        /// Specifies the DataToEncryptDecodingFunction which basically interprets the raw string data and decodes it returning a new string
+        /// </summary>
+        public Func<String, String> DataToEncryptDecodingFunction { get; private set; }
+
+
+        public FileDecodingOptions(Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction)
+        {
+            FilenameRegex = filenameRegex;
+            DataToEncryptDecodingFunction = dataToEncryptDecodingFunction;
+        }
+    }
+
+
+
 
     /// <summary>
     /// ConfigurationBuilderExtensions is a static class providing different extensions methods to IConfigurationBuilder and IDataProtect interfaces
@@ -18,23 +44,21 @@ namespace Fededim.Extensions.Configuration.Protected
     public static class ConfigurationBuilderExtensions
     {
         /// <summary>
-        /// the <see cref="FilesDecoding"/> entry for JsonDecodingFunction
+        /// the <see cref="FilesDecodingOptions"/> entry for JsonDecodingFunction
         /// </summary>
-        public static (Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction) JsonDecodingFunction = (new Regex("(.*)\\.json"), JsonDecode);
+        public static FileDecodingOptions JsonDecodingFunction = new FileDecodingOptions(new Regex("(.*)\\.json"), JsonDecode);
 
         /// <summary>
-        /// the <see cref="FilesDecoding"/> entry for XmlDecodingFunction
+        /// the <see cref="FilesDecodingOptions"/> entry for XmlDecodingFunction
         /// </summary>
-        public static (Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction) XmlDecodingFunction = (new Regex("(.*)\\.xml"), XmlDecode);
+        public static FileDecodingOptions XmlDecodingFunction = new FileDecodingOptions(new Regex("(.*)\\.xml"), XmlDecode);
 
         /// <summary>
-        /// it is a configuration list for interpreting and decoding raw input data which must be encrypted with the <see cref="ProtectFiles"/> method. It is a list of couples made up of:
-        /// - a regex on the filename which if matched applies the associated dataToEncryptDecodingFunction
-        /// - a dataToEncryptDecodingFunction which basically interprets the raw string data and decodes it returning a new string
-        /// By default we support two types of decoding one for json files (public JsonDecode method) and one for xml files (public XmlDecode method)
-        /// this list has a public getter so you can add any additional decoding function you want or replace an existing one for your needs
+        /// it is a configuration list for interpreting and decoding raw input data which must be encrypted with the <see cref="ProtectFiles"/> method. It is a list of <see cref="FileDecodingOptions"/> classes.
+        /// By default we support two types of decoding options, one for json files (<see cref="JsonDecode"/>) and one for xml files (<see cref="XmlDecode"/>)
+        /// This list has a public getter so you can add any additional decoding function you want or replace an existing one for your needs
         /// </summary>
-        public static List<(Regex filenameRegex, Func<String, String> dataToEncryptDecodingFunction)> FilesDecoding { get; private set; } = new List<(Regex filenameRegex, Func<string, string> dataToEncryptDecodingFunction)>()
+        public static List<FileDecodingOptions> FilesDecodingOptions { get; private set; } = new List<FileDecodingOptions>()
         {
          JsonDecodingFunction,
          XmlDecodingFunction
@@ -95,11 +119,11 @@ namespace Fededim.Extensions.Configuration.Protected
                     var value = me.Groups["protectData"].Value;
 
                     /// when encrypting files we need to decode the actual string which must be encrypted according to the input file format (e.g. either JSON or XML or whatever file format it is)
-                    /// this method provides an extension point using the public static property <see cref="FilesDecoding"/>
-                    foreach (var protectFileDecode in FilesDecoding)
-                        if (protectFileDecode.filenameRegex.Match(f).Success)
+                    /// this method provides an extension point using the public static property <see cref="FilesDecodingOptions"/>
+                    foreach (var protectFileDecode in FilesDecodingOptions)
+                        if (protectFileDecode.FilenameRegex.Match(f).Success)
                         {
-                            value = protectFileDecode.dataToEncryptDecodingFunction(value);
+                            value = protectFileDecode.DataToEncryptDecodingFunction(value);
                             break;
                         }
 
@@ -123,7 +147,7 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// decodes a xml string, e.g. converts &amp; into &, &gt; into >, etc.
+        /// Decodes a xml string, e.g. converts <![CDATA[&amp; into &, &gt; into >]]>, etc.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -142,7 +166,7 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// decodes a json string, e.g. converts \\ into \, \u0022 into ", etc.
+        /// Decodes a json string, e.g. converts \\ into \, \u0022 into ", etc.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
