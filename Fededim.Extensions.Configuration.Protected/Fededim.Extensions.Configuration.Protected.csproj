@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -47,13 +47,19 @@
       v1.0.7
       - Improvement: the ProtectedConfigurationProvider.RegisterReloadCallback now uses the framework standard static utility class ChangeToken.OnChange to register the underlying provider configuration changes
       - Improvement: added two additional public static properties inside ConfigurationBuilderExtensions in order to allow them to be referenced if needed: JsonDecodingFunction and XmlDecodingFunction
+
+      v1.0.8
+      - Improvement: introduced FileProtectProcessor and IFileProtectProcessor interface for implementing a custom file protect processor used to read, encrypt and return the encrypted file as string. Json, Xml and Raw processors are provided by default.
+      - Improvement: added custom string parameter purposeString in ProtectedConfigurationBuilder constructor in order to specify a custom purpose string for encryption/decryption, besides the integer keyNumber parameter.
+      - Improvement: added subPurpose optional part in DefaultProtectRegexString, DefaultProtectedRegexString and DefaultProtectedReplaceString in order to allow an optional per key purpose string override.
+      - Improvement: added some data to json (one element in Nullable:DoubleArray of appsettings.development.json) and xml file (AutoRetryDelaySubPurpose under TransientFaultHandlingOptions) of Fededim.Extensions.Configuration.Protected.ConsoleTest in order to exemplify the per key purpose string override.
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
 
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.3" />

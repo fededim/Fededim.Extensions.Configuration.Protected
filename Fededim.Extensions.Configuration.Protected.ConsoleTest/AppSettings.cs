@@ -56,6 +56,7 @@ namespace Fededim.Extensions.Configuration.Protected.ConsoleTest
         public String PlainTextXmlSecretKey {  get; set; }
         public Dictionary<String, String> TransientFaultHandlingOptions { get; set; }
         public Logging Logging { get; set; }
+        public String EmptyElement { get; set; }
 
 
         // settings defined in InMemoryCollection

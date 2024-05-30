@@ -29,7 +29,7 @@ public class Program
 
     public static void Main(String[] args)
     {
-        args = new String[] { "--EncryptedCommandLinePassword","Protect:{secretArgPassword!\\*+?|{[()^$.#}", "--PlainTextCommandLinePassword","secretArgPassword!\\*+?|{[()^$.#" };
+        args = new String[] { "--EncryptedCommandLinePassword", "Protect:{secretArgPassword!\\*+?|{[()^$.#}", "--PlainTextCommandLinePassword", "secretArgPassword!\\*+?|{[()^$.#" };
 
         // define the DI services: setup Data Protection API
         var servicesDataProtection = new ServiceCollection();
@@ -39,8 +39,8 @@ public class Program
         // define the DI services: setup a Data Protection API custom tailored for a particular providers (InMemory and Environment Variables)
 
         // retrieve IDataProtector interfaces for encrypting data
-        var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose());
-        var dataProtectorAdditional = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose(2));
+        var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderKeyNumberPurpose(1));
+        var dataProtectorAdditional = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderStringPurpose("MagicPurpose"));
 
 
         // define in-memory configuration key-value pairs to be encrypted
@@ -69,12 +69,14 @@ public class Program
 
         // encrypts all Protect:{<data>} token tags inside .json files and all OtherProtect:{<data>} inside .xml files 
         var encryptedJsonFiles = dataProtector.ProtectFiles(".");
-        var encryptedXmlFiles = dataProtector.ProtectFiles(".", searchPattern: "*.xml", protectRegexString: "OtherProtect:{(?<protectData>.+?)}", protectedReplaceString: "OtherProtected:{${protectedData}}");
+        var encryptedXmlFiles = dataProtector.ProtectFiles(".", searchPattern: "*.xml", protectRegexString: "OtherProtect(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectData>.+?)}", protectedReplaceString: "OtherProtected${subPurposePattern}:{${protectedData}}");
 
         // encrypts all Protect:{<data>} token tags inside environment variables
         dataProtectorAdditional.ProtectEnvironmentVariables();
 
         // please check that all configuration source defined above are encrypted (check also Environment.GetEnvironmentVariable("SecretEnvironmentPassword") in Watch window)
+        // note the per key purpose string override in file appsettings.development.json inside Nullable:DoubleArray contains two elements one with "Protect:{3.14}" and one with "Protect:{%customSubPurpose%}:{3.14}", even though the value is the same (3.14) they are encrypted differently due to the custom key purpose string
+        // note the per key purpose string override in file appsettings.xml inside TransientFaultHandlingOptions contains two elements AutoRetryDelay with "OtherProtect:{00:00:07}" and AutoRetryDelaySubPurpose with "OtherProtect:{sUbPuRpOsE}:{00:00:07}", even though the value is the same (00:00:07) they are encrypted differently due to the custom key purpose string
         Debugger.Break();
 
         // define the application configuration using almost all possible known ConfigurationSources
@@ -82,9 +84,9 @@ public class Program
                 .AddCommandLine(encryptedArgs)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", false, true)
-                .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected:{(?<protectedData>.+?)}")
-                .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
-                .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 2)
+                .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectedData>.+?)}", keyNumber: 1)
+                .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, purposeString: "MagicPurpose")
+                .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, purposeString: "MagicPurpose")
                 .Build();
 
         // define other DI services: configure strongly typed AppSettings configuration class (must be done after having read the configuration)
@@ -95,7 +97,8 @@ public class Program
         // retrieve the strongly typed AppSettings configuration class, we use IOptionsMonitor in order to be notified on any reloads of appSettings
         var optionsMonitor = serviceProvider.GetRequiredService<IOptionsMonitor<AppSettings>>();
         var appSettings = optionsMonitor.CurrentValue;
-        optionsMonitor.OnChange(appSettingsReloaded => {
+        optionsMonitor.OnChange(appSettingsReloaded =>
+        {
             // this breakpoint gets hit when the appsettings have changed due to a configuration reload, please check that the value of "Int" property inside appSettingsReloaded class is different from the one inside appSettings class
             // note that also there is an unavoidable framework bug on ChangeToken.OnChange which could get called multiple times when using FileSystemWatchers see https://github.com/dotnet/aspnetcore/issues/2542
             // see also the remarks section of FileSystemWatcher https://learn.microsoft.com/en-us/dotnet/api/system.io.filesystemwatcher.created?view=net-8.0#remarks
@@ -107,7 +110,7 @@ public class Program
         Debugger.Break();
 
         // added some simple assertions to test that decrypted value is the same as original plaintext one
-        Debug.Assert(appSettings.EncryptedCommandLinePassword==appSettings.PlainTextCommandLinePassword);
+        Debug.Assert(appSettings.EncryptedCommandLinePassword == appSettings.PlainTextCommandLinePassword);
         Debug.Assert(appSettings.EncryptedEnvironmentPassword == appSettings.PlainTextEnvironmentPassword);
         Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
         Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
@@ -115,7 +118,7 @@ public class Program
 
         // multiple configuration reload example
         int i = 0;
-        while (i++<5)
+        while (i++ < 5)
         {
             // updates inside appsettings.<environment>.json the property "Int": <whatever>, --> "Int": "Protected:{<random number>},"
             var environmentAppSettings = File.ReadAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json");
