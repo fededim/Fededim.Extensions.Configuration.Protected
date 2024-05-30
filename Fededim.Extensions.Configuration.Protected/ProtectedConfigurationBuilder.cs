@@ -19,6 +19,16 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="keyNumber">a number specifying the index of the key to use</param>
         /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
         IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1);
+
+        /// <summary>
+        /// WithProtectedConfigurationOptions is used to override the ProtectedConfigurationOptions for a particular provider (e.g. the last one added)
+        /// </summary>
+        /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
+        /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
+        /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
+        /// <param name="purposeString">a purpose used to create the IDataProtector interface according to Microsoft Data Protection api</param>
+        /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
+        IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose);
     }
 
 
@@ -27,11 +37,19 @@ namespace Fededim.Extensions.Configuration.Protected
     /// </summary>
     public class ProtectedConfigurationBuilder : IProtectedConfigurationBuilder
     {
-        public static String DataProtectionPurpose(int keyNumber = 1) => $"ProtectedConfigurationBuilder.key{keyNumber}";
+        public const String ProtectedConfigurationBuilderPurpose = "ProtectedConfigurationBuilder";
+        public static String ProtectedConfigurationBuilderKeyNumberPurpose(int keyNumber) => ProtectedConfigurationBuilderStringPurpose($"Key{keyNumber}");
+        public static String ProtectedConfigurationBuilderStringPurpose(string purpose)
+        {
+            if (String.IsNullOrEmpty(purpose))
+                throw new ArgumentNullException(purpose);
 
-        public const String DefaultProtectRegexString = "Protect:{(?<protectData>.+?)}";
-        public const String DefaultProtectedRegexString = "Protected:{(?<protectedData>.+?)}";
-        public const String DefaultProtectedReplaceString = "Protected:{${protectedData}}";
+            return $"{ProtectedConfigurationBuilderPurpose}.{purpose}";
+        }
+
+        public const String DefaultProtectRegexString = "Protect(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectData>.+?)}";
+        public const String DefaultProtectedRegexString = "Protected(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectedData>.+?)}";
+        public const String DefaultProtectedReplaceString = "Protected${subPurposePattern}:{${protectedData}}";
 
         protected ProtectedConfigurationData ProtectedGlobalConfigurationData { get; }
 
@@ -41,18 +59,55 @@ namespace Fededim.Extensions.Configuration.Protected
         protected readonly List<IConfigurationSource> _sources = new List<IConfigurationSource>();
 
 
+        // dataProtectionServiceProvider overloads
+        public ProtectedConfigurationBuilder(IServiceProvider dataProtectionServiceProvider)
+            : this(null, dataProtectionServiceProvider, null, 1)
+        {
+        }
 
-        public ProtectedConfigurationBuilder()
+
+        public ProtectedConfigurationBuilder(IServiceProvider dataProtectionServiceProvider, int keyNumber = 1, String protectedRegexString = null)
+            : this(protectedRegexString, dataProtectionServiceProvider, null, keyNumber)
+        {
+        }
+
+        public ProtectedConfigurationBuilder(IServiceProvider dataProtectionServiceProvider, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose, String protectedRegexString = null)
+            : this(protectedRegexString, dataProtectionServiceProvider, null, purposeString)
         {
         }
 
 
 
-        public ProtectedConfigurationBuilder(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1)
+        // dataProtectionConfigureAction overloads
+        public ProtectedConfigurationBuilder(Action<IDataProtectionBuilder> dataProtectionConfigureAction)
+            : this(null, null, dataProtectionConfigureAction, 1)
+        {
+        }
+
+        public ProtectedConfigurationBuilder(Action<IDataProtectionBuilder> dataProtectionConfigureAction, int keyNumber = 1, String protectedRegexString = null)
+            : this(protectedRegexString, null, dataProtectionConfigureAction, keyNumber)
+        {
+        }
+
+
+        public ProtectedConfigurationBuilder(Action<IDataProtectionBuilder> dataProtectionConfigureAction, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose, String protectedRegexString = null)
+            : this(protectedRegexString, null, dataProtectionConfigureAction, purposeString)
+        {
+        }
+
+
+        // internal general versions
+
+        protected ProtectedConfigurationBuilder(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1)
         {
             ProtectedGlobalConfigurationData = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, keyNumber);
         }
 
+
+        protected ProtectedConfigurationBuilder(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose)
+        {
+            ProtectedGlobalConfigurationData = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, purposeString);
+        }
 
 
         /// <summary>
@@ -127,6 +182,22 @@ namespace Fededim.Extensions.Configuration.Protected
             return this;
         }
 
+
+
+        /// <summary>
+        /// It's a helper method used to override the ProtectedGlobalConfigurationData for a particular provider (e.g. the last one added)
+        /// </summary>
+        /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
+        /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
+        /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
+        /// <param name="purposeString">a purpose used to create the IDataProtector interface according to Microsoft Data Protection api</param>
+        /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
+        public IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose)
+        {
+            ProtectedProviderConfigurationData[Sources[Sources.Count - 1].GetHashCode()] = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, purposeString);
+
+            return this;
+        }
 
 
         /// <summary>

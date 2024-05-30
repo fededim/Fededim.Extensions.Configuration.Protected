@@ -87,7 +87,18 @@ namespace Fededim.Extensions.Configuration.Protected
                 if (Provider.TryGet(fullKey, out var value))
                 {
                     if (!String.IsNullOrEmpty(value))
-                        Provider.Set(fullKey, ProtectedConfigurationData.ProtectedRegex.Replace(value, me => ProtectedConfigurationData.DataProtector.Unprotect(me.Groups["protectedData"].Value)));
+                        Provider.Set(fullKey, ProtectedConfigurationData.ProtectedRegex.Replace(value, me =>
+                        {
+
+                            var subPurposePresent = !String.IsNullOrEmpty(me.Groups["subPurpose"]?.Value);
+
+                            var dataProtector = ProtectedConfigurationData.DataProtector;
+
+                            if (subPurposePresent)
+                                dataProtector = dataProtector.CreateProtector(me.Groups["subPurpose"].Value);
+
+                            return dataProtector.Unprotect(me.Groups["protectedData"].Value);
+                        }));
                 }
                 else DecryptChildKeys(fullKey);
             }

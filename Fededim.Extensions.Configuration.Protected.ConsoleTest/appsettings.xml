@@ -5,6 +5,7 @@
   <TransientFaultHandlingOptions>
     <Enabled>true</Enabled>
     <AutoRetryDelay>OtherProtect:{00:00:07}</AutoRetryDelay>
+    <AutoRetryDelaySubPurpose>OtherProtect:{sUbPuRpOsE}:{00:00:07}</AutoRetryDelaySubPurpose>
   </TransientFaultHandlingOptions>
   <Logging>
     <LogLevel>
@@ -12,4 +13,5 @@
       <Microsoft>OtherProtect:{Warning}</Microsoft>
     </LogLevel>
   </Logging>
+  <EmptyElement></EmptyElement>  
 </configuration>

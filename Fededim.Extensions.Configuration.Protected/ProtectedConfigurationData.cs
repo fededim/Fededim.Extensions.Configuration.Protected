@@ -23,7 +23,13 @@ namespace Fededim.Extensions.Configuration.Protected
         }
 
 
-        public ProtectedConfigurationData(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber=1)
+        public ProtectedConfigurationData(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1) 
+            : this(protectedRegexString,dataProtectionServiceProvider,dataProtectionConfigureAction, ProtectedConfigurationBuilder.ProtectedConfigurationBuilderKeyNumberPurpose(keyNumber)) {
+
+        }
+
+
+        public ProtectedConfigurationData(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose)
         {
             // check that at least one parameter is not null
             if (String.IsNullOrEmpty(protectedRegexString) && dataProtectionServiceProvider == null && dataProtectionConfigureAction == null)
@@ -39,12 +45,12 @@ namespace Fededim.Extensions.Configuration.Protected
 
             // if dataProtectionServiceProvider is not null check that it resolves the IDataProtector
             if ((dataProtectionServiceProvider != null) &&
-                ((DataProtector = dataProtectionServiceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.DataProtectionPurpose(keyNumber))) == null))
+                ((DataProtector = dataProtectionServiceProvider.GetRequiredService<IDataProtectionProvider>().CreateProtector(purposeString)) == null))
                 throw new ArgumentException("Either dataProtectionServiceProvider or dataProtectionConfigureAction must configure the DataProtection services!", dataProtectionServiceProvider == null ? nameof(dataProtectionServiceProvider) : nameof(dataProtectionConfigureAction));
 
 
             // check that Regex contains a group named protectedData
-            ProtectedRegex = new Regex(protectedRegexString ?? ProtectedConfigurationBuilder.DefaultProtectedRegexString);
+            ProtectedRegex = new Regex(!String.IsNullOrEmpty(protectedRegexString) ? protectedRegexString : ProtectedConfigurationBuilder.DefaultProtectedRegexString);
             if (!ProtectedRegex.GetGroupNames().Contains("protectedData"))
                 throw new ArgumentException("Regex must contain a group named protectedData!", nameof(protectedRegexString));
         }
