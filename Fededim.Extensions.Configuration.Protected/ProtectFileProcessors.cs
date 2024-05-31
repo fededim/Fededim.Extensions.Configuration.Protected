@@ -11,17 +11,17 @@ using System.Collections.Generic;
 namespace Fededim.Extensions.Configuration.Protected
 {
     /// <summary>
-    /// This is the interface which must be implemented by a custom FileProtectProcessor. It contains a single method <see cref="ProtectFile"/> used to read, encrypt and return the encrypted file as string.
+    /// This is the interface which must be implemented by a custom FileProtectProcessor. It contains a single method <see cref="ProtectFile"/> used to decode, encrypt and re-encode the input file and return it as string.
     /// </summary>
     public interface IFileProtectProcessor
     {
         /// <summary>
-        /// This method actually implements a custom FileProtectProcessor which must read, encrypt and return the encrypted file as string.
+        /// This method actually implements a custom FileProtectProcessor which must decode, encrypt and re-encode the input file and return it as string.
         /// </summary>
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction);
     }
 
@@ -40,7 +40,7 @@ namespace Fededim.Extensions.Configuration.Protected
         public Regex FilenameRegex { get; private set; }
 
         /// <summary>
-        /// Specifies the FileProtectProcessor class implementing the <see cref="IFileProtectProcessor"/> interface used to read, encrypt and return the encrypted file as string.
+        /// Specifies the FileProtectProcessor class implementing the <see cref="IFileProtectProcessor"/> interface used to decode, encrypt and re-encode the input file and return it as string.
         /// </summary>
         public IFileProtectProcessor FileProtectProcessor { get; private set; }
 
@@ -65,7 +65,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> ProtectFunction)
         {
             if (protectRegex.IsMatch(rawFileText))
@@ -88,7 +88,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the JSON file
@@ -171,7 +171,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the XML File

@@ -9,6 +9,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Supports almost any NET framework (net6.0, netstandard2.0 and net462)
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
+- Supports per configuration value derived encryption subkey (called "subpurposes" in Data Protection API)
 
 # How to Use
 
