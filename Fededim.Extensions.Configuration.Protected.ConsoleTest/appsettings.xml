@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
-  <EncryptedXmlSecretKey>OtherProtect:{Xml Secret Key_\&gt;!*+?|{[()^$.#}</EncryptedXmlSecretKey>
+  <EncryptedXmlSecretKey>OtherProtect:{Xml Secret Key_\&gt;!*+?|{[()^$.#}</EncryptedXmlSecretKey>  <!--Protecting encoded characters-->
   <PlainTextXmlSecretKey>Xml Secret Key_\&gt;!*+?|{[()^$.#</PlainTextXmlSecretKey>
   <TransientFaultHandlingOptions>
     <Enabled>true</Enabled>
     <AutoRetryDelay>OtherProtect:{00:00:07}</AutoRetryDelay>
-    <AutoRetryDelaySubPurpose>OtherProtect:{sUbPuRpOsE}:{00:00:07}</AutoRetryDelaySubPurpose>
+    <AutoRetryDelaySubPurpose>OtherProtect:{sUbPuRpOsE}:{00:00:07}</AutoRetryDelaySubPurpose>  <!-- example of per configuration key subpurpose -->
   </TransientFaultHandlingOptions>
   <Logging>
     <LogLevel>
       <Default>Information</Default>
-      <Microsoft>OtherProtect:{Warning}</Microsoft>
+      <Microsoft>OtherProtect:{Warning}</Microsoft>    <!--protecting string-->
     </LogLevel>
   </Logging>
   <EmptyElement></EmptyElement>  

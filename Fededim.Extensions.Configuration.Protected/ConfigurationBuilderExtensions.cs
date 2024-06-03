@@ -36,7 +36,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// This list gets processed in first-in first-out order (FIFO) and stops as soon as a matching is found. By default three types of custom processors are supported:<br/>
         /// - One for JSON files (<see cref="JsonFileProtectOption"/> and <see cref="JsonFileProtectProcessor"/>)<br/>
         /// - One for XML files (<see cref="XmlFileProtectOption"/> and <see cref="XmlFileProtectProcessor"/>)<br/>
-        /// - One for raw files (<see cref="RawFileProtectOption"/> and <see cref="RawFileProtectProcessor"/>)<br/>
+        /// - One for RAW files (<see cref="RawFileProtectOption"/> and <see cref="RawFileProtectProcessor"/>)<br/>
         /// This list has a public getter so you can add any additional decoding function you want or replace an existing one for your needs.
         /// </summary>
         public static List<FilesProtectOptions> ProtectFilesOptions { get; private set; } = new List<FilesProtectOptions>()

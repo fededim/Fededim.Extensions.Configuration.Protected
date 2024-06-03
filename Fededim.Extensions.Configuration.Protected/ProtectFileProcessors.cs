@@ -5,23 +5,22 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
     /// <summary>
-    /// This is the interface which must be implemented by a custom FileProtectProcessor. It contains a single method <see cref="ProtectFile"/> used to read, encrypt and return the encrypted file as string.
+    /// This is the interface which must be implemented by a custom FileProtectProcessor. It contains a single method <see cref="ProtectFile"/> used to decode, encrypt and re-encode the input file and return it as string.
     /// </summary>
     public interface IFileProtectProcessor
     {
         /// <summary>
-        /// This method actually implements a custom FileProtectProcessor which must read, encrypt and return the encrypted file as string.
+        /// This method actually implements a custom FileProtectProcessor which must decode, encrypt and re-encode the input file and return it as string.
         /// </summary>
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction);
     }
 
@@ -40,7 +39,7 @@ namespace Fededim.Extensions.Configuration.Protected
         public Regex FilenameRegex { get; private set; }
 
         /// <summary>
-        /// Specifies the FileProtectProcessor class implementing the <see cref="IFileProtectProcessor"/> interface used to read, encrypt and return the encrypted file as string.
+        /// Specifies the FileProtectProcessor class implementing the <see cref="IFileProtectProcessor"/> interface used to decode, encrypt and re-encode the input file and return it as string.
         /// </summary>
         public IFileProtectProcessor FileProtectProcessor { get; private set; }
 
@@ -65,7 +64,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> ProtectFunction)
         {
             if (protectRegex.IsMatch(rawFileText))
@@ -82,17 +81,40 @@ namespace Fededim.Extensions.Configuration.Protected
     /// </summary>
     public class JsonFileProtectProcessor : IFileProtectProcessor
     {
+        protected JsonSerializerOptions JsonSerializerOptions { get; set; }
+        protected JsonNodeOptions JsonNodeOptions { get; set; }
+        protected JsonDocumentOptions JsonDocumentOptions { get; set; }
+
+
+        /// <summary>
+        /// JsonFileProtectProcessor constructor accepting a JsonSerializerOptions.
+        /// JSON files in contrast to XML files must not have comments according to the standard, but this constraint can be relaxed by setting JsonCommentHandling property in the <see cref="jsonSerializerOptions"/>
+        /// Since NET Core 3.1 JsonCommentHandling.Allow option always raises an exception, so we set by default to allow comments but to skip them (JsonCommentHandling.Skip).
+        /// Moreover JsonSerializer generates always strict JSON files, so it won't output any comments in the encrypted re-encoded file.
+        /// By default we set ReadCommentHandling = JsonCommentHandling.Skip and WriteIndented = true 
+        /// </summary>
+        /// <param name="jsonSerializerOptions">a custom JsonSerializerOptions if you want to override the default one</param>
+        public JsonFileProtectProcessor(JsonSerializerOptions jsonSerializerOptions = null)
+        {
+            jsonSerializerOptions = jsonSerializerOptions ?? new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip, WriteIndented = true };
+
+            JsonSerializerOptions = jsonSerializerOptions;
+            JsonNodeOptions = new JsonNodeOptions { PropertyNameCaseInsensitive = jsonSerializerOptions.PropertyNameCaseInsensitive };
+            JsonDocumentOptions = new JsonDocumentOptions { CommentHandling = jsonSerializerOptions.ReadCommentHandling, AllowTrailingCommas = jsonSerializerOptions.AllowTrailingCommas, MaxDepth = jsonSerializerOptions.MaxDepth };
+        }
+
+
         /// <summary>
         /// Please see <see cref="IFileProtectProcessor.ProtectFile"/> interface
         /// </summary>
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the JSON file
-            var document = JsonNode.Parse(rawFileText);
+            var document = JsonNode.Parse(rawFileText, JsonNodeOptions, JsonDocumentOptions);
 
             // extract and encrypts all string node values
             // extraction must be done first because if you change any value while enumerating the collection it raises InvalidOperationException
@@ -119,10 +141,10 @@ namespace Fededim.Extensions.Configuration.Protected
             }
 
             // returns back the encrypted json file
-            return document.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+            return document.ToJsonString(JsonSerializerOptions);
         }
 
-        
+
 
         /// <summary>
         /// Helper method which extracts all string nodes from the JSON document. It implements a recursive DFS of the JSON parsed tree.
@@ -165,24 +187,45 @@ namespace Fededim.Extensions.Configuration.Protected
     /// </summary>
     public class XmlFileProtectProcessor : IFileProtectProcessor
     {
+        protected LoadOptions LoadOptions { get; set; }
+        protected SaveOptions? SaveOptions { get; set; }
+
+        /// <summary>
+        /// XmlFileProtectProcessor constructor accepting a LoadOptions and/or SaveOptions.
+        /// By default we set LoadOptions.None and SaveOptions are instead taken from XML annotations (e.g. the first parent node with such SaveOptions annotation,
+        /// for XML annotations you can see GetSaveOptionsFromAnnotations method inside XLinq.cs <see href="https://github.com/microsoft/referencesource/blob/master/System.Xml.Linq/System/Xml/Linq/XLinq.cs#L1303-L1318"/> )
+        /// </summary>
+        /// <param name="loadOptions">a custom LoadOptions if you want to override the default one</param>
+        /// <param name="saveOptions">a custom SaveOptions if you want to override the default one</param>
+
+        public XmlFileProtectProcessor(LoadOptions loadOptions = LoadOptions.None, SaveOptions? saveOptions = null)
+        {
+            LoadOptions = loadOptions;
+            SaveOptions = saveOptions;
+        }
+
         /// <summary>
         /// Please see <see cref="IFileProtectProcessor.ProtectFile"/> interface
         /// </summary>
         /// <param name="rawFileText">The is the raw input file as a string</param>
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
-        /// <returns>the encrypted file as a string</returns>
+        /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the XML File
-            var document = XDocument.Parse(rawFileText);
+            var document = XDocument.Parse(rawFileText,LoadOptions);
 
             ProtectXmlNodes(document.Root, protectRegex, protectFunction);
 
             // returns back the encrypted xml file
             using (var xmlBytes = new MemoryStream())
             {
-                document.Save(xmlBytes);
+                if (SaveOptions.HasValue)
+                    document.Save(xmlBytes, SaveOptions.Value);  // use the SaveOptions specified in constructor
+                else
+                    document.Save(xmlBytes);   // use the SaveOptions from XML Annotations
+
                 return Encoding.UTF8.GetString(xmlBytes.ToArray());
             }
         }

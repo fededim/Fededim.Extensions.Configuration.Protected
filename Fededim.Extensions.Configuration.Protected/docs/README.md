@@ -9,6 +9,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Supports almost any NET framework (net6.0, netstandard2.0 and net462)
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
+- Supports per configuration value derived encryption subkey (called "subpurposes" in Data Protection API)
 
 # How to Use
 
@@ -203,6 +204,10 @@ v1.0.8
 
 v1.0.9
 - No changes, just a rebuild due to a misalignment with symbols.
+
+v1.0.10
+- Improvement: Allow the specification of JsonSerializationOptions for JsonFileProtectProcessor to tweak its settings (comments inside JSON files are now skipped by default)
+- Improvement: Allow the specification of LoadOptions and SaveOptions for XmlFileProtectProcessor to tweak its settings
 
 # Detailed guide
 
