@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
@@ -22,6 +19,11 @@ namespace Fededim.Extensions.Configuration.Protected
         public static FilesProtectOptions JsonFileProtectOption = new FilesProtectOptions(new Regex("(.*)\\.json"), new JsonFileProtectProcessor());
 
         /// <summary>
+        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="JsonWithCommentsFileProtectProcessor"/>
+        /// </summary>
+        public static FilesProtectOptions JsonWithCommentsFileProtectOption = new FilesProtectOptions(new Regex("(.*)\\.json"), new JsonWithCommentsFileProtectProcessor());
+
+        /// <summary>
         /// the <see cref="ProtectFilesOptions"/> entry for <see cref="XmlFileProtectProcessor"/>
         /// </summary>
         public static FilesProtectOptions XmlFileProtectOption = new FilesProtectOptions(new Regex("(.*)\\.xml"), new XmlFileProtectProcessor());
@@ -32,11 +34,11 @@ namespace Fededim.Extensions.Configuration.Protected
         public static FilesProtectOptions RawFileProtectOption = new FilesProtectOptions(new Regex("(.*)"), new RawFileProtectProcessor());
 
         /// <summary>
-        /// It is a list of <see cref="Protected.FilesProtectOptions"/> classes used to specify the custom options for tweaking the behaviour of the <see cref="ProtectFiles"/> method according to the particular filename matching a regular expression. 
+        /// It is a list of <see cref="Protected.FilesProtectOptions"/> classes used to specify the custom options for tweaking the behaviour of the <see cref="ProtectFiles"/> method according to the particular filename matching a regular expression.  <br /><br />
         /// This list gets processed in first-in first-out order (FIFO) and stops as soon as a matching is found. By default three types of custom processors are supported:<br/>
-        /// - One for JSON files (<see cref="JsonFileProtectOption"/> and <see cref="JsonFileProtectProcessor"/>)<br/>
+        /// - One for JSON files (<see cref="JsonFileProtectOption"/> and <see cref="JsonFileProtectProcessor"/>, you can optionally activate <see cref="JsonWithCommentsFileProtectOption"/> and <see cref="JsonWithCommentsFileProtectProcessor"/> by calling static method <see cref="UseJsonWithCommentsFileProtectOption"/>)<br/>
         /// - One for XML files (<see cref="XmlFileProtectOption"/> and <see cref="XmlFileProtectProcessor"/>)<br/>
-        /// - One for RAW files (<see cref="RawFileProtectOption"/> and <see cref="RawFileProtectProcessor"/>)<br/>
+        /// - One for RAW files (<see cref="RawFileProtectOption"/> and <see cref="RawFileProtectProcessor"/>)<br/><br />
         /// This list has a public getter so you can add any additional decoding function you want or replace an existing one for your needs.
         /// </summary>
         public static List<FilesProtectOptions> ProtectFilesOptions { get; private set; } = new List<FilesProtectOptions>()
@@ -45,6 +47,16 @@ namespace Fededim.Extensions.Configuration.Protected
          XmlFileProtectOption,
          RawFileProtectOption
         };
+
+
+        /// <summary>
+        /// Turns on JsonWithCommentsFileProtectProcessors (e.g. swaps JsonFileProtectOption with JsonWithCommentsFileProtectOption)
+        /// </summary>
+        public static void UseJsonWithCommentsFileProtectOption()
+        {
+            ProtectFilesOptions.Remove(JsonFileProtectOption);
+            ProtectFilesOptions.Insert(0, JsonWithCommentsFileProtectOption);
+        }
 
 
         /// <summary>

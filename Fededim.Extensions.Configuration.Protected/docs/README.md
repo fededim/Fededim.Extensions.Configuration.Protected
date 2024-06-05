@@ -66,6 +66,7 @@ public class Program
         var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderKeyNumberPurpose(1));
         var dataProtectorAdditional = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderKeyNumberPurpose(2));
 
+        ConfigurationBuilderExtensions.UseJsonWithCommentsFileProtectOption();
 
         // define in-memory configuration key-value pairs to be encrypted
         var memoryConfiguration = new Dictionary<String, String>
@@ -208,6 +209,10 @@ v1.0.9
 v1.0.10
 - Improvement: Allow the specification of JsonSerializationOptions for JsonFileProtectProcessor to tweak its settings (comments inside JSON files are now skipped by default)
 - Improvement: Allow the specification of LoadOptions and SaveOptions for XmlFileProtectProcessor to tweak its settings
+
+v1.0.11
+- Improvement: Implemented additional JsonWithCommentsFileProtectProcessor ("hacky" optional FilerProtectProcessor) to allow the preservation of JSON comments when encrypting files using ProtectFiles
+- Improvement: Implemented UseJsonWithCommentsFileProtectOption extension method to replace JsonFileProtectProcessor (active by default for compliance with JSON standard of System.Text.Json) with JsonWithCommentsFileProtectProcessor
 
 # Detailed guide
 
