@@ -27,8 +27,8 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
     /// <summary>
-    /// ProtectFilesOptions is a class used to specify the custom ProtectFileProcessors used by <see cref="ConfigurationBuilderExtensions.ProtectFiles"/> method. Essentially for each processor you must provide a class <see cref="FileProtectProcessor"/> which must implement 
-    /// the <see cref="IFileProtectProcessor"/> interface in order to process the raw string data of the input file according to its format conventions (<see cref="JsonFileProtectProcessor"/> and <see cref="XmlFileProtectProcessor"/>) when the filename matches 
+    /// ProtectFilesOptions is a class used to specify the custom ProtectFileProcessors used by <see cref="ConfigurationBuilderExtensions.ProtectFiles"/> method. Essentially for each processor you must provide a class <see cref="FileProtectProcessor"/> which must implement <br/>
+    /// the <see cref="IFileProtectProcessor"/> interface in order to process the raw string data of the input file according to its format conventions (<see cref="JsonFileProtectProcessor"/> and <see cref="XmlFileProtectProcessor"/>) when the filename matches <br/>
     /// the provided regular expression (<see cref="FilenameRegex"/>)
     /// </summary>
     public class FilesProtectOptions
@@ -67,8 +67,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <returns>the encrypted re-encoded file as a string</returns>
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> ProtectFunction)
         {
-            if (protectRegex.IsMatch(rawFileText))
-                rawFileText = ProtectFunction(rawFileText);
+            rawFileText = ProtectFunction(rawFileText);
 
             return rawFileText;
         }
@@ -87,10 +86,10 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// JsonFileProtectProcessor constructor accepting a JsonSerializerOptions.
-        /// JSON files in contrast to XML files must not have comments according to the standard, but this constraint can be relaxed by setting JsonCommentHandling property in the <see cref="jsonSerializerOptions"/>
-        /// Since NET Core 3.1 JsonCommentHandling.Allow option always raises an exception, so we set by default to allow comments but to skip them (JsonCommentHandling.Skip).
-        /// Moreover JsonSerializer generates always strict JSON files, so it won't output any comments in the encrypted re-encoded file.
+        /// JsonFileProtectProcessor constructor accepting a JsonSerializerOptions. <br/><br/>
+        /// JSON files in contrast to XML files must not have comments according to the standard, but this constraint can be relaxed by setting JsonCommentHandling property in the <see cref="jsonSerializerOptions"/> <br/>
+        /// Since NET Core 3.1 JsonCommentHandling.Allow option always raises an exception (see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Text.Json/src/System/Text/Json/Document/JsonDocumentOptions.cs#L27-L38"/> and <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/System.Text.Json/src/System/Text/Json/Document/JsonDocument.cs#L1083-L1094"/>), so we set by default to allow comments but to skip them (JsonCommentHandling.Skip) in order to parse the file. <br/>
+        /// Moreover JsonSerializer generates always strict JSON files, so it won't output any comments in the encrypted re-encoded file. <br/><br/>
         /// By default we set ReadCommentHandling = JsonCommentHandling.Skip and WriteIndented = true 
         /// </summary>
         /// <param name="jsonSerializerOptions">a custom JsonSerializerOptions if you want to override the default one</param>
@@ -183,6 +182,60 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
     /// <summary>
+    /// A JSON file processor which parses and writes back input files according to the JSON file format, e.g. converts \\ into \, \u0022 into ", etc. supporting also comments
+    /// </summary>
+    public class JsonWithCommentsFileProtectProcessor : IFileProtectProcessor
+    {
+        protected JsonSerializerOptions JsonSerializerOptions { get; set; }
+        protected JsonReaderOptions JsonReaderOptions { get; set; }
+        protected JsonWriterOptions JsonWriterOptions { get; set; }
+
+
+        /// <summary>
+        /// JsonWithCommentsFileProtectProcessor constructor accepting a JsonSerializerOptions. <br/><br/>
+        /// Comments are not supported in the JSON standard <see cref="JsonFileProtectProcessor.JsonFileProtectProcessor" /> <br/>
+        /// This is a kind of hack since in order to support comments we just need to treat the input file a rawFileText, matching the protectRegex, decoding any value before calling protectFunction and re-encoding the encrypted value after calling protectFunction. <br/><br/>
+        /// By default we set ReadCommentHandling = JsonCommentHandling.Skip and WriteIndented = true <br/>
+        /// </summary>
+        /// <param name="jsonSerializerOptions">a custom JsonSerializerOptions if you want to override the default one</param>
+        public JsonWithCommentsFileProtectProcessor(JsonSerializerOptions jsonSerializerOptions = null)
+        {
+            JsonSerializerOptions = jsonSerializerOptions ?? new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip, WriteIndented = true };
+            JsonReaderOptions = new JsonReaderOptions { AllowTrailingCommas = JsonSerializerOptions.AllowTrailingCommas, MaxDepth = JsonSerializerOptions.MaxDepth };
+            JsonWriterOptions = new JsonWriterOptions { Indented = JsonSerializerOptions.WriteIndented, MaxDepth = JsonSerializerOptions.MaxDepth };
+        }
+
+
+        /// <summary>
+        /// Please see <see cref="IFileProtectProcessor.ProtectFile"/> interface
+        /// </summary>
+        /// <param name="rawFileText">The is the raw input file as a string</param>
+        /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
+        /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
+        /// <returns>the encrypted re-encoded file as a string</returns>
+        public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
+        {
+            return protectRegex.Replace(rawFileText, me =>
+            {
+                var utf8JsonReader = new Utf8JsonReader(Encoding.UTF8.GetBytes($"\"{me.Value}\"").AsSpan(), JsonReaderOptions);
+                var reencodedJsonMemoryStream = new MemoryStream();
+                var utf8JsonWriter = new Utf8JsonWriter(reencodedJsonMemoryStream, JsonWriterOptions);
+
+                if (utf8JsonReader.Read())
+                {
+                    utf8JsonWriter.WriteStringValue(protectFunction(utf8JsonReader.GetString()));
+                    utf8JsonWriter.Flush();
+                    return Encoding.UTF8.GetString(reencodedJsonMemoryStream.ToArray()).Replace("\"",String.Empty);
+                }
+                else
+                    throw new JsonException($"Invalid JSON value: {me.Value}!");
+            });
+        }
+    }
+
+
+
+    /// <summary>
     /// A XML file processor which parses and writes back input files according to the XML file format, e.g. converts <![CDATA[&amp; into &, &gt; into >]]>, etc.
     /// </summary>
     public class XmlFileProtectProcessor : IFileProtectProcessor
@@ -214,7 +267,7 @@ namespace Fededim.Extensions.Configuration.Protected
         public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the XML File
-            var document = XDocument.Parse(rawFileText,LoadOptions);
+            var document = XDocument.Parse(rawFileText, LoadOptions);
 
             ProtectXmlNodes(document.Root, protectRegex, protectFunction);
 
