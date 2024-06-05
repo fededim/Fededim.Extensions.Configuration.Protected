@@ -50,7 +50,7 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// Turns on JsonWithCommentsFileProtectProcessors (e.g. swaps JsonFileProtectOption with JsonWithCommentsFileProtectOption)
+        /// Turns on <see cref="JsonWithCommentsFileProtectProcessor"/> in order to allow the preservation of comments inside JSON files when encrypting by using <see cref="ProtectFiles"/> (e.g. swaps <see cref="JsonFileProtectOption"/> with <see cref="JsonWithCommentsFileProtectOption"/>)
         /// </summary>
         public static void UseJsonWithCommentsFileProtectOption()
         {
