@@ -42,6 +42,7 @@ public class Program
         var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderKeyNumberPurpose(1));
         var dataProtectorAdditional = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderStringPurpose("MagicPurpose"));
 
+        // activates JsonWithCommentsFileProtectProcessor
         ConfigurationBuilderExtensions.UseJsonWithCommentsFileProtectOption();
 
         // define in-memory configuration key-value pairs to be encrypted
