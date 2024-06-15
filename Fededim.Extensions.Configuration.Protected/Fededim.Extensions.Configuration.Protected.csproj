@@ -5,9 +5,9 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.11</Version>
+    <Version>1.0.12</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
-    <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.</Description>
+    <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using a provider implementing a standard interface IProtectProvider.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -64,15 +64,17 @@
       v1.0.11
       - Improvement: Implemented additional JsonWithCommentsFileProtectProcessor ("hacky" optional FilerProtectProcessor) to allow the preservation of JSON comments when encrypting files using ProtectFiles
       - Improvement: Implemented UseJsonWithCommentsFileProtectOption extension method to replace JsonFileProtectProcessor (active by default for compliance with JSON standard of System.Text.Json) with JsonWithCommentsFileProtectProcessor
+
+      v1.0.12
+      - Improvement: Allow encryption/decryption to be pluggable with providers using a new interface IProtectProvider. Therefore all DataProtectionAPI dependencies have been moved to a new package Fededim.Extensions.Configuration.Protected.DataProtectionAPI, you can just use this one which requires Fededim.Extensions.Configuration.Protected.
+      - Bugfix: Fixed a bug with the subPurpose section of the regexs which could lead to a greedy match instead of a lazy one.
+
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.3" />
   </ItemGroup>
 

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Fededim.Extensions.Configuration.Protected.DataProtectionAPI;
 
 public class Program
 {
@@ -38,9 +39,9 @@ public class Program
 
         // define the DI services: setup a Data Protection API custom tailored for a particular providers (InMemory and Environment Variables)
 
-        // retrieve IDataProtector interfaces for encrypting data
-        var dataProtector = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderKeyNumberPurpose(1));
-        var dataProtectorAdditional = serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(ProtectedConfigurationBuilder.ProtectedConfigurationBuilderStringPurpose("MagicPurpose"));
+        // retrieve IProtectProvider interfaces for encrypting data
+        var dataProtector = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationKeyNumberPurpose(1)));
+        var dataProtectorAdditional = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationStringPurpose("MagicPurpose")));
 
         // activates JsonWithCommentsFileProtectProcessor
         ConfigurationBuilderExtensions.UseJsonWithCommentsFileProtectOption();
@@ -71,7 +72,7 @@ public class Program
 
         // encrypts all Protect:{<data>} token tags inside .json files and all OtherProtect:{<data>} inside .xml files 
         var encryptedJsonFiles = dataProtector.ProtectFiles(".");
-        var encryptedXmlFiles = dataProtector.ProtectFiles(".", searchPattern: "*.xml", protectRegexString: "OtherProtect(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectData>.+?)}", protectedReplaceString: "OtherProtected${subPurposePattern}:{${protectedData}}");
+        var encryptedXmlFiles = dataProtector.ProtectFiles(".", searchPattern: "*.xml", protectRegexString: "OtherProtect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.+?)}", protectedReplaceString: "OtherProtected${subPurposePattern}:{${protectedData}}");
 
         // encrypts all Protect:{<data>} token tags inside environment variables
         dataProtectorAdditional.ProtectEnvironmentVariables();
@@ -82,11 +83,11 @@ public class Program
         Debugger.Break();
 
         // define the application configuration using almost all possible known ConfigurationSources
-        var configuration = new ProtectedConfigurationBuilder(dataProtectionServiceProvider: serviceProviderDataProtection)
+        var configuration = new ProtectedConfigurationBuilder(new DataProtectionAPIProtectConfigurationData(dataProtectionServiceProvider: serviceProviderDataProtection))
                 .AddCommandLine(encryptedArgs)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", false, true)
-                .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectedData>.+?)}", keyNumber: 1)
+                .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.+?)}", dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 1)
                 .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, purposeString: "MagicPurpose")
                 .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, purposeString: "MagicPurpose")
                 .Build();

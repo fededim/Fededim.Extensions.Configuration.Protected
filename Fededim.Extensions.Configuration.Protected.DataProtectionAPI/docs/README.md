@@ -1,5 +1,5 @@
 ﻿# About
-Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using a provider implementing a standard interface IProtectProvider.
+Fededim.Extensions.Configuration.Protected.DataProtectionAPI is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using the Microsoft Data Protection API.
 
 # Key Features
 - Encrypt partially or fully a configuration value
@@ -10,13 +10,13 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
 - Supports per configuration value encryption derived subkey (called "subpurposes")
-- Supports pluggable encryption/decryption with different providers implementing a standard interface IProtectProvider. A standard provider based on Microsoft Data Protection API is provided by the companion package Fededim.Extensions.Configuration.Protected.DataProtectionAPI.
+- Supports pluggable encryption/decryption with different providers implementing a standard interface IProtectProvider.
 
 # How to Use
 
 - Modify the configuration sources by enclosing with the encryption tokenization tag (e.g. Protect:{<data to be encrypted}) all the values or part of values you would like to encrypt
 - Configure the data protection api in a helper method (e.g. ConfigureDataProtection)
-- Encrypt all appsettings values by calling IProtectProvider.ProtectFiles, IProtectProvider.ProtectConfigurationValue and IProtectProvider.ProtectEnvironmentVariables extension methods
+- Encrypt all appsettings values by calling IDataProtect.ProtectFiles, IDataProtect.ProtectConfigurationValue and IDataProtect.ProtectEnvironmentVariables extension methods (use ProtectedConfigurationBuilder.DataProtectionPurpose as CreateProtector purpose)
 - Define the application configuration using ProtectedConfigurationBuilder and adding any standard framework provided or custom configuration source
 - Call ProtectedConfigurationBuilder.Build to automatically decrypt the encrypted values and retrieve the cleartext ones into a IConfigurationRoot class.
 - Map the Configuration object to a strongly typed hierarchical class using DI Configure
@@ -165,71 +165,18 @@ public class Program
 
 The main types provided by this library are:
 
-- Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder
-- Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider
-- Fededim.Extensions.Configuration.Protected.ProtectedConfigurationData
-- Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
-- Fededim.Extensions.Configuration.Protected.FilesProtectOptions
-- Fededim.Extensions.Configuration.Protected.IFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.XmlFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.JsonFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.JsonWithCommentsFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.RawFileProtectProcessor
-
+- Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIConfigurationBuilderExtensions
+- Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectConfigurationData
+- Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectProvider
 
 # Version History
 v1.0.0
-- Initial commit: it does not support re-decryption on configuration reload
+- Initial release: extracted Microsoft Data Protection API dependencies from Fededim.Extensions.Configuration.Protected version 1.0.11 into DataProtectionAPIProtectConfigurationData and DataProtectionAPIConfigurationBuilderExtensions and implemented DataProtectionAPIProtectProvider using the standard interface IProtectProvider.
      
-v1.0.1
-- Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
-- Cleaned code and added documentation on most methods.
-
-v1.0.2
-- Added more comments on code
-- Enabled SourceLink support to GitHub for debugging
-
-v1.0.3
-- SourceLink bugfix: removed SourceRevisionId tag in csproj
-
-v1.0.4
-- Commented initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
-
-v1.0.5
-- Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
-
-v1.0.6
-- Bugfix: the ProtectFiles method simply read the raw files which need to be encrypted using File.ReadAllText, whereas it should also decode the file according to its format. By default two decoders are now provided for both JSON and XML files and an extension point (FilesDecoding public property) if additional formats must be supported.
-
-v1.0.7
-- Improvement: the ProtectedConfigurationProvider.RegisterReloadCallback now uses the framework standard static utility class ChangeToken.OnChange to register the underlying provider configuration changes
-- Improvement: added two additional public static properties inside ConfigurationBuilderExtensions in order to allow them to be referenced if needed: JsonDecodingFunction and XmlDecodingFunction
-
-v1.0.8
-- Improvement: introduced FileProtectProcessor and IFileProtectProcessor interface for implementing a custom file protect processor used to read, encrypt and return the encrypted file as string. Json, Xml and Raw processors are provided by default.
-- Improvement: added custom string parameter purposeString in ProtectedConfigurationBuilder constructor in order to specify a custom purpose string for encryption/decryption, besides the integer keyNumber parameter.
-- Improvement: added subPurpose optional part in DefaultProtectRegexString, DefaultProtectedRegexString and DefaultProtectedReplaceString in order to allow an optional per key purpose string override.
-- Improvement: added some data to json (one element in Nullable:DoubleArray of appsettings.development.json) and xml file (AutoRetryDelaySubPurpose under TransientFaultHandlingOptions) of Fededim.Extensions.Configuration.Protected.ConsoleTest in order to exemplify the per key purpose string override.
-
-v1.0.9
-- No changes, just a rebuild due to a misalignment with symbols.
-
-v1.0.10
-- Improvement: Allow the specification of JsonSerializationOptions for JsonFileProtectProcessor to tweak its settings (comments inside JSON files are now skipped by default)
-- Improvement: Allow the specification of LoadOptions and SaveOptions for XmlFileProtectProcessor to tweak its settings
-
-v1.0.11
-- Improvement: Implemented additional JsonWithCommentsFileProtectProcessor ("hacky" optional FilerProtectProcessor) to allow the preservation of JSON comments when encrypting files using ProtectFiles
-- Improvement: Implemented UseJsonWithCommentsFileProtectOption extension method to replace JsonFileProtectProcessor (active by default for compliance with JSON standard of System.Text.Json) with JsonWithCommentsFileProtectProcessor
-
-v1.0.12
-- Improvement: Allow encryption/decryption to be pluggable with providers using a new interface IProtectProvider. Therefore all DataProtectionAPI dependencies have been moved to a new package Fededim.Extensions.Configuration.Protected.DataProtectionAPI, you can just use this one which requires Fededim.Extensions.Configuration.Protected.
-- Bugfix: Fixed a bug with the subPurpose section of the regexs which could lead to a greedy match instead of a lazy one.
-
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
 
 
 # Feedback & Contributing
-Fededim.Extensions.Configuration.Protected is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected).
+Fededim.Extensions.Configuration.Protected.DataProtectionAPI is released as open source under the MIT license. Bug reports and contributions are welcome at the [GitHub repository](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected).
