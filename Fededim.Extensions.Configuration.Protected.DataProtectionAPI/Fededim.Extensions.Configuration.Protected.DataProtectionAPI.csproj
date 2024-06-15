@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="docs\README.md" />
+    <None Include="docs\README.md" Pack="true" PackagePath="\" />
     <None Include="license\LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>
 
