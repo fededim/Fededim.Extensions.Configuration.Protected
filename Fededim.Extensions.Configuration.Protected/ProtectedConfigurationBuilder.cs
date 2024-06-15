@@ -1,119 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
     /// <summary>
-    /// IProtectedConfigurationBuilder derives from IConfigurationBuilder and a single method WithProtectedConfigurationOptions used to override the ProtectedConfigurationOptions for a particular provider (e.g. the last one added)
+    /// IProtectedConfigurationBuilder derives from <see cref="IConfigurationBuilder"/> and adds a single method WithProtectedConfigurationOptions used to override the ProtectedConfigurationOptions for a particular provider (e.g. the last one added)
     /// </summary>
     public interface IProtectedConfigurationBuilder : IConfigurationBuilder
     {
         /// <summary>
         /// WithProtectedConfigurationOptions is used to override the ProtectedConfigurationOptions for a particular provider (e.g. the last one added)
         /// </summary>
-        /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
-        /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
-        /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
-        /// <param name="keyNumber">a number specifying the index of the key to use</param>
+        /// <param name="protectProviderLocalConfigurationData">the local configuration data implemeting the <see cref="IProtectProviderConfigurationData"/ > interface</param>
         /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
-        IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1);
-
-        /// <summary>
-        /// WithProtectedConfigurationOptions is used to override the ProtectedConfigurationOptions for a particular provider (e.g. the last one added)
-        /// </summary>
-        /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
-        /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
-        /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
-        /// <param name="purposeString">a purpose used to create the IDataProtector interface according to Microsoft Data Protection api</param>
-        /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
-        IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose);
+        IConfigurationBuilder WithProtectedConfigurationOptions(IProtectProviderConfigurationData protectProviderLocalConfigurationData);
     }
 
 
+
     /// <summary>
-    /// ProtectedConfigurationBuilder is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture.
+    /// ProtectedConfigurationBuilder is an improved <see cref="ConfigurationBuilder"/> which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture.
     /// </summary>
     public class ProtectedConfigurationBuilder : IProtectedConfigurationBuilder
     {
-        public const String ProtectedConfigurationBuilderPurpose = "ProtectedConfigurationBuilder";
-        public static String ProtectedConfigurationBuilderKeyNumberPurpose(int keyNumber) => ProtectedConfigurationBuilderStringPurpose($"Key{keyNumber}");
-        public static String ProtectedConfigurationBuilderStringPurpose(string purpose)
-        {
-            if (String.IsNullOrEmpty(purpose))
-                throw new ArgumentNullException(purpose);
-
-            return $"{ProtectedConfigurationBuilderPurpose}.{purpose}";
-        }
-
-        public const String DefaultProtectRegexString = "Protect(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectData>.+?)}";
-        public const String DefaultProtectedRegexString = "Protected(?<subPurposePattern>(:{(?<subPurpose>.+)})?):{(?<protectedData>.+?)}";
+        public const String DefaultProtectRegexString = "Protect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.+?)}";
+        public const String DefaultProtectedRegexString = "Protected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.+?)}";
         public const String DefaultProtectedReplaceString = "Protected${subPurposePattern}:{${protectedData}}";
 
-        protected ProtectedConfigurationData ProtectedGlobalConfigurationData { get; }
+        /// <summary>
+        /// A property used to store the global configuration data <see cref="IProtectProviderConfigurationData"/ > interface
+        /// </summary>
+        protected IProtectProviderConfigurationData ProtectedProviderGlobalConfigurationData { get; }
 
-        protected IDictionary<int, ProtectedConfigurationData> ProtectedProviderConfigurationData { get; } = new Dictionary<int, ProtectedConfigurationData>();
+        /// <summary>
+        /// A dictionary property used to store the local configuration data overriding the global one, <see cref="IProtectProviderConfigurationData"/ > interface
+        /// </summary>
+        protected IDictionary<int, IProtectProviderConfigurationData> ProtectProviderLocalConfigurationData { get; } = new Dictionary<int, IProtectProviderConfigurationData>();
 
 
         protected readonly List<IConfigurationSource> _sources = new List<IConfigurationSource>();
 
 
-        // dataProtectionServiceProvider overloads
-        public ProtectedConfigurationBuilder(IServiceProvider dataProtectionServiceProvider)
-            : this(null, dataProtectionServiceProvider, null, 1)
+        /// <summary>
+        /// This is the only constructor which takes in input the global configuration data specifying the regex and the encryption/decryption provider
+        /// </summary>
+        /// <param name="protectedProviderGlobalConfigurationData">the global configuration data specifying the regex and the encryption/decryption provider</param>
+        public ProtectedConfigurationBuilder(IProtectProviderConfigurationData protectedProviderGlobalConfigurationData)
         {
+            ProtectedProviderGlobalConfigurationData = protectedProviderGlobalConfigurationData;
         }
 
-
-        public ProtectedConfigurationBuilder(IServiceProvider dataProtectionServiceProvider, int keyNumber = 1, String protectedRegexString = null)
-            : this(protectedRegexString, dataProtectionServiceProvider, null, keyNumber)
-        {
-        }
-
-        public ProtectedConfigurationBuilder(IServiceProvider dataProtectionServiceProvider, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose, String protectedRegexString = null)
-            : this(protectedRegexString, dataProtectionServiceProvider, null, purposeString)
-        {
-        }
-
-
-
-        // dataProtectionConfigureAction overloads
-        public ProtectedConfigurationBuilder(Action<IDataProtectionBuilder> dataProtectionConfigureAction)
-            : this(null, null, dataProtectionConfigureAction, 1)
-        {
-        }
-
-        public ProtectedConfigurationBuilder(Action<IDataProtectionBuilder> dataProtectionConfigureAction, int keyNumber = 1, String protectedRegexString = null)
-            : this(protectedRegexString, null, dataProtectionConfigureAction, keyNumber)
-        {
-        }
-
-
-        public ProtectedConfigurationBuilder(Action<IDataProtectionBuilder> dataProtectionConfigureAction, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose, String protectedRegexString = null)
-            : this(protectedRegexString, null, dataProtectionConfigureAction, purposeString)
-        {
-        }
-
-
-        // internal general versions
-
-        protected ProtectedConfigurationBuilder(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1)
-        {
-            ProtectedGlobalConfigurationData = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, keyNumber);
-        }
-
-
-        protected ProtectedConfigurationBuilder(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose)
-        {
-            ProtectedGlobalConfigurationData = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, purposeString);
-        }
 
 
         /// <summary>
         /// Returns the sources used to obtain configuration values.
         /// </summary>
         public IList<IConfigurationSource> Sources => _sources;
+
+
 
         /// <summary>
         /// Gets a key/value collection that can be used to share data between the <see cref="IConfigurationBuilder"/>
@@ -152,11 +97,11 @@ namespace Fededim.Extensions.Configuration.Protected
                 IConfigurationProvider provider = source.Build(this);
 
                 // if we have a custom configuration we move the index from the ConfigurationSource object to the newly created ConfigurationProvider object
-                ProtectedProviderConfigurationData.TryGetValue(source.GetHashCode(), out var protectedConfigurationData);
+                ProtectProviderLocalConfigurationData.TryGetValue(source.GetHashCode(), out var protectedConfigurationData);
                 if (protectedConfigurationData != null)
                 {
-                    ProtectedProviderConfigurationData[provider.GetHashCode()] = protectedConfigurationData;
-                    ProtectedProviderConfigurationData.Remove(source.GetHashCode());
+                    ProtectProviderLocalConfigurationData[provider.GetHashCode()] = protectedConfigurationData;
+                    ProtectProviderLocalConfigurationData.Remove(source.GetHashCode());
                 }
 
                 providers.Add(CreateProtectedConfigurationProvider(provider));
@@ -169,41 +114,22 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// It's a helper method used to override the ProtectedGlobalConfigurationData for a particular provider (e.g. the last one added)
         /// </summary>
-        /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
-        /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
-        /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
-        /// <param name="keyNumber">a number specifying the index of the key to use</param>
+        /// <param name="protectProviderLocalConfigurationData">the local configuration data overriding the global one, <see cref="IProtectProviderConfigurationData"/ > interface</param>
         /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
-        public IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1)
+        IConfigurationBuilder IProtectedConfigurationBuilder.WithProtectedConfigurationOptions(IProtectProviderConfigurationData protectProviderLocalConfigurationData)
         {
-            ProtectedProviderConfigurationData[Sources[Sources.Count - 1].GetHashCode()] = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, keyNumber);
+            ProtectProviderLocalConfigurationData[Sources[Sources.Count - 1].GetHashCode()] = protectProviderLocalConfigurationData;
 
             return this;
         }
 
-
-
-        /// <summary>
-        /// It's a helper method used to override the ProtectedGlobalConfigurationData for a particular provider (e.g. the last one added)
-        /// </summary>
-        /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
-        /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
-        /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
-        /// <param name="purposeString">a purpose used to create the IDataProtector interface according to Microsoft Data Protection api</param>
-        /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
-        public IConfigurationBuilder WithProtectedConfigurationOptions(String protectedRegexString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, string purposeString = ProtectedConfigurationBuilder.ProtectedConfigurationBuilderPurpose)
-        {
-            ProtectedProviderConfigurationData[Sources[Sources.Count - 1].GetHashCode()] = new ProtectedConfigurationData(protectedRegexString, dataProtectionServiceProvider, dataProtectionConfigureAction, purposeString);
-
-            return this;
-        }
 
 
         /// <summary>
         /// CreateProtectedConfigurationProvider creates a new ProtectedConfigurationProvider using the composition approach
         /// </summary>
-        /// <param name="provider"></param>
-        /// <returns>a newer decrypted <see cref="IConfigurationProvider"/> if we have a valid protected configuration, otherwise it returns the existing original undecrypted provider</returns>
+        /// <param name="provider">an existing IConfigurationProvider to instrument in order to perform the decryption of the encrypted keys</param>
+        /// <returns>a newer decrypted <see cref="IConfigurationProvider"/> if we have a valid protected configuration data, otherwise it returns the existing original undecrypted provider</returns>
         protected IConfigurationProvider CreateProtectedConfigurationProvider(IConfigurationProvider provider)
         {
             // this code is an initial one of when I was thinking of casting IConfigurationProvider to ConfigurationProvider (all MS classes derive from this one)
@@ -214,8 +140,8 @@ namespace Fededim.Extensions.Configuration.Protected
             //if (!providerType.IsSubclassOf(typeof(ConfigurationProvider)))
             //    return provider;
 
-            // we merge Provider and Global ProtectedDataConfiguration, if it is not valid we return the existing original undecrypted provider
-            var actualProtectedConfigurationData = ProtectedProviderConfigurationData.ContainsKey(provider.GetHashCode()) ? ProtectedConfigurationData.Merge(ProtectedGlobalConfigurationData, ProtectedProviderConfigurationData[provider.GetHashCode()]) : ProtectedGlobalConfigurationData;
+            // we merge ProtectedProviderGlobalConfigurationData and ProtectProviderLocalConfigurationData, if it is not valid we return the existing original undecrypted provider
+            var actualProtectedConfigurationData = ProtectProviderLocalConfigurationData.ContainsKey(provider.GetHashCode()) ? ProtectProviderConfigurationData.Merge(ProtectedProviderGlobalConfigurationData,ProtectProviderLocalConfigurationData[provider.GetHashCode()]) : ProtectedProviderGlobalConfigurationData;
             if (actualProtectedConfigurationData?.IsValid != true)
                 return provider;
 

@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest", "Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest\Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest.csproj", "{96713DB5-7C70-49FC-9736-903478C2D7C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fededim.Extensions.Configuration.Protected", "Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj", "{6C4745A9-A816-44C8-8817-6C12E8A61BCC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected", "Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj", "{6C4745A9-A816-44C8-8817-6C12E8A61BCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fededim.Extensions.Configuration.Protected.ConsoleTest", "Fededim.Extensions.Configuration.Protected.ConsoleTest\Fededim.Extensions.Configuration.Protected.ConsoleTest.csproj", "{DA62A52E-376A-40AF-A276-151063553B88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected.ConsoleTest", "Fededim.Extensions.Configuration.Protected.ConsoleTest\Fededim.Extensions.Configuration.Protected.ConsoleTest.csproj", "{DA62A52E-376A-40AF-A276-151063553B88}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPI", "Fededim.Extensions.Configuration.Protected.DataProtectionAPI\Fededim.Extensions.Configuration.Protected.DataProtectionAPI.csproj", "{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{DA62A52E-376A-40AF-A276-151063553B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA62A52E-376A-40AF-A276-151063553B88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA62A52E-376A-40AF-A276-151063553B88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

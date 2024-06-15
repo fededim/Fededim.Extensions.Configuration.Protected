@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0;net462</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <Version>1.0.0</Version>
+    <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
+    <Description>Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft DataProtectionAPI provider for the encryption/decryption of configuration values using Fededim.Extensions.Configuration.Protected.</Description>
+    <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <Title>$(AssemblyName)</Title>
+    <PackageTags>configuration;data;protection;appsettings;json;encrypted</PackageTags>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PackageReleaseNotes>
+      v1.0.0
+      - Initial release
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.12" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="docs\README.md" Pack="true" PackagePath="\" />
+    <None Include="license\LICENSE.txt" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj" />
+  </ItemGroup>
+
+</Project>

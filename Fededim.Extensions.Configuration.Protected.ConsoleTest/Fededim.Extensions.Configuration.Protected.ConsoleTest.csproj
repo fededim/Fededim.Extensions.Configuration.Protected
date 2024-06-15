@@ -9,11 +9,11 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="8.0.0" />
-    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.5" />-->
+    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected.DataProtectionAPI" Version="1.0.0" />-->
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj" />
+    <ProjectReference Include="..\Fededim.Extensions.Configuration.Protected.DataProtectionAPI\Fededim.Extensions.Configuration.Protected.DataProtectionAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

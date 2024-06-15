@@ -3,30 +3,29 @@ using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.DataProtection;
 using System.Diagnostics;
 using System.Threading;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
     /// <summary>
-    /// ProtectedConfigurationProvider is a custom ConfigurationProvider which is actually responsible for real time decryption of configuration values for any existing or even future ConfigurationProvider. It uses the composition pattern.
+    /// ProtectedConfigurationProvider is a custom <see cref="ConfigurationProvider" /> which is actually responsible for real time decryption of configuration values for any existing or even future ConfigurationProviders. It uses the composition pattern.
     /// </summary>
     [DebuggerDisplay("Provider = Protected{Provider}")]
     public class ProtectedConfigurationProvider : IConfigurationProvider, IDisposable
     {
         protected IConfigurationProvider Provider { get; }
-        protected ProtectedConfigurationData ProtectedConfigurationData { get; }
+        protected IProtectProviderConfigurationData ProtectProviderConfigurationData { get; }
 
         protected ConfigurationReloadToken ReloadToken;
 
         protected IDisposable ProviderReloadTokenRegistration { get; set; }
 
 
-        public ProtectedConfigurationProvider(IConfigurationProvider provider, ProtectedConfigurationData protectedConfigurationData)
+        public ProtectedConfigurationProvider(IConfigurationProvider provider, IProtectProviderConfigurationData protectedConfigurationData)
         {
             Provider = provider;
-            ProtectedConfigurationData = protectedConfigurationData;
+            ProtectProviderConfigurationData = protectedConfigurationData;
 
             RegisterReloadCallback();
         }
@@ -87,17 +86,17 @@ namespace Fededim.Extensions.Configuration.Protected
                 if (Provider.TryGet(fullKey, out var value))
                 {
                     if (!String.IsNullOrEmpty(value))
-                        Provider.Set(fullKey, ProtectedConfigurationData.ProtectedRegex.Replace(value, me =>
+                        Provider.Set(fullKey, ProtectProviderConfigurationData.ProtectedRegex.Replace(value, me =>
                         {
 
                             var subPurposePresent = !String.IsNullOrEmpty(me.Groups["subPurpose"]?.Value);
 
-                            var dataProtector = ProtectedConfigurationData.DataProtector;
+                            IProtectProvider protectProvider = ProtectProviderConfigurationData.ProtectProvider;
 
                             if (subPurposePresent)
-                                dataProtector = dataProtector.CreateProtector(me.Groups["subPurpose"].Value);
+                                protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
 
-                            return dataProtector.Unprotect(me.Groups["protectedData"].Value);
+                            return protectProvider.Decrypt(me.Groups["protectedData"].Value);
                         }));
                 }
                 else DecryptChildKeys(fullKey);
