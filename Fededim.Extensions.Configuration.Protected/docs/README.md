@@ -10,7 +10,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
 - Supports per configuration value encryption derived subkey (called "subpurposes")
-- Supports pluggable encryption/decryption with different providers implementing a standard interface IProtectProvider. A standard provider based on Microsoft Data Protection API is provided by the companion package Fededim.Extensions.Configuration.Protected.DataProtectionAPI.
+- Supports pluggable encryption/decryption with different providers implementing a standard interface IProtectProvider (since version 1.0.12, keep in mind that implementing a secure and robust encryption/decryption provider requires a deep knowledge of security!).
 
 # How to Use
 
@@ -68,8 +68,8 @@ public class Program
         var dataProtector = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationKeyNumberPurpose(1)));
         var dataProtectorAdditional = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationStringPurpose("MagicPurpose")));
 
-        // activates JsonWithCommentsFileProtectProcessor
-        ConfigurationBuilderExtensions.UseJsonWithCommentsFileProtectOption();
+        // activates JsonWithCommentsProtectFileProcessor
+        ConfigurationBuilderExtensions.UseJsonWithCommentsProtectFileOption();
 
         // define in-memory configuration key-value pairs to be encrypted
         var memoryConfiguration = new Dictionary<String, String>
@@ -140,9 +140,29 @@ public class Program
         // added some simple assertions to test that decrypted value is the same as original plaintext one
         Debug.Assert(appSettings.EncryptedCommandLinePassword == appSettings.PlainTextCommandLinePassword);
         Debug.Assert(appSettings.EncryptedEnvironmentPassword == appSettings.PlainTextEnvironmentPassword);
-        Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
-        Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
         Debug.Assert(appSettings.EncryptedInMemorySecretKey == appSettings.PlainTextInMemorySecretKey);
+
+        // appsettings.json assertions
+        Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("(local)\\SECONDINSTANCE"));
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("Secret_Catalog"));
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("secret_user"));
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("secret_password"));
+        Debug.Assert(appSettings.ConnectionStrings["FullyEncryptedConnectionString"].Contains("Data Source=server1\\THIRDINSTANCE; Initial Catalog=DB name; User ID=sa; Password=pass5678; MultipleActiveResultSets=True;"));
+
+        // appsettings.development.json assertions
+        Debug.Assert(appSettings.Nullable.DateTime.Value.ToUniversalTime() == new DateTime(2016, 10, 1, 20, 34, 56, 789, DateTimeKind.Utc));
+        Debug.Assert(appSettings.Nullable.Double == 123.456);
+        Debug.Assert(appSettings.Nullable.Int == 98765);
+        Debug.Assert(appSettings.Nullable.Bool == true);
+        Debug.Assert(appSettings.Nullable.DoubleArray[1] == 3.14);
+        Debug.Assert(appSettings.Nullable.DoubleArray[3] == 3.14);
+
+        // appsettings.xml assertions
+        Debug.Assert(appSettings.TransientFaultHandlingOptions["AutoRetryDelay"] == appSettings.TransientFaultHandlingOptions["AutoRetryDelaySubPurpose"]);
+        Debug.Assert(appSettings.Logging.LogLevel["Microsoft"] == "Warning");
+        Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
+
 
         // multiple configuration reload example
         int i = 0;
@@ -170,11 +190,11 @@ The main types provided by this library are:
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationData
 - Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
 - Fededim.Extensions.Configuration.Protected.FilesProtectOptions
-- Fededim.Extensions.Configuration.Protected.IFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.XmlFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.JsonFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.JsonWithCommentsFileProtectProcessor
-- Fededim.Extensions.Configuration.Protected.RawFileProtectProcessor
+- Fededim.Extensions.Configuration.Protected.IProtectFileProcessor
+- Fededim.Extensions.Configuration.Protected.XmlProtectFileProcessor
+- Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor
+- Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProcessor
+- Fededim.Extensions.Configuration.Protected.RawProtectFileProcessor
 
 
 # Version History
@@ -225,6 +245,10 @@ v1.0.11
 v1.0.12
 - Improvement: Allow encryption/decryption to be pluggable with providers using a new interface IProtectProvider. Therefore all DataProtectionAPI dependencies have been moved to a new package Fededim.Extensions.Configuration.Protected.DataProtectionAPI, you can just use this one which requires Fededim.Extensions.Configuration.Protected.
 - Bugfix: Fixed a bug with the subPurpose section of the regexs which could lead to a greedy match instead of a lazy one.
+
+v1.0.13
+- Improvement: Streamlined validations on regex and converted IProtectProviderConfigurationData.IsValid property to a method CheckConfigurationIsValid raising exception with the details of the errors.
+- Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
 
 # Detailed guide
 

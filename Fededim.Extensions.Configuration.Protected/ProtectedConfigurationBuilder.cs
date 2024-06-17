@@ -48,6 +48,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectedProviderGlobalConfigurationData">the global configuration data specifying the regex and the encryption/decryption provider</param>
         public ProtectedConfigurationBuilder(IProtectProviderConfigurationData protectedProviderGlobalConfigurationData)
         {
+            protectedProviderGlobalConfigurationData.CheckConfigurationIsValid();
             ProtectedProviderGlobalConfigurationData = protectedProviderGlobalConfigurationData;
         }
 
@@ -140,10 +141,9 @@ namespace Fededim.Extensions.Configuration.Protected
             //if (!providerType.IsSubclassOf(typeof(ConfigurationProvider)))
             //    return provider;
 
-            // we merge ProtectedProviderGlobalConfigurationData and ProtectProviderLocalConfigurationData, if it is not valid we return the existing original undecrypted provider
-            var actualProtectedConfigurationData = ProtectProviderLocalConfigurationData.ContainsKey(provider.GetHashCode()) ? ProtectProviderConfigurationData.Merge(ProtectedProviderGlobalConfigurationData,ProtectProviderLocalConfigurationData[provider.GetHashCode()]) : ProtectedProviderGlobalConfigurationData;
-            if (actualProtectedConfigurationData?.IsValid != true)
-                return provider;
+            // we merge ProtectedProviderGlobalConfigurationData and ProtectProviderLocalConfigurationData, if it is not valid we raise an exception in order to be notified that something is wrong
+            var actualProtectedConfigurationData = ProtectProviderLocalConfigurationData.ContainsKey(provider.GetHashCode()) ? ProtectProviderConfigurationData.Merge(ProtectedProviderGlobalConfigurationData, ProtectProviderLocalConfigurationData[provider.GetHashCode()]) : ProtectedProviderGlobalConfigurationData;
+            actualProtectedConfigurationData.CheckConfigurationIsValid();
 
             // we use composition to perform decryption of all provider values
             return new ProtectedConfigurationProvider(provider, actualProtectedConfigurationData);

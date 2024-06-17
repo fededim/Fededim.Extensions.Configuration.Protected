@@ -52,9 +52,17 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// A helper overridable method for checking that the configuation data is valid.
+        /// A helper overridable method for checking that the configuation data is valid (e.g. ProtectProvider is not null and ProtectedRegex contains a regex group named protectedData) 
         /// </summary>
-        public virtual bool IsValid => (ProtectProvider != null) && (ProtectedRegex?.GetGroupNames()?.Contains("protectedData") == true);
+        public virtual void CheckConfigurationIsValid()
+        {
+            ProtectedRegex = ProtectedRegex ?? new Regex(ProtectedConfigurationBuilder.DefaultProtectedRegexString);
+            if (!ProtectedRegex.GetGroupNames().Contains("protectedData"))
+                throw new ArgumentException("ProtectedRegex must contain a group named protectedData!", nameof(ProtectedRegex));
+
+            if (ProtectProvider == null)
+                throw new ArgumentException("ProtectProvider must not be null!", nameof(ProtectProvider));
+        }
     }
 
 
@@ -72,11 +80,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <exception cref="ArgumentException">thrown if the Regex does not containg a group named protectedData</exception>
         public ProtectProviderConfigurationData(String protectedRegexString, IProtectProvider protectProvider)
         {
-            // check that Regex contains a group named protectedData
             ProtectedRegex = new Regex(!String.IsNullOrEmpty(protectedRegexString) ? protectedRegexString : ProtectedConfigurationBuilder.DefaultProtectedRegexString);
-            if (!ProtectedRegex.GetGroupNames().Contains("protectedData"))
-                throw new ArgumentException("Regex must contain a group named protectedData!", nameof(protectedRegexString));
-
             ProtectProvider = protectProvider;
         }
 
