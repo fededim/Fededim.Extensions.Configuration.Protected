@@ -43,8 +43,8 @@ public class Program
         var dataProtector = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationKeyNumberPurpose(1)));
         var dataProtectorAdditional = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationStringPurpose("MagicPurpose")));
 
-        // activates JsonWithCommentsFileProtectProcessor
-        ConfigurationBuilderExtensions.UseJsonWithCommentsFileProtectOption();
+        // activates JsonWithCommentsProtectFileProcessor
+        ConfigurationBuilderExtensions.UseJsonWithCommentsProtectFileOption();
 
         // define in-memory configuration key-value pairs to be encrypted
         var memoryConfiguration = new Dictionary<String, String>
@@ -115,9 +115,29 @@ public class Program
         // added some simple assertions to test that decrypted value is the same as original plaintext one
         Debug.Assert(appSettings.EncryptedCommandLinePassword == appSettings.PlainTextCommandLinePassword);
         Debug.Assert(appSettings.EncryptedEnvironmentPassword == appSettings.PlainTextEnvironmentPassword);
-        Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
-        Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
         Debug.Assert(appSettings.EncryptedInMemorySecretKey == appSettings.PlainTextInMemorySecretKey);
+
+        // appsettings.json assertions
+        Debug.Assert(appSettings.EncryptedJsonSpecialCharacters == appSettings.PlainTextJsonSpecialCharacters);
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("(local)\\SECONDINSTANCE"));
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("Secret_Catalog"));
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("secret_user"));
+        Debug.Assert(appSettings.ConnectionStrings["PartiallyEncryptedConnectionString"].Contains("secret_password"));
+        Debug.Assert(appSettings.ConnectionStrings["FullyEncryptedConnectionString"].Contains("Data Source=server1\\THIRDINSTANCE; Initial Catalog=DB name; User ID=sa; Password=pass5678; MultipleActiveResultSets=True;"));
+
+        // appsettings.development.json assertions
+        Debug.Assert(appSettings.Nullable.DateTime.Value.ToUniversalTime() == new DateTime(2016, 10, 1, 20, 34, 56, 789, DateTimeKind.Utc));
+        Debug.Assert(appSettings.Nullable.Double == 123.456);
+        Debug.Assert(appSettings.Nullable.Int == 98765);
+        Debug.Assert(appSettings.Nullable.Bool == true);
+        Debug.Assert(appSettings.Nullable.DoubleArray[1] == 3.14);
+        Debug.Assert(appSettings.Nullable.DoubleArray[3] == 3.14);
+
+        // appsettings.xml assertions
+        Debug.Assert(appSettings.TransientFaultHandlingOptions["AutoRetryDelay"] == appSettings.TransientFaultHandlingOptions["AutoRetryDelaySubPurpose"]);
+        Debug.Assert(appSettings.Logging.LogLevel["Microsoft"] == "Warning");
+        Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
+
 
         // multiple configuration reload example
         int i = 0;

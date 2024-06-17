@@ -12,48 +12,48 @@ namespace Fededim.Extensions.Configuration.Protected
     public static class ConfigurationBuilderExtensions
     {
         /// <summary>
-        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="JsonFileProtectProcessor"/>
+        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="JsonProtectFileProcessor"/>
         /// </summary>
-        public static FilesProtectOptions JsonFileProtectOption = new FilesProtectOptions(new Regex("(.*)\\.json"), new JsonFileProtectProcessor());
+        public static ProtectFileOptions JsonProtectFileOption = new ProtectFileOptions(new Regex("(.*)\\.json"), new JsonProtectFileProcessor());
 
         /// <summary>
-        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="JsonWithCommentsFileProtectProcessor"/>
+        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="JsonWithCommentsProtectFileProcessor"/>
         /// </summary>
-        public static FilesProtectOptions JsonWithCommentsFileProtectOption = new FilesProtectOptions(new Regex("(.*)\\.json"), new JsonWithCommentsFileProtectProcessor());
+        public static ProtectFileOptions JsonWithCommentsProtectFileOption = new ProtectFileOptions(new Regex("(.*)\\.json"), new JsonWithCommentsProtectFileProcessor());
 
         /// <summary>
-        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="XmlFileProtectProcessor"/>
+        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="XmlProtectFileProcessor"/>
         /// </summary>
-        public static FilesProtectOptions XmlFileProtectOption = new FilesProtectOptions(new Regex("(.*)\\.xml"), new XmlFileProtectProcessor());
+        public static ProtectFileOptions XmlProtectFileOption = new ProtectFileOptions(new Regex("(.*)\\.xml"), new XmlProtectFileProcessor());
 
         /// <summary>
-        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="RawFileProtectProcessor"/>, it must always be the last one of the list (the filenameRegex matches everything).
+        /// the <see cref="ProtectFilesOptions"/> entry for <see cref="RawProtectFileProcessor"/>, it must always be the last one of the list (the filenameRegex matches everything).
         /// </summary>
-        public static FilesProtectOptions RawFileProtectOption = new FilesProtectOptions(new Regex("(.*)"), new RawFileProtectProcessor());
+        public static ProtectFileOptions RawProtectFileOption = new ProtectFileOptions(new Regex("(.*)"), new RawProtectFileProcessor());
 
         /// <summary>
-        /// It is a list of <see cref="Protected.FilesProtectOptions"/> classes used to specify the custom options for tweaking the behaviour of the <see cref="ProtectFiles"/> method according to the particular filename matching a regular expression.  <br /><br />
+        /// It is a list of <see cref="Protected.ProtectFileOptions"/> classes used to specify the custom options for tweaking the behaviour of the <see cref="ProtectFiles"/> method according to the particular filename matching a regular expression.  <br /><br />
         /// This list gets processed in first-in first-out order (FIFO) and stops as soon as a matching is found. By default three types of custom processors are supported:<br/>
-        /// - One for JSON files (<see cref="JsonFileProtectOption"/> and <see cref="JsonFileProtectProcessor"/>, you can optionally activate <see cref="JsonWithCommentsFileProtectOption"/> and <see cref="JsonWithCommentsFileProtectProcessor"/> by calling static method <see cref="UseJsonWithCommentsFileProtectOption"/>)<br/>
-        /// - One for XML files (<see cref="XmlFileProtectOption"/> and <see cref="XmlFileProtectProcessor"/>)<br/>
-        /// - One for RAW files (<see cref="RawFileProtectOption"/> and <see cref="RawFileProtectProcessor"/>)<br/><br />
+        /// - One for JSON files (<see cref="JsonProtectFileOption"/> and <see cref="JsonProtectFileProcessor"/>, you can optionally activate <see cref="JsonWithCommentsProtectFileOption"/> and <see cref="JsonWithCommentsProtectFileProcessor"/> by calling static method <see cref="UseJsonWithCommentsProtectFileOption"/>)<br/>
+        /// - One for XML files (<see cref="XmlProtectFileOption"/> and <see cref="XmlProtectFileProcessor"/>)<br/>
+        /// - One for RAW files (<see cref="RawProtectFileOption"/> and <see cref="RawProtectFileProcessor"/>)<br/><br />
         /// This list has a public getter so you can add any additional decoding function you want or replace an existing one for your needs.
         /// </summary>
-        public static List<FilesProtectOptions> ProtectFilesOptions { get; private set; } = new List<FilesProtectOptions>()
+        public static List<ProtectFileOptions> ProtectFilesOptions { get; private set; } = new List<ProtectFileOptions>()
         {
-         JsonFileProtectOption,
-         XmlFileProtectOption,
-         RawFileProtectOption
+         JsonProtectFileOption,
+         XmlProtectFileOption,
+         RawProtectFileOption
         };
 
 
         /// <summary>
-        /// Turns on <see cref="JsonWithCommentsFileProtectProcessor"/> in order to allow the preservation of comments inside JSON files when encrypting by using <see cref="ProtectFiles"/> (e.g. swaps <see cref="JsonFileProtectOption"/> with <see cref="JsonWithCommentsFileProtectOption"/>)
+        /// Turns on <see cref="JsonWithCommentsProtectFileProcessor"/> in order to allow the preservation of comments inside JSON files when encrypting by using <see cref="ProtectFiles"/> (e.g. swaps <see cref="JsonProtectFileOption"/> with <see cref="JsonWithCommentsProtectFileOption"/>)
         /// </summary>
-        public static void UseJsonWithCommentsFileProtectOption()
+        public static void UseJsonWithCommentsProtectFileOption()
         {
-            ProtectFilesOptions.Remove(JsonFileProtectOption);
-            ProtectFilesOptions.Insert(0, JsonWithCommentsFileProtectOption);
+            ProtectFilesOptions.Remove(JsonProtectFileOption);
+            ProtectFilesOptions.Insert(0, JsonWithCommentsProtectFileOption);
         }
 
 
@@ -86,7 +86,7 @@ namespace Fededim.Extensions.Configuration.Protected
                 foreach (var protectFileOption in ProtectFilesOptions)
                     if (protectFileOption.FilenameRegex.Match(f).Success)
                     {
-                        replacedContent = protectFileOption.FileProtectProcessor.ProtectFile(fileContent, protectRegex, (value) => ProtectConfigurationValue(protectProvider, value, protectRegexString, protectedReplaceString));
+                        replacedContent = protectFileOption.ProtectFileProcessor.ProtectFile(fileContent, protectRegex, (value) => ProtectConfigurationValue(protectProvider, value, protectRegexString, protectedReplaceString));
                         break;
                     }
 
@@ -120,11 +120,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <exception cref="ArgumentException"></exception>
         public static String ProtectConfigurationValue(this IProtectProvider protectProvider, String value, String protectRegexString = null, String protectedReplaceString = null)
         {
-            var protectRegex = new Regex(!String.IsNullOrEmpty(protectRegexString) ? protectRegexString : ProtectedConfigurationBuilder.DefaultProtectRegexString);
-            if (!protectRegex.GetGroupNames().Contains("protectData"))
-                throw new ArgumentException("Regex must contain a group named protectData!", nameof(protectRegexString));
-
-            return ProtectConfigurationValueInternal(protectProvider, value, protectRegex, protectedReplaceString);
+            return ProtectConfigurationValueInternal(protectProvider, value, protectRegexString, protectedReplaceString);
         }
 
 
@@ -137,9 +133,13 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of ProtectedConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
         /// <returns></returns>
-        private static String ProtectConfigurationValueInternal(IProtectProvider protectProvider, String value, Regex protectRegex, String protectedReplaceString)
+        private static String ProtectConfigurationValueInternal(IProtectProvider protectProvider, String value, String protectRegexString, String protectedReplaceString)
         {
             protectedReplaceString = !String.IsNullOrEmpty(protectedReplaceString) ? protectedReplaceString : ProtectedConfigurationBuilder.DefaultProtectedReplaceString;
+            var protectRegex = new Regex(!String.IsNullOrEmpty(protectRegexString) ? protectRegexString : ProtectedConfigurationBuilder.DefaultProtectRegexString);
+            if (!protectRegex.GetGroupNames().Contains("protectData"))
+                throw new ArgumentException("protectRegexString must contain a group named protectData!", nameof(protectRegexString));
+
 
             return protectRegex.Replace(value, (me) =>
             {
