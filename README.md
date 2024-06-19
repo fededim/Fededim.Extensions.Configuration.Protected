@@ -23,7 +23,7 @@ You can find the source code here [Fededim.Extensions.Configuration.Protected](h
 
 Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft Data Protection API encryption/decryption provider for Fededim.Extensions.Configuration.Protected
 
-You can find the source code here [Fededim.Extensions.Configuration.Protected](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
+You can find the source code here [Fededim.Extensions.Configuration.Protected.DataProtectionAPI](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
 
 
 
