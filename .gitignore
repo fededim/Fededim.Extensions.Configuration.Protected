@@ -361,4 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
 /Fededim.Extensions.Configuration.Protected.ConsoleTest/Keys
+/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest/Keys/
