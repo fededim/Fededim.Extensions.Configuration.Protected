@@ -16,7 +16,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 
 - Modify the configuration sources by enclosing with the encryption tokenization tag (e.g. Protect:{<data to be encrypted}) all the values or part of values you would like to encrypt
 - Configure the data protection api in a helper method (e.g. ConfigureDataProtection)
-- Encrypt all appsettings values by calling IProtectProvider.ProtectFiles, IProtectProvider.ProtectConfigurationValue and IProtectProvider.ProtectEnvironmentVariables extension methods
+- Encrypt all appsettings values by calling IProtectProviderConfigurationData.ProtectFiles, IProtectProviderConfigurationData.ProtectConfigurationValue and IProtectProviderConfigurationData.ProtectEnvironmentVariables extension methods
 - Define the application configuration using ProtectedConfigurationBuilder and adding any standard framework provided or custom configuration source
 - Call ProtectedConfigurationBuilder.Build to automatically decrypt the encrypted values and retrieve the cleartext ones into a IConfigurationRoot class.
 - Map the Configuration object to a strongly typed hierarchical class using DI Configure
@@ -62,11 +62,19 @@ public class Program
         ConfigureDataProtection(servicesDataProtection.AddDataProtection());
         var serviceProviderDataProtection = servicesDataProtection.BuildServiceProvider();
 
-        // define the DI services: setup a Data Protection API custom tailored for a particular providers (InMemory and Environment Variables)
 
-        // retrieve IProtectProvider interfaces for encrypting data
-        var dataProtector = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationKeyNumberPurpose(1)));
-        var dataProtectorAdditional = new DataProtectionAPIProtectProvider(serviceProviderDataProtection.GetRequiredService<IDataProtectionProvider>().CreateProtector(DataProtectionAPIProtectConfigurationData.DataProtectionAPIProtectConfigurationStringPurpose("MagicPurpose")));
+        // creates all the DataProtectionAPIProtectConfigurationData classes specifying three different provider configurations
+
+        // standard configuration using key number purpose
+        var standardProtectConfigurationData = new DataProtectionAPIProtectConfigurationData(serviceProviderDataProtection);
+
+        // standard configuration using key number purpose overridden with a custom tokenization
+        var otherProtectedTokenizationProtectConfigurationData = new DataProtectionAPIProtectConfigurationData(serviceProviderDataProtection,2, protectRegexString: "OtherProtect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.+?)}", protectedRegexString: "OtherProtected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.+?)}", protectedReplaceString: "OtherProtected${subPurposePattern}:{${protectedData}}");
+
+        // standard configuration using string purpose
+        var magicPurposeStringProtectConfigurationData = new DataProtectionAPIProtectConfigurationData(serviceProviderDataProtection, "MagicPurpose"); 
+
+
 
         // activates JsonWithCommentsProtectFileProcessor
         ConfigurationBuilderExtensions.UseJsonWithCommentsProtectFileOption();
@@ -90,17 +98,17 @@ public class Program
         // encrypts all configuration sources (must be done before reading the configuration)
 
         // encrypts all Protect:{<data>} token tags inside command line argument (you can use also the same method to encrypt String, IEnumerable<String>, IDictionary<String,String> value of any configuration source
-        var encryptedArgs = dataProtector.ProtectConfigurationValue(args);
+        var encryptedArgs = standardProtectConfigurationData.ProtectConfigurationValue(args);
 
         // encrypts all Protect:{<data>} token tags inside im-memory dictionary
-        dataProtectorAdditional.ProtectConfigurationValue(memoryConfiguration);
+        magicPurposeStringProtectConfigurationData.ProtectConfigurationValue(memoryConfiguration);
 
         // encrypts all Protect:{<data>} token tags inside .json files and all OtherProtect:{<data>} inside .xml files 
-        var encryptedJsonFiles = dataProtector.ProtectFiles(".");
-        var encryptedXmlFiles = dataProtector.ProtectFiles(".", searchPattern: "*.xml", protectRegexString: "OtherProtect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.+?)}", protectedReplaceString: "OtherProtected${subPurposePattern}:{${protectedData}}");
+        var encryptedJsonFiles = standardProtectConfigurationData.ProtectFiles(".");
+        var encryptedXmlFiles = otherProtectedTokenizationProtectConfigurationData.ProtectFiles(".", searchPattern: "*.xml");
 
         // encrypts all Protect:{<data>} token tags inside environment variables
-        dataProtectorAdditional.ProtectEnvironmentVariables();
+        magicPurposeStringProtectConfigurationData.ProtectEnvironmentVariables();
 
         // please check that all configuration source defined above are encrypted (check also Environment.GetEnvironmentVariable("SecretEnvironmentPassword") in Watch window)
         // note the per key purpose string override in file appsettings.development.json inside Nullable:DoubleArray contains two elements one with "Protect:{3.14}" and one with "Protect:{%customSubPurpose%}:{3.14}", even though the value is the same (3.14) they are encrypted differently due to the custom key purpose string
@@ -108,13 +116,13 @@ public class Program
         Debugger.Break();
 
         // define the application configuration using almost all possible known ConfigurationSources
-        var configuration = new ProtectedConfigurationBuilder(new DataProtectionAPIProtectConfigurationData(dataProtectionServiceProvider: serviceProviderDataProtection))
+        var configuration = new ProtectedConfigurationBuilder(standardProtectConfigurationData)  // global configuration
                 .AddCommandLine(encryptedArgs)
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", false, true)
-                .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(protectedRegexString: "OtherProtected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.+?)}", dataProtectionServiceProvider: serviceProviderDataProtection, keyNumber: 1)
-                .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, purposeString: "MagicPurpose")
-                .AddEnvironmentVariables().WithProtectedConfigurationOptions(dataProtectionServiceProvider: serviceProviderDataProtection, purposeString: "MagicPurpose")
+                .AddXmlFile("appsettings.xml").WithProtectedConfigurationOptions(otherProtectedTokenizationProtectConfigurationData) // overrides global configuration for XML file
+                .AddInMemoryCollection(memoryConfiguration).WithProtectedConfigurationOptions(magicPurposeStringProtectConfigurationData) // overrides global configuration for in-memory collection file
+                .AddEnvironmentVariables().WithProtectedConfigurationOptions(magicPurposeStringProtectConfigurationData) // overrides global configuration for enviroment variables file
                 .Build();
 
         // define other DI services: configure strongly typed AppSettings configuration class (must be done after having read the configuration)
@@ -164,13 +172,13 @@ public class Program
         Debug.Assert(appSettings.EncryptedXmlSecretKey == appSettings.PlainTextXmlSecretKey);
 
 
-        // multiple configuration reload example
+        // multiple configuration reload example (in order to check that the ReloadToken re-registration works)
         int i = 0;
         while (i++ < 5)
         {
             // updates inside appsettings.<environment>.json the property "Int": <whatever>, --> "Int": "Protected:{<random number>},"
             var environmentAppSettings = File.ReadAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json");
-            environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{dataProtector.ProtectConfigurationValue($"Protect:{{{new Random().Next(0, 1000000)}}}")}\",");
+            environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{standardProtectConfigurationData.ProtectConfigurationValue($"Protect:{{{new Random().Next(0, 1000000)}}}")}\",");
             File.WriteAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", environmentAppSettings);
 
             // wait 5 seconds for the reload to take place, please check on this breakpoint that the value of "Int" property has changed in appSettings class and it is the same of appSettingsReloaded
@@ -185,6 +193,7 @@ public class Program
 
 The main types provided by this library are:
 
+- Fededim.Extensions.Configuration.Protected.IProtectedConfigurationBuilder
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider
 - Fededim.Extensions.Configuration.Protected.ProtectedConfigurationData
@@ -249,6 +258,11 @@ v1.0.12
 v1.0.13
 - Improvement: Streamlined validations on regex and converted IProtectProviderConfigurationData.IsValid property to a method CheckConfigurationIsValid raising exception with the details of the errors.
 - Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
+
+v1.0.14
+- Improvement: added both ProtectRegex and ProtectedReplaceString to abstract class IProtectProviderConfigurationData in order to specify all configuration in a single point
+- Breaking change: all ConfigurationBuilderExtensions.Protect... methods now extend the IProtectProviderConfigurationData abstract class instead of IProtectProvider interface, the parameters protectRegexString and protectedReplaceString have been removed since they are now specified inside IProtectProviderConfigurationData
+- Refinement: moved IConfigurationBuilder.WithProtectedConfigurationOptions inside Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
 
 # Detailed guide
 

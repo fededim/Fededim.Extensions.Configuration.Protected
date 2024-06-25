@@ -2,16 +2,15 @@
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Fededim.Extensions.Configuration.Protected.DataProtectionAPI;
 using System.IO;
+using Xunit.Abstractions;
+using Xunit;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {
-    public class DataProtectionAPIProtectProviderTest : ProtectedConfigurationBuilderTest
+
+    public class DataProtectionAPIProtectProviderTest : ProtectedConfigurationBuilderTest, IClassFixture<ProtectedConfigurationBuilderTestFixture>
     {
         private static void ConfigureDataProtection(IDataProtectionBuilder builder)
         {
@@ -23,9 +22,23 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             }).SetDefaultKeyLifetime(TimeSpan.FromDays(365 * 15)).PersistKeysToFileSystem(new DirectoryInfo("..\\..\\..\\Keys"));
         }
 
-        public DataProtectionAPIProtectProviderTest():base(new DataProtectionAPIProtectConfigurationData(ConfigureDataProtection))
+
+
+        public DataProtectionAPIProtectProviderTest(ProtectedConfigurationBuilderTestFixture context, ITestOutputHelper testOutputHelper) :base(context, testOutputHelper,new DataProtectionAPIProtectConfigurationData(ConfigureDataProtection))
         {
             
+        }
+
+
+        protected override string TrimStringSubpurpose(string subpurpose)
+        {
+            return subpurpose.Replace(":", "*").Replace("}", "|");
+        }
+
+
+        protected override string TrimStringValue(string value)
+        {
+            return value.Replace("}", "|");
         }
     }
 }

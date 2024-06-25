@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace Fededim.Extensions.Configuration.Protected
 {
     /// <summary>
-    /// ConfigurationBuilderExtensions is a static class providing different extensions methods to IConfigurationBuilder and IProtectProvider interfaces
+    /// ConfigurationBuilderExtensions is a static class providing different extensions methods to IConfigurationBuilder and IProtectProviderConfigurationData interfaces
     /// </summary>
     public static class ConfigurationBuilderExtensions
     {
@@ -59,22 +60,18 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// Perform wildcard search of files in path encrypting any data enclosed by protectRegexString the inside files with the protectedReplaceString
+        /// Perform wildcard search of files in path encrypting any data using the specified <see cref="protectProviderConfigurationData"/>
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="path">directory to be searched</param>
         /// <param name="searchPattern">wildcard pattern to filter files</param>
         /// <param name="searchOption">search options</param>
-        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String expression used to generate the final encrypted String using ${protectedData} as a placeholder parameter for encrypted data and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
         /// <param name="backupOriginalFile">boolean which indicates whether to make a backupof original file with extension .bak</param>
         /// <returns>a list of filenames which have been successfully encrypted</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static IList<String> ProtectFiles(this IProtectProvider protectProvider, String path, String searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, String protectRegexString = null, String protectedReplaceString = null, bool backupOriginalFile = true)
+        public static IList<String> ProtectFiles(this IProtectProviderConfigurationData protectProviderConfigurationData, String path, String searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, bool backupOriginalFile = true)
         {
-            var protectRegex = new Regex(!String.IsNullOrEmpty(protectRegexString) ? protectRegexString : ProtectedConfigurationBuilder.DefaultProtectRegexString);
-            if (!protectRegex.GetGroupNames().Contains("protectData"))
-                throw new ArgumentException("Regex must contain a group named protectData!", nameof(protectRegexString));
+            protectProviderConfigurationData.CheckConfigurationIsValid();
 
             var result = new List<String>();
 
@@ -86,7 +83,7 @@ namespace Fededim.Extensions.Configuration.Protected
                 foreach (var protectFileOption in ProtectFilesOptions)
                     if (protectFileOption.FilenameRegex.Match(f).Success)
                     {
-                        replacedContent = protectFileOption.ProtectFileProcessor.ProtectFile(fileContent, protectRegex, (value) => ProtectConfigurationValue(protectProvider, value, protectRegexString, protectedReplaceString));
+                        replacedContent = protectFileOption.ProtectFileProcessor.ProtectFile(fileContent, protectProviderConfigurationData.ProtectRegex, (value) => ProtectConfigurationValue(protectProviderConfigurationData, value));
                         break;
                     }
 
@@ -110,109 +107,118 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// Encrypts the String value using the specified protectProvider
+        /// Encrypts the String value using the specified <see cref="protectProviderConfigurationData"/>
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="value">a String literal which needs to be encrypted</param>
-        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of ProtectedConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
         /// <returns>the encrypted configuration value</returns>
         /// <exception cref="ArgumentException"></exception>
-        public static String ProtectConfigurationValue(this IProtectProvider protectProvider, String value, String protectRegexString = null, String protectedReplaceString = null)
+        public static String ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, String value)
         {
-            return ProtectConfigurationValueInternal(protectProvider, value, protectRegexString, protectedReplaceString);
+            return ProtectConfigurationValueInternal(protectProviderConfigurationData, value);
         }
 
 
 
         /// <summary>
-        /// internal method actually performing the encryption using the <see cref="protectRegex"/> and <see cref="IProtectProvider"/> interface
+        /// internal method actually performing the encryption using the specified <see cref="protectProviderConfigurationData"/>
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="value">a String literal which needs to be encrypted</param>
-        /// <param name="protectRegex">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of ProtectedConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
         /// <returns></returns>
-        private static String ProtectConfigurationValueInternal(IProtectProvider protectProvider, String value, String protectRegexString, String protectedReplaceString)
+        private static String ProtectConfigurationValueInternal(IProtectProviderConfigurationData protectProviderConfigurationData, String value)
         {
-            protectedReplaceString = !String.IsNullOrEmpty(protectedReplaceString) ? protectedReplaceString : ProtectedConfigurationBuilder.DefaultProtectedReplaceString;
-            var protectRegex = new Regex(!String.IsNullOrEmpty(protectRegexString) ? protectRegexString : ProtectedConfigurationBuilder.DefaultProtectRegexString);
-            if (!protectRegex.GetGroupNames().Contains("protectData"))
-                throw new ArgumentException("protectRegexString must contain a group named protectData!", nameof(protectRegexString));
+            if (value == null)
+                return null;
 
+            protectProviderConfigurationData.CheckConfigurationIsValid();
 
-            return protectRegex.Replace(value, (me) =>
+            return protectProviderConfigurationData.ProtectRegex.Replace(value, (me) =>
             {
                 var subPurposePresent = !String.IsNullOrEmpty(me.Groups["subPurpose"]?.Value);
 
-                if (subPurposePresent)
-                    protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+                var protectProvider = protectProviderConfigurationData.ProtectProvider;
 
-                return protectedReplaceString.Replace("${subPurposePattern}", subPurposePresent ? me.Groups["subPurposePattern"].Value : String.Empty).Replace("${protectedData}", protectProvider.Encrypt(me.Groups["protectData"].Value));
+                if (subPurposePresent)
+                    protectProvider = protectProviderConfigurationData.ProtectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+
+                return protectProviderConfigurationData.ProtectedReplaceString.Replace("${subPurposePattern}", subPurposePresent ? me.Groups["subPurposePattern"].Value : String.Empty).Replace("${protectedData}", protectProvider.Encrypt(me.Groups["protectData"].Value));
             });
         }
 
 
 
         /// <summary>
-        /// Encrypts the Dictionary<String, String> initialData using the specified protectProvider (used for in-memory collections)
+        /// Encrypts the Dictionary<String, String> initialData using the specified <see cref="protectProviderConfigurationData"/> (used for in-memory collections)
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="initialData">a Dictionary<String, String> whose values need to be encrypted</param>
-        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
-        public static void ProtectConfigurationValue(this IProtectProvider protectProvider, Dictionary<String, String> initialData, String protectRegexString = null, String protectedReplaceString = null)
+        public static void ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, Dictionary<String, String> initialData)
         {
             if (initialData != null)
                 foreach (var key in initialData.Keys.ToList())
-                    initialData[key] = protectProvider.ProtectConfigurationValue(initialData[key], protectRegexString, protectedReplaceString);
+                    initialData[key] = protectProviderConfigurationData.ProtectConfigurationValue(initialData[key]);
         }
 
 
 
         /// <summary>
-        /// Encrypts the IEnumerable<String> arguments using the specified protectProvider
+        /// Encrypts the IEnumerable<String> arguments using the specified <see cref="protectProviderConfigurationData"/>
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="arguments">a IEnumerable<String> whose elements need to be encrypted</param>
-        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
         /// <returns>a newer encrypted IEnumerable<String></returns>
-        public static IEnumerable<String> ProtectConfigurationValue(this IProtectProvider protectProvider, IEnumerable<String> arguments, String protectRegexString = null, String protectedReplaceString = null)
+        public static IEnumerable<String> ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, IEnumerable<String> arguments)
         {
-            return arguments?.Select(argument => protectProvider.ProtectConfigurationValue(argument, protectRegexString, protectedReplaceString));
+            return arguments?.Select(argument => protectProviderConfigurationData.ProtectConfigurationValue(argument));
         }
 
 
 
         /// <summary>
-        /// Encrypts the String[] arguments using the specified protectProvider (used for command-line arguments)
+        /// Encrypts the String[] arguments using the specified <see cref="protectProviderConfigurationData"/> (used for command-line arguments)
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="arguments">a String array whose elements need to be encrypted</param>
-        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
         /// <returns>a newer encrypted String[] array</returns>
-        public static String[] ProtectConfigurationValue(this IProtectProvider protectProvider, String[] arguments, String protectRegexString = null, String protectedReplaceString = null)
+        public static String[] ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, String[] arguments)
         {
-            return arguments?.Select(argument => protectProvider.ProtectConfigurationValue(argument, protectRegexString, protectedReplaceString)).ToArray();
+            return arguments?.Select(argument => protectProviderConfigurationData.ProtectConfigurationValue(argument)).ToArray();
         }
 
 
 
         /// <summary>
-        /// Encrypts all the environment variables using the specified protectProvider (used for environment variables)
+        /// Encrypts all the environment variables using the specified <see cref="protectProviderConfigurationData"/> (used for environment variables)
         /// </summary>
-        /// <param name="protectProvider">an IProtectProvider interface obtained from a one of the supported providers</param>
-        /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
-        /// <param name="protectedReplaceString">a String used to replace the protectRegex token with the protected format (e.g. matching the protectRegexString of IConfigurationBuilder), the encrypted data is injected by using the placeholder ${protectedData} and ${subPurposePattern} as a placeholder parameter for the key custom subpurpose</param>
-        public static void ProtectEnvironmentVariables(this IProtectProvider protectProvider, String protectRegexString = null, String protectedReplaceString = null)
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
+        public static void ProtectEnvironmentVariables(this IProtectProviderConfigurationData protectProviderConfigurationData, EnvironmentVariableTarget environmentTarget = EnvironmentVariableTarget.User)
         {
-            var environmentVariables = Environment.GetEnvironmentVariables();
+            var environmentVariables = Environment.GetEnvironmentVariables(environmentTarget);
 
-            if (environmentVariables != null)
-                foreach (String key in environmentVariables.Keys)
-                    Environment.SetEnvironmentVariable(key, protectProvider.ProtectConfigurationValue(environmentVariables[key].ToString(), protectRegexString, protectedReplaceString));
+            foreach (String key in environmentVariables.Keys)
+                Environment.SetEnvironmentVariable(key, protectProviderConfigurationData.ProtectConfigurationValue(environmentVariables[key].ToString()));
+        }
+
+
+
+
+        /// <summary>
+        /// WithProtectedConfigurationOptions is a helper method used to override the ProtectedGlobalConfigurationData for a particular provider (e.g. the last one added)
+        /// </summary>
+        /// <param name="configurationBuilder">the IConfigurationBuilder instance</param>
+        /// <param name="protectProviderLocalConfigurationData">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
+        /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
+        /// <exception cref="ArgumentException">if configurationBuilder is not an instance of ProtectedConfigurationBuilder class</exception>
+        public static IConfigurationBuilder WithProtectedConfigurationOptions(this IConfigurationBuilder configurationBuilder, IProtectProviderConfigurationData protectProviderLocalConfigurationData)
+        {
+            var protectedConfigurationBuilder = configurationBuilder as IProtectedConfigurationBuilder;
+
+            if (protectedConfigurationBuilder != null)
+                return protectedConfigurationBuilder.WithProtectedConfigurationOptions(protectProviderLocalConfigurationData);
+            else
+                throw new ArgumentException("Please use ProtectedConfigurationBuilder instead of ConfigurationBuilder class!", nameof(configurationBuilder));
+
         }
     }
 }
