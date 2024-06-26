@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft DataProtectionAPI provider for the encryption/decryption of configuration values using Fededim.Extensions.Configuration.Protected.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -27,6 +27,13 @@
       v1.0.1
       - Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
       - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.13
+
+      v1.0.2
+      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.14
+      - Breaking change: removed anymore needed DataProtectionAPIConfigurationBuilderExtensions
+      - Refinement: adapted DataProtectionAPIProtectConfigurationData according to the new IProtectProviderConfigurationData, streamlined its constructors and added missing comments
+      - Improvement: added unit testing project Fededim.Extensions.Configuration.Protected.DataProtectionAPITest with an extensive test on all existing configuration providers
+
     </PackageReleaseNotes>
   </PropertyGroup>
 

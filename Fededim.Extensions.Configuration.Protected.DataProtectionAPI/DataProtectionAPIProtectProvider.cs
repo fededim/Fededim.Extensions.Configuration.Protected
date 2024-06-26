@@ -14,7 +14,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <summary>
         /// The main constructor
         /// </summary>
-        /// <param name="dataProtector">the <see cref="IDataProtect"/> interface obtained from Data Protection API</param>
+        /// <param name="dataProtector">the <see cref="IDataProtector"/> interface obtained from Data Protection API</param>
         public DataProtectionAPIProtectProvider(IDataProtector dataProtector)
         {
             DataProtector = dataProtector;

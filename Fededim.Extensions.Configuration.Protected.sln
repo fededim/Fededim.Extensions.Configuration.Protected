@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configur
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected.ConsoleTest", "Fededim.Extensions.Configuration.Protected.ConsoleTest\Fededim.Extensions.Configuration.Protected.ConsoleTest.csproj", "{DA62A52E-376A-40AF-A276-151063553B88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPI", "Fededim.Extensions.Configuration.Protected.DataProtectionAPI\Fededim.Extensions.Configuration.Protected.DataProtectionAPI.csproj", "{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPI", "Fededim.Extensions.Configuration.Protected.DataProtectionAPI\Fededim.Extensions.Configuration.Protected.DataProtectionAPI.csproj", "{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPITest", "Fededim.Extensions.Configuration.Protected.DataProtectionAPITest\Fededim.Extensions.Configuration.Protected.DataProtectionAPITest.csproj", "{898CD43E-C661-4CAF-BE48-293B2A4E0726}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{898CD43E-C661-4CAF-BE48-293B2A4E0726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{898CD43E-C661-4CAF-BE48-293B2A4E0726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{898CD43E-C661-4CAF-BE48-293B2A4E0726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{898CD43E-C661-4CAF-BE48-293B2A4E0726}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

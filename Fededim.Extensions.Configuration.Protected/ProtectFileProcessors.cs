@@ -307,9 +307,8 @@ namespace Fededim.Extensions.Configuration.Protected
             if (element.HasElements)
             {
                 // recursively protects nested elements
-                foreach (var nestedElement in element.Descendants())
+                foreach (var nestedElement in element.Elements())
                     ProtectXmlNodes(nestedElement, protectRegex, protectFunction);
-
             }
             else
             {

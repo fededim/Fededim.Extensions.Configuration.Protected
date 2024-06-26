@@ -24,10 +24,6 @@ namespace Fededim.Extensions.Configuration.Protected
     /// </summary>
     public class ProtectedConfigurationBuilder : IProtectedConfigurationBuilder
     {
-        public const String DefaultProtectRegexString = "Protect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.+?)}";
-        public const String DefaultProtectedRegexString = "Protected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.+?)}";
-        public const String DefaultProtectedReplaceString = "Protected${subPurposePattern}:{${protectedData}}";
-
         /// <summary>
         /// A property used to store the global configuration data <see cref="IProtectProviderConfigurationData"/ > interface
         /// </summary>
@@ -113,12 +109,13 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
-        /// It's a helper method used to override the ProtectedGlobalConfigurationData for a particular provider (e.g. the last one added)
+        /// WithProtectedConfigurationOptions is a helper method used to override the ProtectedGlobalConfigurationData for a particular provider (e.g. the last one added)
         /// </summary>
         /// <param name="protectProviderLocalConfigurationData">the local configuration data overriding the global one, <see cref="IProtectProviderConfigurationData"/ > interface</param>
         /// <returns>The <see cref="IConfigurationBuilder"/> interface for method chaining</returns>
         IConfigurationBuilder IProtectedConfigurationBuilder.WithProtectedConfigurationOptions(IProtectProviderConfigurationData protectProviderLocalConfigurationData)
         {
+            protectProviderLocalConfigurationData.CheckConfigurationIsValid();
             ProtectProviderLocalConfigurationData[Sources[Sources.Count - 1].GetHashCode()] = protectProviderLocalConfigurationData;
 
             return this;
@@ -126,7 +123,7 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
 
-        /// <summary>
+                /// <summary>
         /// CreateProtectedConfigurationProvider creates a new ProtectedConfigurationProvider using the composition approach
         /// </summary>
         /// <param name="provider">an existing IConfigurationProvider to instrument in order to perform the decryption of the encrypted keys</param>
@@ -141,9 +138,8 @@ namespace Fededim.Extensions.Configuration.Protected
             //if (!providerType.IsSubclassOf(typeof(ConfigurationProvider)))
             //    return provider;
 
-            // we merge ProtectedProviderGlobalConfigurationData and ProtectProviderLocalConfigurationData, if it is not valid we raise an exception in order to be notified that something is wrong
+            // we merge ProtectedProviderGlobalConfigurationData and ProtectProviderLocalConfigurationData
             var actualProtectedConfigurationData = ProtectProviderLocalConfigurationData.ContainsKey(provider.GetHashCode()) ? ProtectProviderConfigurationData.Merge(ProtectedProviderGlobalConfigurationData, ProtectProviderLocalConfigurationData[provider.GetHashCode()]) : ProtectedProviderGlobalConfigurationData;
-            actualProtectedConfigurationData.CheckConfigurationIsValid();
 
             // we use composition to perform decryption of all provider values
             return new ProtectedConfigurationProvider(provider, actualProtectedConfigurationData);
