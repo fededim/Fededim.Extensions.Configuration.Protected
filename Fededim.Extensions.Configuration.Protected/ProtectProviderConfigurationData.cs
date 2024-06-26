@@ -40,8 +40,8 @@ namespace Fededim.Extensions.Configuration.Protected
     /// </summary>
     public abstract class IProtectProviderConfigurationData
     {
-        public const String DefaultProtectRegexString = "Protect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.+?)}";
-        public const String DefaultProtectedRegexString = "Protected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.+?)}";
+        public const String DefaultProtectRegexString = "Protect(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectData>.*?)}";
+        public const String DefaultProtectedRegexString = "Protected(?<subPurposePattern>(:{(?<subPurpose>[^:}]+)})?):{(?<protectedData>.*?)}";
         public const String DefaultProtectedReplaceString = "Protected${subPurposePattern}:{${protectedData}}";
 
         /// <summary>

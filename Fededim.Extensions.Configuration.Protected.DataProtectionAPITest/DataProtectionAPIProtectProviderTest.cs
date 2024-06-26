@@ -30,13 +30,13 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         }
 
 
-        protected override string TrimStringSubpurpose(string subpurpose)
+        protected override string TrimRegexCharsFromSubpurpose(string subpurpose)
         {
             return subpurpose.Replace(":", "*").Replace("}", "|");
         }
 
 
-        protected override string TrimStringValue(string value)
+        protected override string TrimRegexCharsFromProtectData(string value)
         {
             return value.Replace("}", "|");
         }
