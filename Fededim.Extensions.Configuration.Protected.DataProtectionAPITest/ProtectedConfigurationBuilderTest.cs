@@ -521,14 +521,14 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                     case DataTypes.BooleanArray:
                     case DataTypes.DateTimeOffsetArray:
                         var arrayElement = xmlDocument.CreateElement(entryKey + "Plaintext");
-                        ((Array)entryValue.Value).Cast<object>().Select((obj, index) => AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, entryValue.DataType == DataTypes.String ? obj.ToString().Trim() : obj)).ToArray();
+                        ((Array)entryValue.Value).Cast<object>().Select((obj, index) => AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, entryValue.DataType == DataTypes.StringArray ? obj.ToString().Trim() : obj)).ToArray();
                         currentNode.AppendChild(arrayElement);
 
                         arrayElement = xmlDocument.CreateElement(entryKey + "Encrypted");
                         ((Array)entryValue.Value).Cast<object>().Select((obj, index) =>
                         {
                             subPurpose = (Random.Next() % 4 == 0) ? TrimRegexCharsFromSubpurpose(GenerateRandomString(SUBPURPOSEMAXLENGTH)) : null;
-                            return AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, CreateXmlProtectValue(subPurpose, entryValue.DataType, entryValue.DataType == DataTypes.String ? obj.ToString().Trim() : obj));
+                            return AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, CreateXmlProtectValue(subPurpose, entryValue.DataType, entryValue.DataType == DataTypes.StringArray ? obj.ToString().Trim() : obj));
                         }).ToArray();
                         currentNode.AppendChild(arrayElement);
                         break;

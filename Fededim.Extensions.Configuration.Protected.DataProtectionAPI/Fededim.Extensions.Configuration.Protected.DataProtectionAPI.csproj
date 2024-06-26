@@ -32,6 +32,7 @@
       - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.14
       - Breaking change: removed anymore needed DataProtectionAPIConfigurationBuilderExtensions
       - Refinement: adapted DataProtectionAPIProtectConfigurationData according to the new IProtectProviderConfigurationData, streamlined its constructors and added missing comments
+      - Improvement: added unit testing project Fededim.Extensions.Configuration.Protected.DataProtectionAPITest with an extensive test on all existing configuration providers
 
     </PackageReleaseNotes>
   </PropertyGroup>

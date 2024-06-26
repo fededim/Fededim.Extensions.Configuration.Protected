@@ -208,7 +208,8 @@ v1.0.2
 - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.14
 - Breaking change: removed anymore needed DataProtectionAPIConfigurationBuilderExtensions
 - Refinement: adapted DataProtectionAPIProtectConfigurationData according to the new IProtectProviderConfigurationData, streamlined its constructors and added missing comments
-     
+- Improvement: added unit testing project Fededim.Extensions.Configuration.Protected.DataProtectionAPITest with an extensive test on all existing configuration providers
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
