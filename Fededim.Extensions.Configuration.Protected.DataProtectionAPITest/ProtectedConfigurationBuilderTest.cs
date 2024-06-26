@@ -316,12 +316,16 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// Generates random json file with <see cref="NUMENTRIES"/> entries, encrypts them, loads them into IConfigurationRoot using a ProtectedConfigurationBuilder and tests that all decrypted key are equal to plaintext ones.
         /// </summary>
         /// <exception cref="InvalidDataException"></exception>
-        [Fact]
-        public void RandomJsonFileTest()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void RandomJsonFileTest(bool useJsonWithCommentFileProcessor)
         {
+            if (useJsonWithCommentFileProcessor)
+                ConfigurationBuilderExtensions.UseJsonWithCommentsProtectFileOption();
+
             // genererates a JSON file
             var fileName = GenerateRandomJsonFile();
-
 
             // Encrypts the JSON file
             Assert.True(ProtectProviderConfigurationData.ProtectFiles(".")?.Any());
