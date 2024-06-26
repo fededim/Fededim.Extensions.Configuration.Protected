@@ -19,6 +19,11 @@ You can find the source code here [Fededim.Extensions.Configuration.Protected.Da
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected) explaning the origin, how to use it and the main point of the implementation.
 
 
+# Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
+This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (10000), one in plaintext with random datatype and value and another with the same value but encrypted. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. On my personal laptop I have successfully tested it also with 30000 entries for a JSON file total size of 17MB, it has ran for two hours without any issues!
+
+
+
 # Fededim.Extensions.Configuration.ProtectedJson (OBSOLETE PLEASE USE Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
 
 Fededim.Extensions.Configuration.ProtectedJson is my first package and it is an improved JSON configuration provider which allows partial or full encryption of configuration values stored in appsettings.json files and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationSource and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using ASP.NET Core Data Protection API.
