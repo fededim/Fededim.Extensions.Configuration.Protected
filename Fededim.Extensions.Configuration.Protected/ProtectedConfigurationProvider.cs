@@ -74,7 +74,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// This is a helper method actually responsible for the decryption of all configuration values. It decrypts all values using just IConfigurationBuilder interface methods so it should work on any existing or even future IConfigurationProvider <br /><br />
         /// Note: unluckily there Data dictionary property of ConfigurationProvider is not exposed on the interface IConfigurationProvider, but we can manage to get all keys by using the GetChildKeys methods, look at its implementation <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration/src/ConfigurationProvider.cs#L61-L94"/> <br /><br />
-        /// The only drawback of this method is that it returns the child keys of the level of the hierarchy specified by the parentPath parameter (it's at line 71 in MS source code "Segment(kv.Key,0)" <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration/src/ConfigurationProvider.cs#L71"/>) <br />
+        /// The only drawback of this method is that it returns the child keys of the level of the hierarchy specified by the parentPath parameter (it's at line 71 in MS source code "Segment(kv.Key, parentPath.Length + 1)" <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration/src/ConfigurationProvider.cs#L84"/>) <br />
         /// So you have to use a recursive function to gather all existing keys and also to issue a distinct due to the way the GetChildKeys method has been implemented <br />
         /// </summary>
         /// <param name="parentPath"></param>
