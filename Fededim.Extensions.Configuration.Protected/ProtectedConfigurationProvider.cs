@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
+using System.Collections.ObjectModel;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
@@ -72,21 +74,69 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
         /// <summary>
+        /// Static PropertyInfo of property Data of Microsoft.Extensions.Configuration.ConfigurationProvider class
+        /// </summary>
+        public static PropertyInfo ConfigurationProviderDataProperty = typeof(ConfigurationProvider).GetProperty("Data", BindingFlags.NonPublic | BindingFlags.Instance);
+
+
+
+        /// <summary>
+        /// Hacky and fastest, tough safe method which gives access to the provider Data dictionary in readonly mode (it could be null in the future or for other providers not deriving from ConfigurationProvider, be sure to always check that it is not null!)
+        /// </summary>
+        public IReadOnlyDictionary<String, String> ProviderDataReadOnly
+        {
+            get
+            {
+                IDictionary<String, String> providerData = ProviderData;
+
+                if (providerData != null)
+                    return new ReadOnlyDictionary<String, String>(providerData);
+
+                return null;
+            }
+        }
+
+
+
+
+        /// <summary>
+        /// Hacky and fastest, tough safe method which gives access to the provider Data dictionary (it could be null in the future or for other providers not deriving from ConfigurationProvider, be sure to always check that it is not null!)
+        /// </summary>
+        protected IDictionary<String, String> ProviderData
+        {
+            get
+            {
+                IDictionary<String, String> providerData = null;
+
+                if (Provider is ConfigurationProvider && ConfigurationProviderDataProperty != null)
+                    providerData = (IDictionary<string, string>)ConfigurationProviderDataProperty.GetValue(Provider);
+
+                return providerData;
+            }
+        }
+
+
+
+        /// <summary>
         /// This is a helper method actually responsible for the decryption of all configuration values. It decrypts all values using just IConfigurationBuilder interface methods so it should work on any existing or even future IConfigurationProvider <br /><br />
         /// Note: unluckily there Data dictionary property of ConfigurationProvider is not exposed on the interface IConfigurationProvider, but we can manage to get all keys by using the GetChildKeys methods, look at its implementation <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration/src/ConfigurationProvider.cs#L61-L94"/> <br /><br />
-        /// The only drawback of this method is that it returns the child keys of the level of the hierarchy specified by the parentPath parameter (it's at line 71 in MS source code "Segment(kv.Key,0)" <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration/src/ConfigurationProvider.cs#L71"/>) <br />
+        /// The only drawback of this method is that it returns the child keys of the level of the hierarchy specified by the parentPath parameter (it's at line 71 in MS source code "Segment(kv.Key, parentPath.Length + 1)" <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration/src/ConfigurationProvider.cs#L84"/>) <br />
         /// So you have to use a recursive function to gather all existing keys and also to issue a distinct due to the way the GetChildKeys method has been implemented <br />
         /// </summary>
         /// <param name="parentPath"></param>
         protected void DecryptChildKeys(String parentPath = null)
         {
-            foreach (var key in Provider.GetChildKeys(new List<String>(), parentPath).Distinct())
+            IDictionary<String, String> dataProperty;
+
+            // this is a hacky yet safe way to speed up key enumeration
+            // we access the Data dictionary of ConfigurationProvider using reflection avoiding enumerating all keys with recursive function
+            // the speed improvement is more 3000 times!
+            if (((dataProperty = ProviderData) != null))
             {
-                var fullKey = parentPath != null ? $"{parentPath}:{key}" : key;
-                if (Provider.TryGet(fullKey, out var value))
+                foreach (var key in dataProperty.Keys.ToList())
                 {
-                    if (!String.IsNullOrEmpty(value))
-                        Provider.Set(fullKey, ProtectProviderConfigurationData.ProtectedRegex.Replace(value, me =>
+                    if (!String.IsNullOrEmpty(dataProperty[key]))
+                        Provider.Set(key, ProtectProviderConfigurationData.ProtectedRegex.Replace(dataProperty[key], me =>
                         {
 
                             var subPurposePresent = !String.IsNullOrEmpty(me.Groups["subPurpose"]?.Value);
@@ -99,7 +149,30 @@ namespace Fededim.Extensions.Configuration.Protected
                             return protectProvider.Decrypt(me.Groups["protectedData"].Value);
                         }));
                 }
-                else DecryptChildKeys(fullKey);
+            }
+            else
+            {
+                foreach (var key in Provider.GetChildKeys(new List<String>(), parentPath).Distinct())
+                {
+                    var fullKey = parentPath != null ? $"{parentPath}:{key}" : key;
+                    if (Provider.TryGet(fullKey, out var value))
+                    {
+                        if (!String.IsNullOrEmpty(value))
+                            Provider.Set(fullKey, ProtectProviderConfigurationData.ProtectedRegex.Replace(value, me =>
+                            {
+
+                                var subPurposePresent = !String.IsNullOrEmpty(me.Groups["subPurpose"]?.Value);
+
+                                IProtectProvider protectProvider = ProtectProviderConfigurationData.ProtectProvider;
+
+                                if (subPurposePresent)
+                                    protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+
+                                return protectProvider.Decrypt(me.Groups["protectedData"].Value);
+                            }));
+                    }
+                    else DecryptChildKeys(fullKey);
+                }
             }
         }
 

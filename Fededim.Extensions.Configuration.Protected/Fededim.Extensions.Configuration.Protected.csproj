@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.14</Version>
+    <Version>1.0.15</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using a provider implementing a standard interface IProtectProvider.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -78,6 +78,9 @@
       - Improvement: added both ProtectRegex and ProtectedReplaceString to abstract class IProtectProviderConfigurationData in order to specify all configuration in a single point
       - Breaking change: all ConfigurationBuilderExtensions.Protect... methods now extend the IProtectProviderConfigurationData abstract class instead of IProtectProvider interface, the parameters protectRegexString and protectedReplaceString have been removed since they are now specified inside IProtectProviderConfigurationData
       - Refinement: moved IConfigurationBuilder.WithProtectedConfigurationOptions inside Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
+
+      v1.0.15
+      - Improvement: made child keys enumeration process unbelievably fast (if the provider is derived from ConfigurationProvider like all now existing providers, the child keys enumeration is now done with a safe hacky method accessing the Data dictionary through reflection which is unbelievably faster, otherwise the old method is used)
     </PackageReleaseNotes>
   </PropertyGroup>
 

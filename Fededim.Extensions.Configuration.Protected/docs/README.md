@@ -264,6 +264,9 @@ v1.0.14
 - Breaking change: all ConfigurationBuilderExtensions.Protect... methods now extend the IProtectProviderConfigurationData abstract class instead of IProtectProvider interface, the parameters protectRegexString and protectedReplaceString have been removed since they are now specified inside IProtectProviderConfigurationData
 - Refinement: moved IConfigurationBuilder.WithProtectedConfigurationOptions inside Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
 
+v1.0.15
+- Improvement: made child keys enumeration process unbelievably fast (if the provider is derived from ConfigurationProvider like all now existing providers, the child keys enumeration is now done with a safe hacky method accessing the Data dictionary through reflection which is unbelievably faster, otherwise the old method is used)
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
