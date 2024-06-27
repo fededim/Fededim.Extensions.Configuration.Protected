@@ -20,7 +20,9 @@ You can find a [detailed article on CodeProject](https://www.codeproject.com/Art
 
 
 # Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
-This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (10000), one in plaintext with random datatype and value and another with the same value but encrypted. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. On my personal laptop I have successfully tested it also with 30000 entries for a JSON file total size of 17MB, it has ran for two hours without any issues!
+This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (10000), one in plaintext with random datatype and value and another with the same value but encrypted. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. On my personal laptop I have successfully tested it also with 30000 entries for a JSON file total size of 17MB, it has run for two hours without any issues!
+
+![image](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/assets/8364158/cd5e87f8-7a1b-4a98-b686-62a64b493c4b)
 
 
 
