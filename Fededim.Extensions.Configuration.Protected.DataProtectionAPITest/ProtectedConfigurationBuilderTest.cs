@@ -13,6 +13,7 @@ using System.Buffers;
 using Xunit.Abstractions;
 using System.Xml;
 using System.Xml.Linq;
+using System.Reflection;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {
@@ -48,7 +49,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
     public abstract class ProtectedConfigurationBuilderTest
     {
-        const int NUMENTRIES = 10000;
+        const int NUMENTRIES = 30000;
         const int STRINGMAXLENGTH = 20;
         const int ARRAYMAXLENGTH = 10;
         const int SUBPURPOSEMAXLENGTH = 8;
@@ -137,7 +138,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                     return (dataType, NextInt64(Int64.MinValue, Int64.MaxValue));
 
                 case DataTypes.DateTimeOffset:
-                    return (dataType, new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks, DateTimeOffset.MaxValue.Ticks), TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset));
+                    return (dataType, new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay), TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset));
 
                 case DataTypes.Double:
                     return (dataType, NextInt64(Int64.MinValue, Int64.MaxValue) * Random.NextDouble());
@@ -184,17 +185,72 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
 
 
-        protected void CheckConfigurationEntriesAreEqual(IConfigurationRoot configuration)
+        static PropertyInfo ProtectedConfigurationProviderProviderDataProperty = typeof(ProtectedConfigurationProvider).GetProperty("ProviderData", BindingFlags.NonPublic | BindingFlags.Instance);
+
+
+        protected int CheckConfigurationEntriesAreEqual(IConfigurationRoot configurationRoot)
         {
-            ExtractAllConfigurationKeys(configuration).ForEach(key =>
+            int numEntries = 0;
+
+            foreach (var provider in configurationRoot.Providers)
             {
-                if (key.Contains("_Plaintext"))
+                // this is a hacky yet safe way to speed up test
+                if (provider is ProtectedConfigurationProvider && ProtectedConfigurationProviderProviderDataProperty != null)
                 {
-                    var encryptedKey = key.Replace("_Plaintext", "_Encrypted");
-                    if (configuration[key] != configuration[encryptedKey])
-                        throw new InvalidDataException($"Value mismatch: Plaintext Key {key} Value {configuration[key]} Encrypted Key {encryptedKey} Value {configuration[encryptedKey]}");
+                    var dataProperty = (IDictionary<string, string>) ProtectedConfigurationProviderProviderDataProperty.GetValue(provider);
+
+                    foreach (var key in dataProperty)
+                    {
+                        if (key.Key.Contains("_Plaintext"))
+                        {
+                            numEntries++;
+                            var encryptedKey = key.Key.Replace("_Plaintext", "_Encrypted");
+                            if (key.Value != dataProperty[encryptedKey])
+                                throw new InvalidDataException($"Value mismatch: Plaintext Key {key.Key} Value {key.Value} Encrypted Key {encryptedKey} Value {dataProperty[encryptedKey]}");
+
+                            // for debugging
+                            //TestOutputHelper.WriteLine($"Checked Key {key.Key} Value {key.Value} Encrypted Key {encryptedKey} Value {dataProperty[encryptedKey]}");
+                        }
+
+                    }
                 }
-            });
+                else
+                {
+                    var queue = new Queue<String>();
+
+                    queue.Enqueue(null);
+
+                    do
+                    {
+                        var parentPath = queue.Dequeue();
+                        foreach (var key in provider.GetChildKeys(new List<String>(), parentPath).Distinct())
+                        {
+                            var fullKey = parentPath != null ? $"{parentPath}:{key}" : key;
+
+                            if (provider.TryGet(fullKey, out var value))
+                            {
+                                if (fullKey.Contains("_Plaintext"))
+                                {
+                                    numEntries++;
+                                    var encryptedKey = fullKey.Replace("_Plaintext", "_Encrypted");
+                                    provider.TryGet(encryptedKey, out var valueDecrypted);
+
+                                    if (value != valueDecrypted)
+                                        throw new InvalidDataException($"Value mismatch: Plaintext Key {fullKey} Value {value} Encrypted Key {encryptedKey} Value {valueDecrypted}");
+
+                                    // for debugging
+                                    //TestOutputHelper.WriteLine($"Checked Key {fullKey} Value {value} Encrypted Key {encryptedKey} Value {valueDecrypted}");
+                                }
+                            }
+                            else
+                                queue.Enqueue(fullKey);
+
+                        }
+                    } while (queue.Count > 0);
+                }
+            }
+
+            return numEntries;
         }
 
 
@@ -250,8 +306,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// <summary>
         /// generates a random hierarchical JSON file with random NUMENTRIES in both datatype and value
         /// </summary>
-        /// <returns>the generated filename</returns>
-        protected String GenerateRandomJsonFile()
+        /// <returns>the generated filename and the number of the entries (variable due to the generation of the random number of element in arrays)</returns>
+        protected (String FileName, int NumEntries) GenerateRandomJsonFile()
         {
             String subPurpose;
             var fileName = RANDOMJSONFILENAME;
@@ -261,6 +317,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var currentNode = JSONObject;
 
             int level = 1;
+            int numEntries = 0;
 
             for (int i = 0; i < NUMENTRIES; i++)
             {
@@ -281,6 +338,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         subPurpose = (Random.Next() % 4 == 0) ? TrimRegexCharsFromSubpurpose(GenerateRandomString(SUBPURPOSEMAXLENGTH)) : null;
                         currentNode[entryKey + "Plaintext"] = JsonValue.Create(entryValue.Value);
                         currentNode[entryKey + "Encrypted"] = JsonValue.Create(CreateJsonProtectValue(subPurpose, entryValue.DataType, entryValue.Value));
+                        numEntries += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -294,6 +352,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                             subPurpose = (Random.Next() % 4 == 0) ? TrimRegexCharsFromSubpurpose(GenerateRandomString(SUBPURPOSEMAXLENGTH)) : null;
                             return JsonValue.Create(CreateJsonProtectValue(subPurpose, entryValue.DataType, obj));
                         }).ToArray());
+                        numEntries += Math.Max(((Array)entryValue.Value).Length,1);
                         break;
                 }
 
@@ -321,7 +380,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             TestOutputHelper.WriteLine($"File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
             TestOutputHelper.WriteLine($"Size {fileInfo.Length / 1024}KB, starting test...");
 
-            return fileName;
+            return (fileName, numEntries);
         }
 
 
@@ -334,15 +393,15 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         [InlineData(true)]
         public void RandomJsonFileTest(bool useJsonWithCommentFileProcessor)
         {
-            var stopwatch = new ExtendedStopwatch(testOutputHelper: TestOutputHelper);
+            var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             if (useJsonWithCommentFileProcessor)
                 ConfigurationBuilderExtensions.UseJsonWithCommentsProtectFileOption();
 
             // genererates a JSON file
-            var fileName = GenerateRandomJsonFile();
+            var result = GenerateRandomJsonFile();
 
-            stopwatch.Step("Generated random JSON file");
+            stopwatch.Step($"Generated random JSON file ({result.NumEntries} entries)");
 
             // Encrypts the JSON file
             Assert.True(ProtectProviderConfigurationData.ProtectFiles(".")?.Any());
@@ -350,7 +409,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Encrypted random JSON file");
 
             // Reads the encrypted JSON file and checks that all encrypted entries do not match DefaultProtectRegexString
-            var encryptedJsonDocument = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(fileName), JsonSerializerOptions);
+            var encryptedJsonDocument = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(result.FileName), JsonSerializerOptions);
             foreach (var node in encryptedJsonDocument)
             {
                 if (node.Key.Contains("_Encrypted") && node.Value != null)
@@ -358,17 +417,17 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         throw new InvalidDataException($"Found an invalid un-encrypted node Key {node.Key} Value {node.Value}!");
             }
 
-            stopwatch.Step("Checked all random JSON file is encrypted");
+            stopwatch.Step("Checked that all random JSON file is encrypted");
 
             // Loads the JSON with ProtectedConfigurationBuilder
-            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddJsonFile(fileName).Build();
+            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddJsonFile(result.FileName).Build();
 
             stopwatch.Step("Loaded and decrypted random JSON file with ProtectedConfigurationBuilder");
 
             // Foreach xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            CheckConfigurationEntriesAreEqual(configuration);
+            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
 
-            stopwatch.Step("Checked all keys are equal");
+            stopwatch.Step($"Checked that {checkedEntries} entries are equal");
         }
 
 
@@ -460,7 +519,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         public bool AddXmlNode(XmlNode currentNode, string name, DataTypes dataType, object value)
         {
             // with array we must use elememts, with WhitespaceString we must use attributes (whitespace is only preserved there)
-            bool forceElement = new List<DataTypes> { DataTypes.StringArray, DataTypes.IntegerArray, DataTypes.DoubleArray, DataTypes.BooleanArray, DataTypes.DateTimeOffsetArray}.Contains(dataType);
+            bool forceElement = new List<DataTypes> { DataTypes.StringArray, DataTypes.IntegerArray, DataTypes.DoubleArray, DataTypes.BooleanArray, DataTypes.DateTimeOffsetArray }.Contains(dataType);
             bool forceAttribute = new List<DataTypes> { DataTypes.WhitespaceString }.Contains(dataType);
 
             String valueString = null;
@@ -495,8 +554,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// - Add Whitespace strings only to attribute <br/>
         /// - Trim whitespace from any string which goes into an element
         /// </remarks>
-        /// <returns>the generated filename</returns>
-        protected String GenerateRandomXmlFile()
+        /// <returns>the generated filename and the number of the entries (variable due to the generation of the random number of element in arrays)</returns>
+        protected (String FileName, int NumEntries) GenerateRandomXmlFile()
         {
             String subPurpose;
             var fileName = RANDOMXMLFILENAME;
@@ -507,6 +566,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var currentNode = xmlDocument.DocumentElement;
 
             int level = 1;
+            int numEntries = 0;
 
             for (int i = 0; i < NUMENTRIES; i++)
             {
@@ -531,6 +591,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
                         AddXmlNode(currentNode, entryKey + "Plaintext", entryValue.DataType, entryValue.Value);
                         AddXmlNode(currentNode, entryKey + "Encrypted", entryValue.DataType, CreateXmlProtectValue(subPurpose, entryValue.DataType, entryValue.Value));
+
+                        numEntries += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -549,6 +611,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                             return AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, CreateXmlProtectValue(subPurpose, entryValue.DataType, entryValue.DataType == DataTypes.StringArray ? obj.ToString().Trim() : obj));
                         }).ToArray();
                         currentNode.AppendChild(arrayElement);
+
+                        numEntries += ((Array)entryValue.Value).Length;   // note IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty />
                         break;
                 }
 
@@ -576,7 +640,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             TestOutputHelper.WriteLine($"File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
             TestOutputHelper.WriteLine($"Size {fileInfo.Length / 1024}KB, starting test...");
 
-            return fileName;
+            return (fileName, numEntries);
         }
 
 
@@ -588,12 +652,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         [Fact]
         public void RandomXmlFileTest()
         {
-            var stopwatch = new ExtendedStopwatch(testOutputHelper: TestOutputHelper);
+            var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates a XML file
-            var fileName = GenerateRandomXmlFile();
+            var result = GenerateRandomXmlFile();
 
-            stopwatch.Step("Generated random XML file");
+            stopwatch.Step($"Generated random XML file ({result.NumEntries} entries)");
 
             // Encrypts the XML file
             Assert.True(ProtectProviderConfigurationData.ProtectFiles(".", searchPattern: "*.xml")?.Any());
@@ -601,7 +665,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Encrypted random XML file");
 
             // Reads the encrypted XML file and checks that all encrypted entries do not match DefaultProtectRegexString
-            var encryptedXmlDocument = XDocument.Load(fileName);
+            var encryptedXmlDocument = XDocument.Load(result.FileName);
             foreach (var node in encryptedXmlDocument.Descendants())
             {
                 // check element is encrypted
@@ -616,17 +680,17 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                             throw new InvalidDataException($"Found an invalid un-encrypted attribute Key {attribute.Name.LocalName} Value {attribute.Value}!");
             }
 
-            stopwatch.Step("Checked all random XML file is encrypted");
+            stopwatch.Step("Checked that all random XML file is encrypted");
 
-            // Loads the XML with ProtectedConfigurationBuilder
-            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddXmlFile(fileName).Build();
+            // Loads the XML with ProtectedConfigurationBuilder, note that IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty />
+            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddXmlFile(result.FileName).Build();
 
             stopwatch.Step("Loaded and decrypted random XML file with ProtectedConfigurationBuilder");
 
             // Foreach xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            CheckConfigurationEntriesAreEqual(configuration);
+            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
 
-            stopwatch.Step("Checked all keys are equal");
+            stopwatch.Step($"Checked that {checkedEntries} entries are equal");
         }
 
         #endregion
@@ -697,11 +761,13 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         Environment.SetEnvironmentVariable(entryKey + "Plaintext", firstValue, EnvironmentVariableTarget.Process);
                         Environment.SetEnvironmentVariable(entryKey + "Encrypted", CreateStringProtectValue(subPurpose, entryValue.DataType, firstValue), EnvironmentVariableTarget.Process);
                         break;
+
+                    default:
+                        throw new NotSupportedException($"{entryValue.DataType}");
                 }
             }
 
-
-            TestOutputHelper.WriteLine($"Generated a random environment variables {NUMENTRIES} entries, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
+            TestOutputHelper.WriteLine($"Generated a random environment variables {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
             TestOutputHelper.WriteLine($"Starting test...");
         }
 
@@ -713,12 +779,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         [Fact]
         public void RandomEnvironmentVariablesTest()
         {
-            var stopwatch = new ExtendedStopwatch(testOutputHelper: TestOutputHelper);
+            var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates random environment variables
             GenerateRandomEnvironmentVariables();
 
-            stopwatch.Step("Generated random environment variables");
+            stopwatch.Step($"Generated random environment variables (note that Windows has a maximum size of 32KB for all environment variables, so not all {NUMENTRIES} keys could be created)");
 
             // Encrypts the environment variables
             ProtectProviderConfigurationData.ProtectEnvironmentVariables(EnvironmentVariableTarget.Process);
@@ -734,7 +800,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         throw new InvalidDataException($"Found an invalid un-encrypted environment variable {key} Value {environmentVariables[key]}!");
             }
 
-            stopwatch.Step("Checked all random environment variables are encrypted");
+            stopwatch.Step("Checked that all random environment variables are encrypted");
 
             // Loads the XML with ProtectedConfigurationBuilder
             var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddEnvironmentVariables().Build();
@@ -742,9 +808,9 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Loaded and decrypted random environment variables with ProtectedConfigurationBuilder");
 
             // For each xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            CheckConfigurationEntriesAreEqual(configuration);
+            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
 
-            stopwatch.Step("Checked all keys are equal");
+            stopwatch.Step($"Checked that {checkedEntries} entries are equal");
         }
         #endregion
 
@@ -817,7 +883,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         [Fact]
         public void RandomInMemoryDictionaryTest()
         {
-            var stopwatch = new ExtendedStopwatch(testOutputHelper: TestOutputHelper);
+            var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates random in-memory dictionary
             var dictionary = GenerateRandomInMemoryDictionary();
@@ -838,7 +904,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         throw new InvalidDataException($"Found an invalid un-encrypted environment variable {entry.Key} Value {entry.Value}!");
             }
 
-            stopwatch.Step("Checked all random in-memory dictionary is encrypted");
+            stopwatch.Step("Checked that all random in-memory dictionary is encrypted");
 
             // Loads the in-memory dictionary with ProtectedConfigurationBuilder
             var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddInMemoryCollection(dictionary).Build();
@@ -846,9 +912,9 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Loaded and decrypted random in-memory dictionary with ProtectedConfigurationBuilder");
 
             // Foreach xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            CheckConfigurationEntriesAreEqual(configuration);
+            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
 
-            stopwatch.Step("Checked all keys are equal");
+            stopwatch.Step($"Checked that {checkedEntries} entries are equal");
         }
 
         #endregion
@@ -924,7 +990,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         [Fact]
         public void RandomCommandLineTest()
         {
-            var stopwatch = new ExtendedStopwatch(testOutputHelper: TestOutputHelper);
+            var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates random command line arguments
             var args = GenerateRandomCommandLine();
@@ -944,7 +1010,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         throw new InvalidDataException($"Found an invalid un-encrypted environment variable {encryptedArgs[2 * i]} Value {encryptedArgs[2 * i + 1]}!");
             }
 
-            stopwatch.Step("Checked all random comand line args are encrypted");
+            stopwatch.Step("Checked that all random comand line args are encrypted");
 
             // Loads the command line arguments with ProtectedConfigurationBuilder
             var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddCommandLine(encryptedArgs).Build();
@@ -952,37 +1018,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Loaded and decrypted random comand line args with ProtectedConfigurationBuilder");
 
             // For each xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            CheckConfigurationEntriesAreEqual(configuration);
+            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
 
-            stopwatch.Step("Checked all keys are equal");
+            stopwatch.Step($"Checked that {checkedEntries} entries are equal");
         }
         #endregion
 
-
-
-
-        /// <summary>
-        /// Extracts all configuration keys from IConfiguration or IConfigurationRoot
-        /// </summary>
-        /// <param name="configurationRoot"></param>
-        /// <returns></returns>
-        protected List<String> ExtractAllConfigurationKeys(IConfiguration configurationRoot)
-        {
-            var result = new List<String>();
-
-            // For each xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            foreach (var key in configurationRoot.GetChildren())
-            {
-                var childKeys = ExtractAllConfigurationKeys(key);
-
-                if (childKeys.Any())
-                    result.AddRange(childKeys);
-                else
-                    result.Add(key.Path);
-            }
-
-            return result;
-        }
 
 
 

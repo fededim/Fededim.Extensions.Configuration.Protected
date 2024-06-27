@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
@@ -20,10 +16,13 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         }
 
 
-        public ExtendedStopwatch(Func<String> debugInfo = null, ITestOutputHelper testOutputHelper = null) : this()
+        public ExtendedStopwatch(bool start=false,Func<String> debugInfo = null, ITestOutputHelper testOutputHelper = null) : this()
         {
             DebugInfo = debugInfo;
             TestOutputHelper = testOutputHelper;
+
+            if (start)
+                Start();
         }
 
 

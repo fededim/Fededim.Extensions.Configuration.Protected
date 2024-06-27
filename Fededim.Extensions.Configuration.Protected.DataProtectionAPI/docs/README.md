@@ -210,6 +210,10 @@ v1.0.2
 - Refinement: adapted DataProtectionAPIProtectConfigurationData according to the new IProtectProviderConfigurationData, streamlined its constructors and added missing comments
 - Improvement: added unit testing project Fededim.Extensions.Configuration.Protected.DataProtectionAPITest with an extensive test on all existing configuration providers
 
+v1.0.3
+- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.15
+- Improvement: improved testing output, timing all phases with a Stopwatch and made plaintext-decrypted value comparison unbelievably fast using the Data dictionary safe hacky method
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
