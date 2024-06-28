@@ -49,7 +49,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
     public abstract class ProtectedConfigurationBuilderTest
     {
-        const int NUMENTRIES = 30000;
+        const int NUMENTRIES = 100000;
         const int STRINGMAXLENGTH = 20;
         const int ARRAYMAXLENGTH = 10;
         const int SUBPURPOSEMAXLENGTH = 8;
