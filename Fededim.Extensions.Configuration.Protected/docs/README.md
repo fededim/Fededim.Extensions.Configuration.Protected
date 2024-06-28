@@ -92,8 +92,8 @@ public class Program
         };
 
         // define an environment variable to be encrypted
-        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}");
-        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#");
+        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#", EnvironmentVariableTarget.Process);
 
         // encrypts all configuration sources (must be done before reading the configuration)
 
@@ -266,6 +266,9 @@ v1.0.14
 
 v1.0.15
 - Improvement: made child keys enumeration process unbelievably fast (if the provider is derived from ConfigurationProvider like all now existing providers, the child keys enumeration is now done with a safe hacky method accessing the Data dictionary through reflection which is unbelievably faster, otherwise the old method is used)
+
+v1.0.16
+- Bugfix: environment target was not passed on ProtectEnvironmentVariables while setting the encrypted variables
 
 # Detailed guide
 
