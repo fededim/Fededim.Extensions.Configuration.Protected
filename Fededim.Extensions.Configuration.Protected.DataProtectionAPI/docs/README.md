@@ -92,8 +92,8 @@ public class Program
         };
 
         // define an environment variable to be encrypted
-        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}");
-        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#");
+        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#", EnvironmentVariableTarget.Process);
 
         // encrypts all configuration sources (must be done before reading the configuration)
 
@@ -213,6 +213,9 @@ v1.0.2
 v1.0.3
 - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.15
 - Improvement: improved testing output, timing all phases with a Stopwatch and made plaintext-decrypted value comparison unbelievably fast using the Data dictionary safe hacky method
+
+v1.0.4
+- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.16
 
 # Detailed guide
 

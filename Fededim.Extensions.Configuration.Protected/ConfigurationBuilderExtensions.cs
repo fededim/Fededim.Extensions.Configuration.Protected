@@ -192,12 +192,13 @@ namespace Fededim.Extensions.Configuration.Protected
         /// Encrypts all the environment variables using the specified <see cref="protectProviderConfigurationData"/> (used for environment variables)
         /// </summary>
         /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
+        /// <param name="environmentTarget">a target EnvironmentVariableTarget (e.g. User, Machine, Process)</param>
         public static void ProtectEnvironmentVariables(this IProtectProviderConfigurationData protectProviderConfigurationData, EnvironmentVariableTarget environmentTarget = EnvironmentVariableTarget.User)
         {
             var environmentVariables = Environment.GetEnvironmentVariables(environmentTarget);
 
             foreach (String key in environmentVariables.Keys)
-                Environment.SetEnvironmentVariable(key, protectProviderConfigurationData.ProtectConfigurationValue(environmentVariables[key].ToString()));
+                Environment.SetEnvironmentVariable(key, protectProviderConfigurationData.ProtectConfigurationValue(environmentVariables[key].ToString()),environmentTarget);
         }
 
 

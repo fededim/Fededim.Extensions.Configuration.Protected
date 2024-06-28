@@ -67,8 +67,8 @@ public class Program
         };
 
         // define an environment variable to be encrypted
-        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}");
-        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#");
+        Environment.SetEnvironmentVariable("EncryptedEnvironmentPassword", "Protect:{SecretEnvPassword\\!*+?|{[()^$.#}", EnvironmentVariableTarget.Process);
+        Environment.SetEnvironmentVariable("PlainTextEnvironmentPassword", "SecretEnvPassword\\!*+?|{[()^$.#", EnvironmentVariableTarget.Process);
 
         // encrypts all configuration sources (must be done before reading the configuration)
 
