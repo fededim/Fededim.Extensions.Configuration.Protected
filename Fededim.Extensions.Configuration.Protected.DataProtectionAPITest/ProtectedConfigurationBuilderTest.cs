@@ -185,9 +185,6 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
 
 
-        static PropertyInfo ProtectedConfigurationProviderProviderDataProperty = typeof(ProtectedConfigurationProvider).GetProperty("ProviderData", BindingFlags.NonPublic | BindingFlags.Instance);
-
-
         protected int CheckConfigurationEntriesAreEqual(IConfigurationRoot configurationRoot)
         {
             int numEntries = 0;
@@ -195,9 +192,9 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             foreach (var provider in configurationRoot.Providers)
             {
                 // this is a hacky yet safe way to speed up test
-                if (provider is ProtectedConfigurationProvider && ProtectedConfigurationProviderProviderDataProperty != null)
+                if (provider is ProtectedConfigurationProvider && ((ProtectedConfigurationProvider)provider).ProviderDataReadOnly != null)
                 {
-                    var dataProperty = (IDictionary<string, string>) ProtectedConfigurationProviderProviderDataProperty.GetValue(provider);
+                    var dataProperty = ((ProtectedConfigurationProvider)provider).ProviderDataReadOnly;
 
                     foreach (var key in dataProperty)
                     {
