@@ -109,7 +109,7 @@ namespace Fededim.Extensions.Configuration.Protected
                 IDictionary<String, String> providerData = null;
 
                 if (Provider is ConfigurationProvider && ConfigurationProviderDataProperty != null)
-                    providerData = (IDictionary<string, string>)ConfigurationProviderDataProperty.GetValue(Provider);
+                    providerData = ConfigurationProviderDataProperty.GetValue(Provider) as IDictionary<string, string>;
 
                 return providerData;
             }
@@ -216,6 +216,7 @@ namespace Fededim.Extensions.Configuration.Protected
         }
 
 
+
         /// <summary>
         /// Calls the underlying provider Set method
         /// </summary>
@@ -225,6 +226,7 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             Provider.Set(key, value);
         }
+
 
 
         /// <summary>
@@ -237,6 +239,7 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             return Provider.TryGet(key, out value);
         }
+
 
 
         /// <summary>
