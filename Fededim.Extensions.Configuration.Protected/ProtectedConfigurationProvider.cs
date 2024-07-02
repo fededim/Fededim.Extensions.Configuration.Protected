@@ -130,7 +130,7 @@ namespace Fededim.Extensions.Configuration.Protected
 
             // this is a hacky yet safe way to speed up key enumeration
             // we access the Data dictionary of ConfigurationProvider using reflection avoiding enumerating all keys with recursive function
-            // the speed improvement is more 3000 times!
+            // the speed improvement is more than 3000 times!
             if (((dataProperty = ProviderData) != null))
             {
                 foreach (var key in dataProperty.Keys.ToList())
