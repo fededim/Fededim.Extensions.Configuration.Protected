@@ -270,6 +270,10 @@ v1.0.15
 v1.0.16
 - Bugfix: environment target was not passed on ProtectEnvironmentVariables while setting the encrypted variables
 
+v1.0.17
+- Refinement: made ProtectedConfigurationProvider.ProviderData property safer using as instead of a direct cast
+- Refinement: added virtual to various methods in order to allow extensibility
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.

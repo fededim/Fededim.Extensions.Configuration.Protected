@@ -65,7 +65,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
         /// <returns>the encrypted re-encoded file as a string</returns>
-        public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> ProtectFunction)
+        public virtual String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> ProtectFunction)
         {
             rawFileText = ProtectFunction(rawFileText);
 
@@ -110,7 +110,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
         /// <returns>the encrypted re-encoded file as a string</returns>
-        public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
+        public virtual String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the JSON file
             var document = JsonNode.Parse(rawFileText, JsonNodeOptions, JsonDocumentOptions);
@@ -152,7 +152,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
         /// <returns>list of all string nodes</returns>
-        protected List<JsonNode> ExtractAllStringNodes(JsonNode node, Regex protectRegex, Func<String, String> protectFunction)
+        protected virtual List<JsonNode> ExtractAllStringNodes(JsonNode node, Regex protectRegex, Func<String, String> protectFunction)
         {
             var result = new List<JsonNode>();
 
@@ -213,7 +213,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
         /// <returns>the encrypted re-encoded file as a string</returns>
-        public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
+        public virtual String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             return protectRegex.Replace(rawFileText, me =>
             {
@@ -264,7 +264,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
         /// <returns>the encrypted re-encoded file as a string</returns>
-        public String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
+        public virtual String ProtectFile(String rawFileText, Regex protectRegex, Func<String, String> protectFunction)
         {
             // Loads the XML File
             var document = XDocument.Parse(rawFileText, LoadOptions);
@@ -292,7 +292,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectRegex">This is the configured protected regex which must be matched in file values in order to choose whether to encrypt or not the data.</param>
         /// <param name="protectFunction">This is the protect function taking the plaintext data as input and producing encrypted base64 data as output</param>
         /// <returns>list of all string nodes</returns>
-        private static void ProtectXmlNodes(XElement element, Regex protectRegex, Func<string, string> protectFunction)
+        protected virtual void ProtectXmlNodes(XElement element, Regex protectRegex, Func<string, string> protectFunction)
         {
             String value;
 

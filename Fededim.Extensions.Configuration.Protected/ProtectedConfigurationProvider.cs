@@ -64,7 +64,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// Dispatches all the callbacks waiting for the reload event from this configuration provider (and creates a new ReloadToken)
         /// </summary>
-        protected void OnReload()
+        protected virtual void OnReload()
         {
             ConfigurationReloadToken previousToken = Interlocked.Exchange(ref ReloadToken, new ConfigurationReloadToken());
             previousToken.OnReload();
@@ -109,7 +109,7 @@ namespace Fededim.Extensions.Configuration.Protected
                 IDictionary<String, String> providerData = null;
 
                 if (Provider is ConfigurationProvider && ConfigurationProviderDataProperty != null)
-                    providerData = (IDictionary<string, string>)ConfigurationProviderDataProperty.GetValue(Provider);
+                    providerData = ConfigurationProviderDataProperty.GetValue(Provider) as IDictionary<string, string>;
 
                 return providerData;
             }
@@ -130,7 +130,7 @@ namespace Fededim.Extensions.Configuration.Protected
 
             // this is a hacky yet safe way to speed up key enumeration
             // we access the Data dictionary of ConfigurationProvider using reflection avoiding enumerating all keys with recursive function
-            // the speed improvement is more 3000 times!
+            // the speed improvement is more than 3000 times!
             if (((dataProperty = ProviderData) != null))
             {
                 foreach (var key in dataProperty.Keys.ToList())
@@ -192,7 +192,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// Calls the underlying provider Load method in order to load configuration values and then decrypts them by calling DecryptChildKeys helper method
         /// </summary>
-        public void Load()
+        public virtual void Load()
         {
             Provider.Load();
 
@@ -216,6 +216,7 @@ namespace Fededim.Extensions.Configuration.Protected
         }
 
 
+
         /// <summary>
         /// Calls the underlying provider Set method
         /// </summary>
@@ -225,6 +226,7 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             Provider.Set(key, value);
         }
+
 
 
         /// <summary>
@@ -237,6 +239,7 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             return Provider.TryGet(key, out value);
         }
+
 
 
         /// <summary>
