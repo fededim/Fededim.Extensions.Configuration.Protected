@@ -64,7 +64,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// Dispatches all the callbacks waiting for the reload event from this configuration provider (and creates a new ReloadToken)
         /// </summary>
-        protected void OnReload()
+        protected virtual void OnReload()
         {
             ConfigurationReloadToken previousToken = Interlocked.Exchange(ref ReloadToken, new ConfigurationReloadToken());
             previousToken.OnReload();
@@ -192,7 +192,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// Calls the underlying provider Load method in order to load configuration values and then decrypts them by calling DecryptChildKeys helper method
         /// </summary>
-        public void Load()
+        public virtual void Load()
         {
             Provider.Load();
 

@@ -128,7 +128,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// </summary>
         /// <param name="provider">an existing IConfigurationProvider to instrument in order to perform the decryption of the encrypted keys</param>
         /// <returns>a newer decrypted <see cref="IConfigurationProvider"/> if we have a valid protected configuration data, otherwise it returns the existing original undecrypted provider</returns>
-        protected IConfigurationProvider CreateProtectedConfigurationProvider(IConfigurationProvider provider)
+        protected virtual IConfigurationProvider CreateProtectedConfigurationProvider(IConfigurationProvider provider)
         {
             // this code is an initial one of when I was thinking of casting IConfigurationProvider to ConfigurationProvider (all MS classes derive from this one)
             // in order to retrieve all configuration keys inside DecryptChildKeys using the Data property (through reflection since it is protected) without using the recursive "hack" of GetChildKeys 
