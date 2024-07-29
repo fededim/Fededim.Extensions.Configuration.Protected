@@ -2,6 +2,7 @@
 
 In this repository you will find the sources of my three NuGet packages
 
+![example workflow](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/actions/workflows/dotnet.yml/badge.svg)
 
 # Fededim.Extensions.Configuration.Protected
 
