@@ -18,7 +18,8 @@ jobs:
     name: "Build & Test"
 
     # Permissions this GitHub Action needs for other things in GitHub
-    permissions: write-all
+    permissions:
+      pull-requests: write
 
     runs-on: windows-latest
 
