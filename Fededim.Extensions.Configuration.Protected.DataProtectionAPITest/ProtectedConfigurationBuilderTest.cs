@@ -13,7 +13,6 @@ using System.Buffers;
 using Xunit.Abstractions;
 using System.Xml;
 using System.Xml.Linq;
-using System.Reflection;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {

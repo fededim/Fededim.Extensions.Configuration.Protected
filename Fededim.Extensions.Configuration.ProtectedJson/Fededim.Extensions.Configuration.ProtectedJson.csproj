@@ -28,7 +28,7 @@
       - Targeting multi frameworks: net6.0, netstandard2.0 and net462
 
       v1.0.2
-      - Renamed GitHub repository, just updated the NuGet README file. This package is however deprecated in favour of the more versatile [Fededim.Extensions.Configuration.Protected](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected).
+      - Renamed GitHub repository, just updated the NuGet README file. This package is however obsolete and it has been replaced by the more versatile [Fededim.Extensions.Configuration.Protected](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected).
     </PackageReleaseNotes>
   </PropertyGroup>
 
