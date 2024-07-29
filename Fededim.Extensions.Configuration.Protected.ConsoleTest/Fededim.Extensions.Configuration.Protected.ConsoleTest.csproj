@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="8.0.0" />
+    <PackageReference Include="XunitXml.TestLogger" Version="4.0.254" />
     <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected.DataProtectionAPI" Version="1.0.0" />-->
   </ItemGroup>
 

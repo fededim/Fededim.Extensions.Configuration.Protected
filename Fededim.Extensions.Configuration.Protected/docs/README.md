@@ -274,6 +274,9 @@ v1.0.17
 - Refinement: made ProtectedConfigurationProvider.ProviderData property safer using as instead of a direct cast
 - Refinement: added virtual to various methods in order to allow extensibility
 
+v1.0.18
+- Refinement: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.

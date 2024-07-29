@@ -80,6 +80,17 @@ The main types provided by this library are:
 - Fededim.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationProvider
 - Fededim.Extensions.Configuration.ProtectedJson.ProtectedJsonConfigurationSource
 
+# Version History
+
+v1.0.0
+- Initial commit
+
+v1.0.1
+- Targeting multi frameworks: net6.0, netstandard2.0 and net462
+
+v1.0.2
+- Renamed GitHub repository, just updated the NuGet README file. This package is however obsolete and it has been replaced by the more versatile [Fededim.Extensions.Configuration.Protected](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected).
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5372873/ProtectedJson-Integrating-ASP-NET-Core-Configurati) explaning the origin, how to use it and the main point of the implementation.
