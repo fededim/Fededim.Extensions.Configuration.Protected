@@ -13,7 +13,6 @@ using System.Buffers;
 using Xunit.Abstractions;
 using System.Xml;
 using System.Xml.Linq;
-using System.Reflection;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {
@@ -49,7 +48,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
     public abstract class ProtectedConfigurationBuilderTest
     {
-        const int NUMENTRIES = 10000;
+        const int NUMENTRIES = 100000;
         const int STRINGMAXLENGTH = 20;
         const int ARRAYMAXLENGTH = 10;
         const int SUBPURPOSEMAXLENGTH = 8;
