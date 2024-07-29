@@ -20,7 +20,7 @@ jobs:
     # Permissions this GitHub Action needs for other things in GitHub
     permissions: write-all
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Check out the code
