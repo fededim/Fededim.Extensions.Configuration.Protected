@@ -86,8 +86,6 @@ jobs:
           git add --all ./misc/last_test_results
           git commit -m "Updated Badges And Test Summary"
           git push
-        with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}         
  
       - name: Test Results Summary
         uses: dorny/test-reporter@v1
