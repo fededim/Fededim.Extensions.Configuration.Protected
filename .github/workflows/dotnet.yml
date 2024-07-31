@@ -20,6 +20,7 @@ jobs:
     # Permissions this GitHub Action needs for other things in GitHub
     permissions:
       pull-requests: write
+      contents: write
 
     runs-on: windows-latest
 
@@ -28,7 +29,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -36,39 +38,61 @@ jobs:
             8.x
           dotnet-quality: 'ga'
 
+
       - name: "Restore/Build/Test"
         run: dotnet test --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
 
       - name: Combine Coverage Reports # This is because one report is produced per project, and we want one result for all of them.
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-          targetdir: "${{ github.workspace }}" # REQUIRED # The directory where the generated report should be saved.
+          targetdir: "${{ github.workspace }}/misc/last_test_result" # REQUIRED # The directory where the generated report should be saved.
           reporttypes: Html;Cobertura;MarkdownSummaryGithub;Badges # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
           verbosity: "Info" # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
-          title: "Code Coverage" # Optional title.
+          title: "Code Coverage and Reports" # Optional title.
           tag: "${{ github.run_number }}_${{ github.run_id }}" # Optional tag or build version.
           customSettings: "" # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
           toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
 
-      - name: Upload Combined Coverage XML
+
+      - name: Upload Artifact Coverage And Reports 
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
-          path: ${{ github.workspace }}/Cobertura.xml
-          retention-days: 5
-         
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
-      
-      - name: Upload Test Result Files
+          name: CoverageAndReports
+          path: ${{ github.workspace }}/misc/last_test_result/**
+
+
+      - name: Upload Artifact Test Results
         uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: ${{ github.workspace }}/**/TestResults/**/*
-          retention-days: 5
-          
+
+
+      - name: Add PR Comment with test results
+        uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event_name == 'pull_request'
+        with:
+          recreate: true
+          path: SummaryGithub.md
+
+      - name: Commit and push misc/last_test_results folder to master
+        if: github.ref_name == 'master'
+        run: |
+          cp -rf * ./misc/last_test_results
+          git config --global user.name 'Github Action'
+          git config --global user.email 'fededim@users.noreply.github.com'
+          git add --all ./misc/last_test_results
+          git commit -m "Updated Badges And Test Summary"
+          git push
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}         
+ 
+      - name: Test Results Summary
+        uses: dorny/test-reporter@v1
+        with:
+          artifact: test-results            # artifact name
+          name: XUnit Tests                 # Name of the check run which will be created
+          path: '*.xml'                     # Path to test results (inside artifact .zip)
+          reporter: dotnet-nunit            # Format of test results    
