@@ -52,7 +52,7 @@ jobs:
         run: dotnet test --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/
 
 
-      - name: "Generate Coverage And Reports"
+      - name: "Generate reports From Code Coverage"
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
@@ -88,12 +88,12 @@ jobs:
           name: test-artifacts
           path: ${{ github.workspace }}/**/misc/last_build_artifacts/**
 
-      - name: Commit and push last_build_artifacts folder
+      - name: Commit and push last_build_artifacts to PR branch
         if: github.event_name == 'pull_request'
         run: |
           git checkout ${{ github.event.pull_request.head.ref }}
-          git config --global user.name 'Buil And Test Github Action'
-          git config --global user.email 'fededim@users.noreply.github.com'
+          git config --global user.name 'Build And Test Github Action'
+          git config --global user.email 'githubaction@users.noreply.github.com'
           git add ./misc/last_build_artifacts/*
           git commit -m "Updated Last Build artifacts"
           git push
