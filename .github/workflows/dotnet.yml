@@ -39,6 +39,10 @@ jobs:
           dotnet-quality: 'ga'
 
 
+      - name: "Install Tyrannoport"         
+        run: dotnet tool install tyrannoport
+
+
       - name: "Restore/Build/Test"
         run: dotnet test --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
@@ -47,7 +51,7 @@ jobs:
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-          targetdir: "${{ github.workspace }}/misc/last_test_result" # REQUIRED # The directory where the generated report should be saved.
+          targetdir: "${{ github.workspace }}/misc/last_test_results" # REQUIRED # The directory where the generated report should be saved.
           reporttypes: Html;Cobertura;MarkdownSummaryGithub;Badges # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
           verbosity: "Info" # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
           title: "Code Coverage and Reports" # Optional title.
@@ -60,7 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CoverageAndReports
-          path: ${{ github.workspace }}/**/misc/last_test_result/**
+          path: ${{ github.workspace }}/**/misc/last_test_results/**
 
 
       - name: Upload Artifact Test Results
@@ -75,7 +79,7 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           recreate: true
-          path: ./misc/last_test_result/SummaryGithub.md
+          path: ./misc/last_test_results/SummaryGithub.md
 
       - name: Commit and push misc/last_test_results folder to master
         if: github.ref_name == 'master'
