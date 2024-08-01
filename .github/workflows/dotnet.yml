@@ -5,10 +5,12 @@ name: "Main Build Process"
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - 'misc/last_build_artifacts/**'
   pull_request:
     branches: ["master"]
-      paths-ignore:
-        - 'misc/last_build_artifacts/**'
+    paths-ignore:
+      - 'misc/last_build_artifacts/**'
   release:
     types: [published]
 
