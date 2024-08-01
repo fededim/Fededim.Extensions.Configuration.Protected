@@ -25,6 +25,15 @@
     </PackageReference>
   </ItemGroup>
 
+    <ItemGroup>
+      <VSTestLogger Include="trx%3BLogFileName=TestResults-$(TargetFramework)-$(MSBuildProjectName).trx" />
+      <!--<VSTestLogger Include="html%3BLogFileName=TestResults-$(TargetFramework)-$(MSBuildProjectName).html" />-->
+    </ItemGroup>
+
+  <PropertyGroup>
+    <VSTestLogger>@(VSTestLogger)</VSTestLogger>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Fededim.Extensions.Configuration.Protected.DataProtectionAPI\Fededim.Extensions.Configuration.Protected.DataProtectionAPI.csproj" />
   </ItemGroup>
