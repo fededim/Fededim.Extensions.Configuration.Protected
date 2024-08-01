@@ -75,6 +75,7 @@ jobs:
         uses: im-open/process-dotnet-test-results@v3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment-if-one-exists: false
           #report-title-filter: 'Tests'
 
 
