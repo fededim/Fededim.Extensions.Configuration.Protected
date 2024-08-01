@@ -40,7 +40,7 @@ jobs:
 
 
       - name: "Install Tyrannoport"         
-        run: dotnet tool install tyrannoport
+        run: dotnet tool install --global tyrannoport
 
 
       - name: "Restore/Build/Test"
