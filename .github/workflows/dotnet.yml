@@ -84,8 +84,8 @@ jobs:
           name: test-artifacts
           path: ${{ github.workspace }}/**/misc/last_build_artifacts/**
 
-      - name: Commit and push last_build_artifacts folder to master
-        if: github.ref_name == 'master'
+      - name: Commit and push last_build_artifacts folder
+        if: github.event_name == 'pull_request'
         run: |
           git config --global user.name 'Buil And Test Github Action'
           git config --global user.email 'fededim@users.noreply.github.com'
