@@ -3,10 +3,6 @@ name: "Main Build Process"
 # Runs on main branch commits, 
 # every commit in a pull request, any published release.
 on:
-  push:
-    branches: ["master"]
-    paths-ignore:
-      - 'misc/last_build_artifacts/**'
   pull_request:
     branches: ["master"]
     paths-ignore:
