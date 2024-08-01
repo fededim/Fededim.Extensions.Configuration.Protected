@@ -45,7 +45,7 @@ jobs:
 
 
       - name: "Restore/Build/Test"
-        run: dotnet test --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        run: dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage"
 
 
       - name: Generate Coverage And Reports to misc/last_test_results folder # This is because one report is produced per project, and we want one result for all of them.
