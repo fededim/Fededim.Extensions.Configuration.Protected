@@ -83,7 +83,7 @@ jobs:
 
 
       - name: "Generate HTML from Test Results"
-        run: gci -Filter *.lnk -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
+        run: gci -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
 
 
       - name: Commit and push misc/last_test_results folder to master
