@@ -43,7 +43,7 @@ jobs:
         run: dotnet test --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
 
-      - name: Combine Coverage Reports # This is because one report is produced per project, and we want one result for all of them.
+      - name: Generate Coverage And Reports # This is because one report is produced per project, and we want one result for all of them.
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CoverageAndReports
-          path: ${{ github.workspace }}/misc/last_test_result/**
+          path: ${{ github.workspace }}/**/misc/last_test_result/**
 
 
       - name: Upload Artifact Test Results
@@ -75,15 +75,14 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           recreate: true
-          path: SummaryGithub.md
+          path: ./misc/last_test_result/SummaryGithub.md
 
       - name: Commit and push misc/last_test_results folder to master
         if: github.ref_name == 'master'
         run: |
-          cp -rf * ./misc/last_test_results
-          git config --global user.name 'Github Action'
+          git config --global user.name 'Buil And Test Github Action'
           git config --global user.email 'fededim@users.noreply.github.com'
-          git add --all ./misc/last_test_results
+          git add ./misc/last_test_results/*
           git commit -m "Updated Badges And Test Summary"
           git push
  
