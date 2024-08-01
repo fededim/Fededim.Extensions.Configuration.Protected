@@ -3,6 +3,10 @@ name: "Main Build Process"
 # Runs on main branch commits, 
 # every commit in a pull request, any published release.
 on:
+  push:
+    branches: ["master"]
+    paths-ignore:
+      - 'misc/last_build_artifacts/**'
   pull_request:
     branches: ["master"]
     paths-ignore:
@@ -64,6 +68,7 @@ jobs:
       #- name: "Generate HTML from Test Results"
        # run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_build_artifacts $_.FullName }
 
+
       - name: "Generate reports from Test Results"
         if: always()
         id: process-test
@@ -72,17 +77,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           #report-title-filter: 'Tests'
 
+
       - name: "Copy reports from Test Results to misc/last_build_artifacts folder"
         run: |
           cp "${{ steps.process-test.outputs.test-results-file-path }}" "${{ github.workspace }}/misc/last_build_artifacts/test_results.md"
           gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.trx -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
           gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.cobertura.xml -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
 
+
       - name: "Upload All Artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: test-artifacts
           path: ${{ github.workspace }}/**/misc/last_build_artifacts/**
+
 
       - name: Commit and push last_build_artifacts to PR branch
         if: github.event_name == 'pull_request'
