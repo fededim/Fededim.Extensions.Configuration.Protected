@@ -74,7 +74,7 @@ jobs:
           path: ${{ github.workspace }}/**/TestResults/**/*
 
 
-      - name: Add PR Comment with test results
+      - name: Add PR Comment with Test Results
         uses: marocchino/sticky-pull-request-comment@v2
         if: github.event_name == 'pull_request'
         with:
@@ -101,5 +101,5 @@ jobs:
         with:
           artifact: test-results            # artifact name
           name: XUnit Tests                 # Name of the check run which will be created
-          path: '**/*.trx'                  # Path to test results (inside artifact .zip)
+          path: 'TestResults/*.trx'         # Path to test results (inside artifact .zip)
           reporter: dotnet-trx              # Format of test results    
