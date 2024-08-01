@@ -26,13 +26,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Check out the code
+      - name: "Check out the code"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
 
-      - name: Setup .NET
+      - name: "Setup .NET"
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
@@ -48,7 +48,7 @@ jobs:
         run: dotnet test --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/
 
 
-      - name: Generate Coverage And Reports to misc/last_build_artifacts folder # This is because one report is produced per project, and we want one result for all of them.
+      - name: "Generate Coverage And Reports"
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
@@ -62,9 +62,9 @@ jobs:
 
 
       #- name: "Generate HTML from Test Results"
-        # run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_build_artifacts $_.FullName }
+       # run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_build_artifacts $_.FullName }
 
-      - name: Generate reports from Test Results
+      - name: "Generate reports from Test Results"
         if: always()
         id: process-test
         uses: im-open/process-dotnet-test-results@v3
@@ -72,33 +72,17 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           #report-title-filter: 'Tests'
 
-      - name: Copy reports from Test Results to misc/last_build_artifacts folder
+      - name: "Copy reports from Test Results to misc/last_build_artifacts folder"
         run: |
           cp "${{ steps.process-test.outputs.test-results-file-path }}" "${{ github.workspace }}/misc/last_build_artifacts/test_results.md"
           gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.trx -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
           gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.cobertura.xml -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
 
-      - name: Upload All Artifacts
+      - name: "Upload All Artifacts"
         uses: actions/upload-artifact@v4
         with:
           name: test-artifacts
           path: ${{ github.workspace }}/**/misc/last_build_artifacts/**
-
-
-      # - name: Upload Artifact Test Results
-        # uses: actions/upload-artifact@v4
-        # with:
-          # name: test-results
-          # path: ${{ github.workspace }}/**/TestResults/**/*
-
-
-      # - name: Add PR Comment with Test Results
-        # uses: marocchino/sticky-pull-request-comment@v2
-        # if: github.event_name == 'pull_request'
-        # with:
-          # recreate: true
-          # path: ./misc/last_build_artifacts/SummaryGithub.md
-
 
       - name: Commit and push last_build_artifacts folder to master
         if: github.ref_name == 'master'
