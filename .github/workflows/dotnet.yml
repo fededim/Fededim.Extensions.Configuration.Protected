@@ -21,6 +21,7 @@ jobs:
     permissions:
       pull-requests: write
       contents: write
+      checks: write       # required if create-status-check: true
 
     runs-on: windows-latest
 
@@ -39,15 +40,15 @@ jobs:
           dotnet-quality: 'ga'
 
 
-      - name: "Install Tyrannoport"         
-        run: dotnet tool install --global tyrannoport
+      # - name: "Install Tyrannoport"         
+        # run: dotnet tool install --global tyrannoport
 
 
       - name: "Restore/Build/Test"
         run: dotnet test --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
 
-      - name: Generate Coverage And Reports # This is because one report is produced per project, and we want one result for all of them.
+      - name: Generate Coverage And Reports to misc/last_test_results folder # This is because one report is produced per project, and we want one result for all of them.
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
@@ -60,8 +61,19 @@ jobs:
           toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
 
 
-      - name: "Generate HTML from Test Results"
-        run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
+      #- name: "Generate HTML from Test Results"
+        # run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
+
+      - name: Generate reports from Test Results
+        if: always()
+        id: process-test
+        uses: im-open/process-dotnet-test-results@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          #report-title-filter: 'Tests'
+
+      - name: Copy reports from Test Results to misc/last_test_results folder
+        run: cat ${{ steps.process-test.outputs.test-results-file-path }} >./misc/last_test_results/test_results.md
 
       - name: Upload Artifact Coverage And Reports 
         uses: actions/upload-artifact@v4
