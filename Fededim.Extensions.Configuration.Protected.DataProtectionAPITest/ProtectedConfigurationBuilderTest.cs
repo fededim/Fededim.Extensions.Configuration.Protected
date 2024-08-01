@@ -48,7 +48,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
     public abstract class ProtectedConfigurationBuilderTest
     {
-        const int NUMENTRIES = 1000;
+        const int NUMENTRIES = 100000;
         const int STRINGMAXLENGTH = 20;
         const int ARRAYMAXLENGTH = 10;
         const int SUBPURPOSEMAXLENGTH = 8;
@@ -724,7 +724,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
             // Generate random environments variables
             // 
-            for (int i = 0; i < NUMENTRIES; i++)
+            for (int i = 0; i < Math.Min(NUMENTRIES,2000); i++)
             {
                 var entryValue = GenerateRandomValue();
                 var entryKey = $"Entry_{i + 1}_{entryValue.DataType}_";
