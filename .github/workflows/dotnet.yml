@@ -81,6 +81,11 @@ jobs:
           recreate: true
           path: ./misc/last_test_results/SummaryGithub.md
 
+
+      - name: "Generate HTML from Test Results"
+        run: gci -Filter *.lnk -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
+
+
       - name: Commit and push misc/last_test_results folder to master
         if: github.ref_name == 'master'
         run: |
@@ -89,6 +94,7 @@ jobs:
           git add ./misc/last_test_results/*
           git commit -m "Updated Badges And Test Summary"
           git push
+
  
       - name: Test Results Summary
         uses: dorny/test-reporter@v1
