@@ -3,7 +3,7 @@
 In this repository you will find the source code of my NuGet package: Fededim.Extensions.Configuration.Protected
 
 ![Build status](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/actions/workflows/dotnet.yml/badge.svg)
-[![Test Coverage](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/misc/last_build_artifacts/badge_combined.svg)](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/misc/last_build_artifacts/index.html)
+[![Test Coverage](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/last_build_artifacts/badge_combined.svg)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/last_build_artifacts/index.html)
 
 
 # Fededim.Extensions.Configuration.Protected
