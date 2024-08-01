@@ -75,8 +75,8 @@ jobs:
       - name: Copy reports from Test Results to misc/last_build_artifacts folder
         run: |
           cp "${{ steps.process-test.outputs.test-results-file-path }}" "${{ github.workspace }}/misc/last_build_artifacts/test_results.md"
-          gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
-          gci -Path ${{ github.workspace }} -Filter *.cobertura.xml -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
+          gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.trx -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
+          gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.cobertura.xml -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
 
       - name: Upload All Artifacts
         uses: actions/upload-artifact@v4
@@ -100,7 +100,7 @@ jobs:
           # path: ./misc/last_build_artifacts/SummaryGithub.md
 
 
-      - name: Commit and push misc/last_build_artifacts folder to master
+      - name: Commit and push last_build_artifacts folder to master
         if: github.ref_name == 'master'
         run: |
           git config --global user.name 'Buil And Test Github Action'
