@@ -60,6 +60,9 @@ jobs:
           toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
 
 
+      - name: "Generate HTML from Test Results"
+        run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
+
       - name: Upload Artifact Coverage And Reports 
         uses: actions/upload-artifact@v4
         with:
@@ -80,10 +83,6 @@ jobs:
         with:
           recreate: true
           path: ./misc/last_test_results/SummaryGithub.md
-
-
-      - name: "Generate HTML from Test Results"
-        run: gci -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_test_results $_.FullName }
 
 
       - name: Commit and push misc/last_test_results folder to master
