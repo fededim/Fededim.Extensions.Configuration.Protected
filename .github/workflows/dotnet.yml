@@ -98,7 +98,7 @@ jobs:
         run: |
           git checkout ${{ github.event.pull_request.head.ref }}
           git config --global user.name 'Build And Test Github Action'
-          git config --global user.email 'githubaction@users.noreply.github.com'
+          git config --global user.email 'fededim@users.noreply.github.com'
           git add ./misc/last_build_artifacts/*
           git commit -m "Updated Last Build artifacts"
           git push
