@@ -23,7 +23,6 @@ jobs:
 
     # Permissions this GitHub Action needs for other things in GitHub
     permissions:
-      checks: write
       pull-requests: write
       contents: write
       checks: write       # required if create-status-check: true
