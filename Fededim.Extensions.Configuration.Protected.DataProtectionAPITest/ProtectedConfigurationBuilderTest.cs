@@ -35,9 +35,9 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         public ProtectedConfigurationBuilderTestFixture()
         {
             // cleans existing XML, JSON and BAK files
-            Directory.EnumerateFiles(".", "*.json").ToList().ForEach(f => File.Delete(f));
-            Directory.EnumerateFiles(".", "*.xml").ToList().ForEach(f => File.Delete(f));
-            Directory.EnumerateFiles(".", "*.bak").ToList().ForEach(f => File.Delete(f));
+            Directory.EnumerateFiles(".", "random_*.json").ToList().ForEach(f => File.Delete(f));
+            Directory.EnumerateFiles(".", "random_*.xml").ToList().ForEach(f => File.Delete(f));
+            Directory.EnumerateFiles(".", "random_*.bak").ToList().ForEach(f => File.Delete(f));
         }
 
         public void Dispose()
@@ -137,7 +137,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                     return (dataType, NextInt64(Int64.MinValue, Int64.MaxValue));
 
                 case DataTypes.DateTimeOffset:
-                    return (dataType, new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay), TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset));
+                    return (dataType, new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay)+TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset.Ticks,TimeSpan.Zero));
 
                 case DataTypes.Double:
                     return (dataType, NextInt64(Int64.MinValue, Int64.MaxValue) * Random.NextDouble());
@@ -168,7 +168,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                 case DataTypes.DateTimeOffsetArray:
                     var dateTimeArray = new DateTimeOffset[Random.Next(0, ARRAYMAXLENGTH)];
                     for (int i = 0; i < dateTimeArray.Length; i++)
-                        dateTimeArray[i] = new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks, DateTimeOffset.MaxValue.Ticks), TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset);
+                        dateTimeArray[i] = new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay) + TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset.Ticks, TimeSpan.Zero);
                     return (dataType, dateTimeArray);
 
                 case DataTypes.DoubleArray:
@@ -184,7 +184,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
 
 
-        protected int CheckConfigurationEntriesAreEqual(IConfigurationRoot configurationRoot)
+        protected int CheckConfigurationEntriesAreEqual(IConfigurationRoot configurationRoot, bool skipMissingNullKeys=false)
         {
             int numEntries = 0;
 
@@ -201,11 +201,14 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         {
                             numEntries++;
                             var encryptedKey = key.Key.Replace("_Plaintext", "_Encrypted");
-                            if (key.Value != dataProperty[encryptedKey])
-                                throw new InvalidDataException($"Value mismatch: Plaintext Key {key.Key} Value {key.Value} Encrypted Key {encryptedKey} Value {dataProperty[encryptedKey]}");
+                            if (!dataProperty.TryGetValue(encryptedKey, out var encryptedValue) && skipMissingNullKeys && encryptedKey.Contains("_Null_"))
+                                continue;
+
+                            if (key.Value != encryptedValue)
+                                throw new InvalidDataException($"Value mismatch: Plaintext Key {key.Key} Value {key.Value} Encrypted Key {encryptedKey} Value {encryptedValue}");
 
                             // for debugging
-                            //TestOutputHelper.WriteLine($"Checked Key {key.Key} Value {key.Value} Encrypted Key {encryptedKey} Value {dataProperty[encryptedKey]}");
+                            //TestOutputHelper.WriteLine($"{DateTime.Now}: Checked Key {key.Key} Value {key.Value} Encrypted Key {encryptedKey} Value {dataProperty[encryptedKey]}");
                         }
 
                     }
@@ -229,13 +232,14 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                                 {
                                     numEntries++;
                                     var encryptedKey = fullKey.Replace("_Plaintext", "_Encrypted");
-                                    provider.TryGet(encryptedKey, out var valueDecrypted);
+                                    if (!provider.TryGet(encryptedKey, out var valueDecrypted) && skipMissingNullKeys && encryptedKey.Contains("_Null_"))
+                                        continue;
 
                                     if (value != valueDecrypted)
                                         throw new InvalidDataException($"Value mismatch: Plaintext Key {fullKey} Value {value} Encrypted Key {encryptedKey} Value {valueDecrypted}");
 
                                     // for debugging
-                                    //TestOutputHelper.WriteLine($"Checked Key {fullKey} Value {value} Encrypted Key {encryptedKey} Value {valueDecrypted}");
+                                    //TestOutputHelper.WriteLine($"{DateTime.Now}: Checked Key {fullKey} Value {value} Encrypted Key {encryptedKey} Value {valueDecrypted}");
                                 }
                             }
                             else
@@ -308,6 +312,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             String subPurpose;
             var fileName = RANDOMJSONFILENAME;
 
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random JSON file with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
+
             var JSONObject = new JsonObject();
 
             var currentNode = JSONObject;
@@ -372,9 +378,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             File.WriteAllText(fileName, JSONObject.ToJsonString(JsonSerializerOptions));
 
             var fileInfo = new FileInfo(fileName);
-            TestOutputHelper.WriteLine($"Generated a random JSON file with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
-            TestOutputHelper.WriteLine($"File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
-            TestOutputHelper.WriteLine($"Size {fileInfo.Length / 1024}KB, starting test...");
+            TestOutputHelper.WriteLine($"{DateTime.Now}: File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
 
             return (fileName, numEntries);
         }
@@ -397,12 +401,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             // genererates a JSON file
             var result = GenerateRandomJsonFile();
 
-            stopwatch.Step($"Generated random JSON file ({result.NumEntries} entries)");
+            stopwatch.Step($"Generated random JSON file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Encrypts the JSON file
             Assert.True(ProtectProviderConfigurationData.ProtectFiles(".")?.Any());
 
-            stopwatch.Step("Encrypted random JSON file");
+            stopwatch.Step($"Encrypted random JSON file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Reads the encrypted JSON file and checks that all encrypted entries do not match DefaultProtectRegexString
             var encryptedJsonDocument = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(result.FileName), JsonSerializerOptions);
@@ -512,7 +516,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// <param name="value">the new node value</param>
         /// <param name="forceElement">if true, forces the new node to be an element</param>
         /// <returns>always true</returns>
-        public bool AddXmlNode(XmlNode currentNode, string name, DataTypes dataType, object value)
+        public bool AddXmlNode(XElement currentNode, string name, DataTypes dataType, object value)
         {
             // with array we must use elememts, with WhitespaceString we must use attributes (whitespace is only preserved there)
             bool forceElement = new List<DataTypes> { DataTypes.StringArray, DataTypes.IntegerArray, DataTypes.DoubleArray, DataTypes.BooleanArray, DataTypes.DateTimeOffsetArray }.Contains(dataType);
@@ -527,15 +531,13 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
             if (attributeNode)
             {
-                var attribute = currentNode.OwnerDocument.CreateAttribute(name);
-                attribute.Value = valueString;
-                currentNode.Attributes.Append(attribute);
+                var attribute = new XAttribute(name, valueString ?? String.Empty);
+                currentNode.Add(attribute);
             }
             else
             {
-                var element = currentNode.OwnerDocument.CreateElement(name);
-                element.InnerText = valueString;
-                currentNode.AppendChild(element);
+                var element = new XElement(name, valueString);
+                currentNode.Add(element);
             }
 
             return true;
@@ -556,10 +558,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             String subPurpose;
             var fileName = RANDOMXMLFILENAME;
 
-            var xmlDocument = new XmlDocument();
-            xmlDocument.AppendChild(xmlDocument.CreateElement("root"));
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random XML file with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
 
-            var currentNode = xmlDocument.DocumentElement;
+            var xDocument = new XDocument();
+            xDocument.Add(new XElement("root"));
+
+            var currentNode = xDocument.Root;
 
             int level = 1;
             int numEntries = 0;
@@ -596,19 +600,19 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                     case DataTypes.DoubleArray:
                     case DataTypes.BooleanArray:
                     case DataTypes.DateTimeOffsetArray:
-                        var arrayElement = xmlDocument.CreateElement(entryKey + "Plaintext");
+                        var arrayElement = new XElement(entryKey + "Plaintext");
                         ((Array)entryValue.Value).Cast<object>().Select((obj, index) => AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, entryValue.DataType == DataTypes.StringArray ? obj.ToString().Trim() : obj)).ToArray();
-                        currentNode.AppendChild(arrayElement);
+                        currentNode.Add(arrayElement);
 
-                        arrayElement = xmlDocument.CreateElement(entryKey + "Encrypted");
+                        arrayElement = new XElement(entryKey + "Encrypted");
                         ((Array)entryValue.Value).Cast<object>().Select((obj, index) =>
                         {
                             subPurpose = (Random.Next() % 4 == 0) ? TrimRegexCharsFromSubpurpose(GenerateRandomString(SUBPURPOSEMAXLENGTH)) : null;
                             return AddXmlNode(arrayElement, $"A_{index}", entryValue.DataType, CreateXmlProtectValue(subPurpose, entryValue.DataType, entryValue.DataType == DataTypes.StringArray ? obj.ToString().Trim() : obj));
                         }).ToArray();
-                        currentNode.AppendChild(arrayElement);
+                        currentNode.Add(arrayElement);
 
-                        numEntries += ((Array)entryValue.Value).Length;   // note IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty />
+                        numEntries += ((Array)entryValue.Value).Length;   // note IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
                         break;
                 }
 
@@ -616,25 +620,22 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                 {
                     var nextSubLevelKey = $"Sublevel_{++level}";
 
-                    if (currentNode.GetElementsByTagName(nextSubLevelKey).Count == 0)
-                        currentNode.AppendChild(xmlDocument.CreateElement(nextSubLevelKey));
+                    if (!currentNode.Elements(nextSubLevelKey).Any())
+                        currentNode.Add(new XElement(nextSubLevelKey));
 
-                    currentNode = (XmlElement)currentNode.GetElementsByTagName(nextSubLevelKey).Item(0);
+                    currentNode = (XElement)currentNode.Elements(nextSubLevelKey).First();
                 }
                 else if (levelMove == LevelMove.Up && level > 1)
                 {
                     level--;
-                    currentNode = (XmlElement)currentNode.ParentNode;
+                    currentNode = (XElement)currentNode.Parent;
                 }
             }
 
-
-            File.WriteAllText(fileName, xmlDocument.OuterXml);
+            xDocument.Save(fileName);
 
             var fileInfo = new FileInfo(fileName);
-            TestOutputHelper.WriteLine($"Generated a random XML file with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
-            TestOutputHelper.WriteLine($"File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
-            TestOutputHelper.WriteLine($"Size {fileInfo.Length / 1024}KB, starting test...");
+            TestOutputHelper.WriteLine($"{DateTime.Now}: File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
 
             return (fileName, numEntries);
         }
@@ -653,12 +654,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             // genererates a XML file
             var result = GenerateRandomXmlFile();
 
-            stopwatch.Step($"Generated random XML file ({result.NumEntries} entries)");
+            stopwatch.Step($"Generated random XML file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Encrypts the XML file
             Assert.True(ProtectProviderConfigurationData.ProtectFiles(".", searchPattern: "*.xml")?.Any());
-
-            stopwatch.Step("Encrypted random XML file");
+            
+            stopwatch.Step($"Encrypted random XML file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Reads the encrypted XML file and checks that all encrypted entries do not match DefaultProtectRegexString
             var encryptedXmlDocument = XDocument.Load(result.FileName);
@@ -678,13 +679,13 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
             stopwatch.Step("Checked that all random XML file is encrypted");
 
-            // Loads the XML with ProtectedConfigurationBuilder, note that IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty />
+            // Loads the XML with ProtectedConfigurationBuilder, note that IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty /> see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
             var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddXmlFile(result.FileName).Build();
 
             stopwatch.Step("Loaded and decrypted random XML file with ProtectedConfigurationBuilder");
 
-            // Foreach xxx_Plaintext key check that its value is equal to xxx_Encrypted
-            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
+            // Foreach xxx_Plaintext key check that its value is equal to xxx_Encrypted, here we pass true to skipMissingNullKeys because of the previous comment about empty XML elements
+            var checkedEntries = CheckConfigurationEntriesAreEqual(configuration,true);
 
             stopwatch.Step($"Checked that {checkedEntries} entries are equal");
         }
@@ -721,6 +722,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         {
             String subPurpose;
             var fileName = RANDOMXMLFILENAME;
+
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random environment variables {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
 
             // Generate random environments variables
             // 
@@ -763,8 +766,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                 }
             }
 
-            TestOutputHelper.WriteLine($"Generated a random environment variables {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
-            TestOutputHelper.WriteLine($"Starting test...");
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Starting test...");
         }
 
 
@@ -824,6 +826,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         {
             String subPurpose;
 
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random in-memory dictionary with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
+
             var dictionary = new Dictionary<String, String>();
 
             var currentNode = dictionary;
@@ -865,8 +869,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             }
 
 
-            TestOutputHelper.WriteLine($"Generated a random in-memory dictionary with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
-            TestOutputHelper.WriteLine($"Starting test...");
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Starting test...");
 
             return dictionary;
         }
@@ -929,6 +932,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         {
             String subPurpose;
 
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random command line arguments with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
+
             var args = new String[4 * NUMENTRIES];
 
             for (int i = 0; i < NUMENTRIES; i++)
@@ -972,8 +977,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             }
 
 
-            TestOutputHelper.WriteLine($"Generated a random command line arguments with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}");
-            TestOutputHelper.WriteLine($"Starting test...");
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Starting test...");
 
             return args;
         }
