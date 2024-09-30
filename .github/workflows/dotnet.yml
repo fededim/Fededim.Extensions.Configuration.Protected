@@ -4,9 +4,13 @@ name: "Main Build Process"
 # every commit in a pull request, any published release.
 on:
   push:
-    branches: ["main"]
+    branches: ["master"]
+    paths-ignore:
+      - 'misc/last_build_artifacts/**'
   pull_request:
-    branches: ["main"]
+    branches: ["master"]
+    paths-ignore:
+      - 'misc/last_build_artifacts/**'
   release:
     types: [published]
 
@@ -21,73 +25,90 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
+      contents: write
+      checks: write       # required if create-status-check: true
 
     runs-on: windows-latest
 
     steps:
-      - name: Check out the code
+      - name: "Check out the code"
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Setup .NET
+
+
+      - name: "Setup .NET"
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
             8.x
-            
-      - name: "Restore/Build/Test"
-        run: dotnet test --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+          dotnet-quality: 'ga'
 
-      - name: Combine Coverage Reports # This is because one report is produced per project, and we want one result for all of them.
+
+      # - name: "Install Tyrannoport"         
+        # run: dotnet tool install --global tyrannoport
+
+
+      - name: "Restore/Build/Test"
+        run: dotnet test --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/
+
+
+      - name: "Generate reports From Code Coverage"
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
           reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
-          targetdir: "${{ github.workspace }}" # REQUIRED # The directory where the generated report should be saved.
-          reporttypes: "Cobertura" # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
+          targetdir: "${{ github.workspace }}/misc/last_build_artifacts" # REQUIRED # The directory where the generated report should be saved.
+          reporttypes: Html;Cobertura;MarkdownSummaryGithub;Badges # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
           verbosity: "Info" # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
-          title: "Code Coverage" # Optional title.
+          title: "Code Coverage and Reports" # Optional title.
           tag: "${{ github.run_number }}_${{ github.run_id }}" # Optional tag or build version.
           customSettings: "" # Optional custom settings (separated by semicolon). See: https://github.com/danielpalme/ReportGenerator/wiki/Settings.
           toolpath: "reportgeneratortool" # Default directory for installing the dotnet tool.
 
-      - name: Upload Combined Coverage XML
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: ${{ github.workspace }}/Cobertura.xml
-          retention-days: 5
 
-      - name: Publish Code Coverage Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
+      #- name: "Generate HTML from Test Results"
+       # run: gci -Path ${{ github.workspace }} -Filter *.trx -Recurse | foreach { tyrannoport -o misc/last_build_artifacts $_.FullName }
+
+
+      - name: "Generate reports from Test Results"
+        if: always()
+        id: process-test
+        uses: im-open/process-dotnet-test-results@v3
         with:
-          filename: "Cobertura.xml"
-          badge: true
-          fail_below_min: false # just informative for now
-          format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
-          indicators: true
-          output: both
-          thresholds: "10 30"
-          
-      - name: Add Coverage PR Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        if: github.event_name == 'pull_request'
-        with:
-          recreate: true
-          path: code-coverage-results.md
-      
-      - name: Upload Test Result Files
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          update-comment-if-one-exists: false
+          #report-title-filter: 'Tests'
+
+
+      - name: "Copy reports from Test Results to misc/last_build_artifacts folder"
+        run: |
+          cp "${{ steps.process-test.outputs.test-results-file-path }}" "${{ github.workspace }}/misc/last_build_artifacts/test_results.md"
+          gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.trx -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
+          gci -Path "${{ github.workspace }}/Fededim.Extensions.Configuration.Protected.DataProtectionAPITest" -Filter *.cobertura.xml -Recurse | foreach { cp "$_" misc/last_build_artifacts/ }
+
+
+      - name: "Upload All Artifacts"
         uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: ${{ github.workspace }}/**/TestResults/**/*
-          retention-days: 5
-          
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2.16.1
-        if: always()
+          name: test-artifacts
+          path: ${{ github.workspace }}/**/misc/last_build_artifacts/**
+
+
+      - name: Commit and push last_build_artifacts to PR branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git checkout ${{ github.event.pull_request.head.ref }}
+          git config --global user.name 'Build And Test Github Action'
+          git config --global user.email 'fededim@users.noreply.github.com'
+          git add ./misc/last_build_artifacts/*
+          git commit -m "Updated Last Build artifacts"
+          git push
+
+ 
+      - name: Test Results Summary
+        uses: dorny/test-reporter@v1
         with:
-          # NOTE: using trx_files instead of files due to https://github.com/EnricoMi/publish-unit-test-result-action/issues/424
-          trx_files: "${{ github.workspace }}/**/*.trx"
+          artifact: test-artifacts          # artifact name
+          name: XUnit Tests                 # Name of the check run which will be created
+          path: '**/*.trx'                  # Path to test results (inside artifact .zip)
+          reporter: dotnet-trx              # Format of test results    
