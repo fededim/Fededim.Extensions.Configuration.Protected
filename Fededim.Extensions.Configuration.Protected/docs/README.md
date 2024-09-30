@@ -275,7 +275,7 @@ v1.0.17
 - Refinement: added virtual to various methods in order to allow extensibility
 
 v1.0.18
-- Refinement: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
+- Security fix: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
 
 # Detailed guide
 
