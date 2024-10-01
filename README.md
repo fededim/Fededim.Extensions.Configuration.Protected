@@ -23,10 +23,13 @@ You can find a [detailed article on CodeProject](https://www.codeproject.com/Art
 
 
 # Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
-This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (10000), one in plaintext with random datatype and value and another with the same value but encrypted. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. On my personal laptop I have successfully tested it also with 100000 entries for a JSON file total size of 65MB, it has run in less than 8 seconds without any issues (Setting environment variables is terribly slow, it seems to be a Windows issue since it needs every time to broadcast all environment changes to the listening windows!)
+This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (10000), one in plaintext with random datatype and value and another with the same value but encrypted. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. For example a test case on the JsonConfigurationProvider generated a plain-text file with a total size of 60MB and an encrypted file with a total size of 91MB, the test has ended in around 10 seconds for generating the random JSON file, encrypting it, decrypting it using the ProtectedConfigurationBuilder (in order to decrypt 250k encrypted values this step took around 5 seconds in .Net462 and around 3 seconds in net6.0 which is faster) and checking that every decrypted key was equal to the plaintext one. Moreover all the whole set of five test cases was repeated for 1000 iterations (Test Explorer Run Until Failure, unluckily it is not available for all tests, I had to do it separately), both for net462 (total runtime 705 minutes) and net6.0 (total runtime 424 minutes) without raising any error as you can see in the pictures below.
 
-![image](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/assets/8364158/7b0dee4f-e8d8-4d2f-b9d1-d73ce6abe690)
+Net462 Endurance Test 
+![image](https://github.com/user-attachments/assets/66b4a6ec-ea3f-4004-8eea-b4d2d554ee33)
 
+Net6.0 Endurance Test
+![image](https://github.com/user-attachments/assets/fc73e3ef-e5e6-4b1c-a4bd-d1a2dbf30e10)
 
 
 # Fededim.Extensions.Configuration.ProtectedJson (OBSOLETE PLEASE USE Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
