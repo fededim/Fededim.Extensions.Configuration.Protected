@@ -3,17 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.ProtectedJson", "Fededim.Extensions.Configuration.ProtectedJson\Fededim.Extensions.Configuration.ProtectedJson.csproj", "{DF3EFBDF-A1AD-4B35-817A-E9B035C09D9B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest", "Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest\Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest.csproj", "{96713DB5-7C70-49FC-9736-903478C2D7C4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected", "Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj", "{6C4745A9-A816-44C8-8817-6C12E8A61BCC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected.ConsoleTest", "Fededim.Extensions.Configuration.Protected.ConsoleTest\Fededim.Extensions.Configuration.Protected.ConsoleTest.csproj", "{DA62A52E-376A-40AF-A276-151063553B88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPI", "Fededim.Extensions.Configuration.Protected.DataProtectionAPI\Fededim.Extensions.Configuration.Protected.DataProtectionAPI.csproj", "{BA2781C3-F027-490C-A01D-C52CCB0FE8A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPITest", "Fededim.Extensions.Configuration.Protected.DataProtectionAPITest\Fededim.Extensions.Configuration.Protected.DataProtectionAPITest.csproj", "{898CD43E-C661-4CAF-BE48-293B2A4E0726}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fededim.Extensions.Configuration.Protected.DataProtectionAPITest", "Fededim.Extensions.Configuration.Protected.DataProtectionAPITest\Fededim.Extensions.Configuration.Protected.DataProtectionAPITest.csproj", "{898CD43E-C661-4CAF-BE48-293B2A4E0726}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,14 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DF3EFBDF-A1AD-4B35-817A-E9B035C09D9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF3EFBDF-A1AD-4B35-817A-E9B035C09D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF3EFBDF-A1AD-4B35-817A-E9B035C09D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF3EFBDF-A1AD-4B35-817A-E9B035C09D9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96713DB5-7C70-49FC-9736-903478C2D7C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96713DB5-7C70-49FC-9736-903478C2D7C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96713DB5-7C70-49FC-9736-903478C2D7C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96713DB5-7C70-49FC-9736-903478C2D7C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6C4745A9-A816-44C8-8817-6C12E8A61BCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C4745A9-A816-44C8-8817-6C12E8A61BCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C4745A9-A816-44C8-8817-6C12E8A61BCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
