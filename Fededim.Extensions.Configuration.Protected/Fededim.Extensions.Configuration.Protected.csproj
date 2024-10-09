@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.18</Version>
+    <Version>1.0.19</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using a provider implementing a standard interface IProtectProvider.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -91,13 +91,18 @@
 
       v1.0.18
       - Security fix: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
+
+      v1.0.19
+      - Security fix: updated System.Text.Json to 8.0.5 in order to fix the security issue CVE-2024-43485
+      - Updated project to net8.0 due to incoming net6.0 EOL
+      - Removed obsolete projects Fededim.Extensions.Configuration.ProtectedJson and Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest from solution
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageReference Include="System.Text.Json" Version="8.0.4" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
 
   <ItemGroup>

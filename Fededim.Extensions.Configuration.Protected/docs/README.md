@@ -6,7 +6,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Works with any existing and (hopefully) future ConfigurationSource and ConfigurationProvider (tested with CommandLine, EnvironmentVariables, Json, Xml and InMemoryCollection)
 - Trasparent in memory decryption of encrypted values without almost any additional line of code
 - Supports a global configuration and an eventual custom override for any ConfigurationSource
-- Supports almost any NET framework (net6.0, netstandard2.0 and net462)
+- Supports almost any NET framework (net8.0, netstandard2.0 and net462)
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
 - Supports per configuration value encryption derived subkey (called "subpurposes")
@@ -276,6 +276,11 @@ v1.0.17
 
 v1.0.18
 - Security fix: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
+
+v1.0.19
+- Security fix: updated System.Text.Json to 8.0.5 in order to fix the security issue CVE-2024-43485
+- Updated project to net8.0 due to incoming net6.0 EOL
+- Removed obsolete projects Fededim.Extensions.Configuration.ProtectedJson and Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest from solution
 
 # Detailed guide
 

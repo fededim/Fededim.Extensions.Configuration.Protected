@@ -117,10 +117,16 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// <summary>
         /// helper method to create random values both in datatype and value
         /// </summary>
+        /// <param name="requiredDataType">an array of datatypes to restrict the requested random value datatype, if null it picks any available ones.
         /// <returns>tuple with a random datatype <see cref="DataTypes"/> and a random value</returns>
-        protected (DataTypes DataType, object Value) GenerateRandomValue()
+        /// <exception cref="NotSupportedException"></exception>
+        protected (DataTypes DataType, object Value) GenerateRandomValue(DataTypes[] requiredDataTypes=null)
         {
-            var dataType = (DataTypes)DataTypesValues.GetValue(Random.Next(DataTypesValues.Length));
+            DataTypes dataType;
+            if (requiredDataTypes == null)
+                dataType = (DataTypes)DataTypesValues.GetValue(Random.Next(DataTypesValues.Length));
+            else
+                dataType = requiredDataTypes[Random.Next(requiredDataTypes.Length)];
 
             switch (dataType)
             {
@@ -137,7 +143,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                     return (dataType, NextInt64(Int64.MinValue, Int64.MaxValue));
 
                 case DataTypes.DateTimeOffset:
-                    return (dataType, new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay)+TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset.Ticks,TimeSpan.Zero));
+                    return (dataType, new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay), TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset));
 
                 case DataTypes.Double:
                     return (dataType, NextInt64(Int64.MinValue, Int64.MaxValue) * Random.NextDouble());
@@ -154,27 +160,27 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                     return (dataType, stringArray);
 
                 case DataTypes.BooleanArray:
-                    var booleanArray = new Boolean[Random.Next(0, ARRAYMAXLENGTH)];
+                    var booleanArray = new Boolean?[Random.Next(0, ARRAYMAXLENGTH)];
                     for (int i = 0; i < booleanArray.Length; i++)
-                        booleanArray[i] = (Random.Next() % 2 == 0) ? true : false;
+                        booleanArray[i] = (Boolean?) GenerateRandomValue(new[] { DataTypes.Boolean, DataTypes.Boolean, DataTypes.Boolean, DataTypes.Null }).Value;
                     return (dataType, booleanArray);
 
                 case DataTypes.IntegerArray:
-                    var integerArray = new Int64[Random.Next(0, ARRAYMAXLENGTH)];
+                    var integerArray = new Int64?[Random.Next(0, ARRAYMAXLENGTH)];
                     for (int i = 0; i < integerArray.Length; i++)
-                        integerArray[i] = NextInt64(Int64.MinValue, Int64.MaxValue);
+                        integerArray[i] = (Int64?) GenerateRandomValue(new[] { DataTypes.Integer, DataTypes.Integer, DataTypes.Integer, DataTypes.Null }).Value;
                     return (dataType, integerArray);
 
                 case DataTypes.DateTimeOffsetArray:
-                    var dateTimeArray = new DateTimeOffset[Random.Next(0, ARRAYMAXLENGTH)];
+                    var dateTimeArray = new DateTimeOffset?[Random.Next(0, ARRAYMAXLENGTH)];
                     for (int i = 0; i < dateTimeArray.Length; i++)
-                        dateTimeArray[i] = new DateTimeOffset(NextInt64(DateTimeOffset.MinValue.Ticks + 2 * TimeSpan.TicksPerDay, DateTimeOffset.MaxValue.Ticks - 2 * TimeSpan.TicksPerDay) + TimeZoneInfoValues[Random.Next(TimeZoneInfoValues.Length)].BaseUtcOffset.Ticks, TimeSpan.Zero);
+                        dateTimeArray[i] = (DateTimeOffset?) GenerateRandomValue(new[] { DataTypes.DateTimeOffset, DataTypes.DateTimeOffset, DataTypes.DateTimeOffset, DataTypes.Null }).Value;
                     return (dataType, dateTimeArray);
 
                 case DataTypes.DoubleArray:
-                    var doubleArray = new Double[Random.Next(0, ARRAYMAXLENGTH)];
+                    var doubleArray = new Double?[Random.Next(0, ARRAYMAXLENGTH)];
                     for (int i = 0; i < doubleArray.Length; i++)
-                        doubleArray[i] = NextInt64(Int64.MinValue, Int64.MaxValue) * Random.NextDouble();
+                        doubleArray[i] = (Double?) GenerateRandomValue(new[] { DataTypes.Double, DataTypes.Double, DataTypes.Double, DataTypes.Null }).Value;
                     return (dataType, doubleArray);
 
                 default:
