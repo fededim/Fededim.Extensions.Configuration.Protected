@@ -117,7 +117,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// <summary>
         /// helper method to create random values both in datatype and value
         /// </summary>
-        /// <param name="requiredDataType">the datatype of the requested random value, if null it picks also a random datatype</param>
+        /// <param name="requiredDataType">an array of datatypes to restrict the requested random value datatype, if null it picks any available ones.
         /// <returns>tuple with a random datatype <see cref="DataTypes"/> and a random value</returns>
         /// <exception cref="NotSupportedException"></exception>
         protected (DataTypes DataType, object Value) GenerateRandomValue(DataTypes[] requiredDataTypes=null)
