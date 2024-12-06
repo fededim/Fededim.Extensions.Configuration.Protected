@@ -1,23 +1,18 @@
-﻿using Microsoft.AspNetCore.DataProtection;
-using System;
+﻿using System;
 
-namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
+namespace Fededim.Extensions.Configuration.Protected
 {
     /// <summary>
-    /// The standard Microsoft DataProtectionAPI protect provider for Fededim.Extensions.Configuration.Protected, implementing the <see cref="IProtectProvider"/> interface.
+    /// A passthrough protect provider for Fededim.Extensions.Configuration.Protected, implementing the <see cref="IProtectProvider"/> interface.
+    /// It does not encrypt or decrypt any entries, it leaves all the entries untouched, it can be used for development purposes.
     /// </summary>
-    public class DataProtectionAPIProtectProvider : IProtectProvider
+    public class PassthroughProtectProvider : IProtectProvider
     {
-        public IDataProtector DataProtector { get; }
-
-
         /// <summary>
         /// The main constructor
         /// </summary>
-        /// <param name="dataProtector">the <see cref="IDataProtector"/> interface obtained from Data Protection API</param>
-        public DataProtectionAPIProtectProvider(IDataProtector dataProtector)
+        public PassthroughProtectProvider()
         {
-            DataProtector = dataProtector;
         }
 
         /// <summary>
@@ -27,7 +22,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <returns>a derived <see cref="IProtectProvider"/> based on the <see cref="subkey"/> parameter</returns>
         public IProtectProvider CreateNewProviderFromSubkey(String key, String subkey)
         {
-            return new DataProtectionAPIProtectProvider(DataProtector.CreateProtector(subkey));
+            return this;
         }
 
 
@@ -38,7 +33,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <returns>the decrypted string</returns>
         public String Decrypt(String key, String encryptedValue)
         {
-            return DataProtector.Unprotect(encryptedValue);
+            return encryptedValue;
         }
 
 
@@ -49,7 +44,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <returns>the encrypted string</returns>
         public String Encrypt(String key, String plainTextValue)
         {
-            return DataProtector.Protect(plainTextValue);
+            return plainTextValue;
         }
     }
 }
+

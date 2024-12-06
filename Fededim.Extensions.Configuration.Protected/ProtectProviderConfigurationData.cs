@@ -12,25 +12,28 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// This method encrypts a plain-text string 
         /// </summary>
+        /// <param name="key">the configuration key to be encrypted, it could be empty string in some cases</param>
         /// <param name="plainTextValue">the plain-text string to be encrypted</param>
-        /// <returns>the encrypted string</returns>
-        String Encrypt(String plainTextValue);
+        /// <returns>the encrypted string or null if you do not want to encrypt it</returns>
+        String Encrypt(String key, String plainTextValue);
 
 
         /// <summary>
         /// This method decrypts an encrypted string 
         /// </summary>
+        /// <param name="key">the configuration key to be decrypted</param>
         /// <param name="encryptedValue">the encrypted string to be decrypted</param>
         /// <returns>the decrypted string</returns>
-        String Decrypt(String encryptedValue);
+        String Decrypt(String key, String encryptedValue);
 
 
         /// <summary>
         /// This methods create a new <see cref="IProtectProvider"/> for supporting per configuration value encryption subkey (e.g. "subpurposes")
         /// </summary>
+        /// <param name="key">the configuration key to be encrypted, it could be empty string in some cases</param>
         /// <param name="subkey">the per configuration value encryption subkey</param>
         /// <returns>a derived <see cref="IProtectProvider"/> based on the <see cref="subkey"/> parameter</returns>
-        IProtectProvider CreateNewProviderFromSubkey(string subkey);
+        IProtectProvider CreateNewProviderFromSubkey(String key, String subkey);
     }
 
 
@@ -87,6 +90,18 @@ namespace Fededim.Extensions.Configuration.Protected
             if (ProtectProvider == null)
                 throw new ArgumentException("ProtectProvider must not be null!", nameof(ProtectProvider));
         }
+
+
+        /// <summary>
+        /// A helper overridable method which allows you to chain multiple IProtectProvider
+        /// </summary>
+        /// <param name="chainFunction">a chain function which creates a new IProtectProvider reusing an existing IProtectProvider</param>
+        /// <returns>a new IProtectProviderConfigurationData</returns>
+        public virtual IProtectProviderConfigurationData Chain(Func<IProtectProvider,IProtectProvider> chainFunction)
+        {
+            return new ProtectProviderConfigurationData(ProtectRegex.ToString(), ProtectedRegex.ToString(), ProtectedReplaceString, chainFunction(ProtectProvider));
+        }
+
     }
 
 
@@ -125,7 +140,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// </summary>
         /// <param name="global">the global configuration data</param>
         /// <param name="local">the local configuration data</param>
-        /// <returns></returns>
+        /// <returns>a new IProtectProviderConfigurationData</returns>
         public static IProtectProviderConfigurationData Merge(IProtectProviderConfigurationData global, IProtectProviderConfigurationData local)
         {
             if (local == null)

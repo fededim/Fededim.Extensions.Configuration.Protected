@@ -144,9 +144,9 @@ namespace Fededim.Extensions.Configuration.Protected
                             IProtectProvider protectProvider = ProtectProviderConfigurationData.ProtectProvider;
 
                             if (subPurposePresent)
-                                protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+                                protectProvider = protectProvider.CreateNewProviderFromSubkey(key, me.Groups["subPurpose"].Value);
 
-                            return protectProvider.Decrypt(me.Groups["protectedData"].Value);
+                            return protectProvider.Decrypt(key, me.Groups["protectedData"].Value);
                         }));
                 }
             }
@@ -166,9 +166,9 @@ namespace Fededim.Extensions.Configuration.Protected
                                 IProtectProvider protectProvider = ProtectProviderConfigurationData.ProtectProvider;
 
                                 if (subPurposePresent)
-                                    protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+                                    protectProvider = protectProvider.CreateNewProviderFromSubkey(fullKey, me.Groups["subPurpose"].Value);
 
-                                return protectProvider.Decrypt(me.Groups["protectedData"].Value);
+                                return protectProvider.Decrypt(fullKey, me.Groups["protectedData"].Value);
                             }));
                     }
                     else DecryptChildKeys(fullKey);

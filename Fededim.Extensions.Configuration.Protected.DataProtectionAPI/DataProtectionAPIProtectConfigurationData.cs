@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
@@ -11,12 +9,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
     /// DataProtectionAPIProtectConfigurationData is a custom data structure which stores all Microsoft Data Protection Api configuration options needed by ProtectedConfigurationBuilder and ProtectConfigurationProvider
     /// </summary>
     public class DataProtectionAPIProtectConfigurationData : IProtectProviderConfigurationData
-    {      
+    {
         /// <summary>
         /// The basic purpose string common to all purposes
         /// </summary>
         public const String DataProtectionAPIProtectConfigurationPurpose = "ProtectedConfigurationBuilder";
-        
+
         /// <summary>
         /// A purpose string based on a key number
         /// </summary>
@@ -53,8 +51,9 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// - key number purpose set to 1
         /// </summary>
         /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, which must resolve the <see cref="IDataProtectionProvider"/> interface</param>
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(IServiceProvider dataProtectionServiceProvider)
-            : this(null, null,null, dataProtectionServiceProvider, null, 1)
+            : this(null, null, null, dataProtectionServiceProvider, null, 1)
         {
         }
 
@@ -68,9 +67,9 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
         /// <param name="protectedReplaceString">a string replacement expression which captures the substitution which must be applied for transforming unencrypted tokenization into an encrypted tokenization</param>
-
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(IServiceProvider dataProtectionServiceProvider, int keyNumber, String protectRegexString = null, String protectedRegexString = null, String protectedReplaceString = null)
-            : this(protectRegexString,protectedRegexString, protectedReplaceString, dataProtectionServiceProvider, null, keyNumber)
+            : this(protectRegexString, protectedRegexString, protectedReplaceString, dataProtectionServiceProvider, null, keyNumber)
         {
         }
 
@@ -85,6 +84,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
         /// <param name="protectedReplaceString">a string replacement expression which captures the substitution which must be applied for transforming unencrypted tokenization into an encrypted tokenization</param>
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(IServiceProvider dataProtectionServiceProvider, String purposeString, String protectRegexString = null, String protectedRegexString = null, String protectedReplaceString = null)
             : this(protectRegexString, protectedRegexString, protectedReplaceString, dataProtectionServiceProvider, null, purposeString)
         {
@@ -99,6 +99,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// - key number purpose set to 1
         /// </summary>
         /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API</param>
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(Action<IDataProtectionBuilder> dataProtectionConfigureAction)
             : this(null, null, null, null, dataProtectionConfigureAction, 1)
         {
@@ -115,7 +116,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
         /// <param name="protectedReplaceString">a string replacement expression which captures the substitution which must be applied for transforming unencrypted tokenization into an encrypted tokenization</param>
-
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(Action<IDataProtectionBuilder> dataProtectionConfigureAction, int keyNumber, String protectRegexString = null, String protectedRegexString = null, String protectedReplaceString = null)
             : this(protectRegexString, protectedRegexString, protectedReplaceString, null, dataProtectionConfigureAction, keyNumber)
         {
@@ -132,6 +133,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <param name="protectRegexString">a regular expression which captures the data to be encrypted in a named group called protectData</param>
         /// <param name="protectedRegexString">a regular expression which captures the data to be decrypted in a named group called protectedData</param>
         /// <param name="protectedReplaceString">a string replacement expression which captures the substitution which must be applied for transforming unencrypted tokenization into an encrypted tokenization</param>
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(Action<IDataProtectionBuilder> dataProtectionConfigureAction, String purposeString, String protectRegexString = null, String protectedRegexString = null, String protectedReplaceString = null)
             : this(protectRegexString, protectedRegexString, protectedReplaceString, null, dataProtectionConfigureAction, purposeString)
         {
@@ -149,7 +151,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
         /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
         /// <param name="keyNumber">a number specifying the index of the key to use</param>
-        /// <exception cref="ArgumentException">if dataProtectionServiceProvider or dataProtectionServiceProvider is null or not well configured</exception>
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(String protectRegexString = null, String protectedRegexString = null, String protectedReplaceString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, int keyNumber = 1)
             : this(protectRegexString, protectedRegexString, protectedReplaceString, dataProtectionServiceProvider, dataProtectionConfigureAction, DataProtectionAPIProtectConfigurationKeyNumberToString(keyNumber))
         {
@@ -167,7 +169,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <param name="dataProtectionServiceProvider">a service provider configured with Data Protection API, this parameters is mutually exclusive to dataProtectionConfigureAction</param>
         /// <param name="dataProtectionConfigureAction">a configure action to setup the Data Protection API, this parameters is mutually exclusive to dataProtectionServiceProvider</param>
         /// <param name="purposeString">a string used to derive the encryption key</param>
-        /// <exception cref="ArgumentException">if dataProtectionServiceProvider or dataProtectionServiceProvider is null or not well configured</exception>
+        /// <exception cref="ArgumentException">if either dataProtectionServiceProvider or dataProtectionConfigureAction are null or not well configured</exception>
         public DataProtectionAPIProtectConfigurationData(String protectRegexString = null, String protectedRegexString = null, String protectedReplaceString = null, IServiceProvider dataProtectionServiceProvider = null, Action<IDataProtectionBuilder> dataProtectionConfigureAction = null, String purposeString = null)
         {
             // check that at least one parameter is not null
@@ -201,5 +203,4 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
             CheckConfigurationIsValid();
         }
     }
-
 }
