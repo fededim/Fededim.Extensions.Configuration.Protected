@@ -99,11 +99,11 @@
 
       v1.0.20
       - Improved IProtectProvider interface by including also the key being encrypted / decrypted
-      - Implemented a PassthroughProtectProvider and PassthroughProtectConfigurationData which does not encrypt / decrypt anything, useful for development
+      - Implemented a PassthroughProtectProvider and PassthroughProtectConfigurationData which does not encrypt / decrypt anything, useful for development and testing
       - Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
-      - Added new tests for the chain function and the PassthroughProtectProvider
+      - Implemented ProtectFile method in ConfigurationBuilderExtensions to encrypt just a single file (it was missing)
+      - Added new tests for the chain function and the PassthroughProtectProvider, implemented a ProcessSafeRandomId for running tests in parallel
       - Update all NuGet packages to the latest version
-      - Added ProtectFile in ConfigurationBuilderExtensions to encrypt a single file
     </PackageReleaseNotes>
   </PropertyGroup>
 
