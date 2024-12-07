@@ -329,8 +329,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// <summary>
         /// generates a random hierarchical JSON file with random NUMENTRIES in both datatype and value
         /// </summary>
-        /// <returns>the generated filename and the number of the entries (variable due to the generation of the random number of element in arrays)</returns>
-        protected (String FileName, int NumEntries) GenerateRandomJsonFile()
+        /// <returns>the generated filename and the number of the values (variable due to the generation of the random number of element in arrays)</returns>
+        protected (String FileName, int NumEntries, int NumValues) GenerateRandomJsonFile()
         {
             String subPurpose;
             var fileName = RANDOMJSONFILENAME;
@@ -342,7 +342,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var currentNode = JSONObject;
 
             int level = 1;
-            int numEntries = 0;
+            int numValues = 0;
 
             for (int i = 0; i < NUMENTRIES; i++)
             {
@@ -363,7 +363,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         subPurpose = (Random.Next() % 4 == 0) ? TrimRegexCharsFromSubpurpose(GenerateRandomString(SUBPURPOSEMAXLENGTH)) : null;
                         currentNode[entryKey + "Plaintext"] = JsonValue.Create(entryValue.Value);
                         currentNode[entryKey + "Encrypted"] = JsonValue.Create(CreateJsonProtectValue(subPurpose, entryValue.DataType, entryValue.Value));
-                        numEntries += 1;
+
+                        numValues += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -377,7 +378,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                             subPurpose = (Random.Next() % 4 == 0) ? TrimRegexCharsFromSubpurpose(GenerateRandomString(SUBPURPOSEMAXLENGTH)) : null;
                             return JsonValue.Create(CreateJsonProtectValue(subPurpose, entryValue.DataType, obj));
                         }).ToArray());
-                        numEntries += Math.Max(((Array)entryValue.Value).Length, 1);
+
+                        numValues += Math.Max(((Array)entryValue.Value).Length, 1);   // note some ConfigurationProviders do not load all values (e.g. XML does not load empty / null elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
                         break;
                 }
 
@@ -403,7 +405,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var fileInfo = new FileInfo(fileName);
             TestOutputHelper.WriteLine($"{DateTime.Now}: File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
 
-            return (fileName, numEntries);
+            return (fileName, NUMENTRIES, numValues);
         }
 
 
@@ -424,12 +426,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             // genererates a JSON file
             var result = GenerateRandomJsonFile();
 
-            stopwatch.Step($"Generated random JSON file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
+            stopwatch.Step($"Generated random JSON file (NumEntries {result.NumEntries} NumValues {result.NumValues} size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Encrypts the JSON file
             Assert.True(ProtectProviderConfigurationData.ProtectFile(result.FileName));
 
-            stopwatch.Step($"Encrypted random JSON file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
+            stopwatch.Step($"Encrypted random JSON file (NumEntries {result.NumEntries} NumValues {result.NumValues} size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Reads the encrypted JSON file and checks that all encrypted entries do not match DefaultProtectRegexString
             var encryptedJsonDocument = JsonSerializer.Deserialize<Dictionary<string, object>>(File.ReadAllText(result.FileName), JsonSerializerOptions);
@@ -576,7 +578,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// - Trim whitespace from any string which goes into an element
         /// </remarks>
         /// <returns>the generated filename and the number of the entries (variable due to the generation of the random number of element in arrays)</returns>
-        protected (String FileName, int NumEntries) GenerateRandomXmlFile()
+        protected (String FileName, int NumEntries, int NumValues) GenerateRandomXmlFile()
         {
             String subPurpose;
             var fileName = RANDOMXMLFILENAME;
@@ -589,7 +591,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var currentNode = xDocument.Root;
 
             int level = 1;
-            int numEntries = 0;
+            int numValues = 0;
 
             for (int i = 0; i < NUMENTRIES; i++)
             {
@@ -615,7 +617,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         AddXmlNode(currentNode, entryKey + "Plaintext", entryValue.DataType, entryValue.Value);
                         AddXmlNode(currentNode, entryKey + "Encrypted", entryValue.DataType, CreateXmlProtectValue(subPurpose, entryValue.DataType, entryValue.Value));
 
-                        numEntries += 1;
+                        numValues += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -635,7 +637,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         }).ToArray();
                         currentNode.Add(arrayElement);
 
-                        numEntries += ((Array)entryValue.Value).Length;   // note IConfigurationBuilder.AddXmlFile does not load empty XML elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
+                        numValues += Math.Max(((Array)entryValue.Value).Length, 1);   // note some ConfigurationProviders do not load all values (e.g. XML does not load empty / null elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
                         break;
                 }
 
@@ -660,7 +662,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var fileInfo = new FileInfo(fileName);
             TestOutputHelper.WriteLine($"{DateTime.Now}: File location file://{Path.GetFullPath(fileName).Replace("\\", "/")}");
 
-            return (fileName, numEntries);
+            return (fileName, NUMENTRIES, numValues);
         }
 
 
@@ -677,12 +679,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             // genererates a XML file
             var result = GenerateRandomXmlFile();
 
-            stopwatch.Step($"Generated random XML file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
+            stopwatch.Step($"Generated random XML file (NumEntries {result.NumEntries} NumValues {result.NumValues} size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Encrypts the XML file
             Assert.True(ProtectProviderConfigurationData.ProtectFile(result.FileName));
 
-            stopwatch.Step($"Encrypted random XML file ({result.NumEntries} entries size {new FileInfo(result.FileName).Length / 1024} KB)");
+            stopwatch.Step($"Encrypted random XML file (NumEntries {result.NumEntries} NumValues {result.NumValues} size {new FileInfo(result.FileName).Length / 1024} KB)");
 
             // Reads the encrypted XML file and checks that all encrypted entries do not match DefaultProtectRegexString
             var encryptedXmlDocument = XDocument.Load(result.FileName);
@@ -741,15 +743,18 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// <summary>
         /// Generates random environment variables with (2*NUMENTRIES) in both datatype and value. Environment variables can only contain string and they aren't hierarchical.
         /// </summary>
-        protected void GenerateRandomEnvironmentVariables(EnvironmentVariableTarget environmentVariableTarget)
+        /// <returns>the number of entries generated</returns>
+        protected (int NumEntries, int NumValues) GenerateRandomEnvironmentVariables(EnvironmentVariableTarget environmentVariableTarget)
         {
             String subPurpose;
+
+            var numberOfEntries = Math.Min(NUMENTRIES, 2000);
+            var numValues = 0;
 
             TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random environment variables {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
 
             // Generate random environments variables
-            // 
-            for (int i = 0; i < Math.Min(NUMENTRIES, 2000); i++)
+            for (int i = 0; i < numberOfEntries; i++)
             {
                 var entryValue = GenerateRandomValue();
                 var entryKey = $"TID_{Thread.CurrentThread.ManagedThreadId}_Entry_{i + 1}_{entryValue.DataType}_";
@@ -767,6 +772,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
                         Environment.SetEnvironmentVariable(entryKey + "Plaintext", entryValue.Value?.ToString(), environmentVariableTarget);
                         Environment.SetEnvironmentVariable(entryKey + "Encrypted", CreateStringProtectValue(subPurpose, entryValue.DataType, entryValue.Value), environmentVariableTarget);
+
+                        numValues += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -781,6 +788,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
                         Environment.SetEnvironmentVariable(entryKey + "Plaintext", firstValue, environmentVariableTarget);
                         Environment.SetEnvironmentVariable(entryKey + "Encrypted", CreateStringProtectValue(subPurpose, entryValue.DataType, firstValue), environmentVariableTarget);
+
+                        numValues += Math.Max(((Array)entryValue.Value).Length, 1);   // note some ConfigurationProviders do not load all values (e.g. XML does not load empty / null elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
                         break;
 
                     default:
@@ -789,6 +798,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             }
 
             TestOutputHelper.WriteLine($"{DateTime.Now}: Starting test...");
+
+            return (numberOfEntries, numValues);
         }
 
 
@@ -803,12 +814,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates random environment variables
-            GenerateRandomEnvironmentVariables(EnvironmentVariableTarget.Process);
+            var result = GenerateRandomEnvironmentVariables(EnvironmentVariableTarget.Process);
 
-            stopwatch.Step($"Generated random environment variables (note that Windows has a maximum size of 32KB for all environment variables, so not all {NUMENTRIES} keys could be created) TID {Thread.CurrentThread.ManagedThreadId}");
+            stopwatch.Step($"Generated random environment variables (NumEntries {result.NumEntries} NumValues {result.NumValues} TID {Thread.CurrentThread.ManagedThreadId}, note that Windows has a maximum size of 32KB for all environment variables, so not all {NUMENTRIES} keys could be created)");
 
             // Encrypts the environment variables
-            ProtectProviderConfigurationData.ProtectEnvironmentVariables(EnvironmentVariableTarget.Process);
+            ProtectProviderConfigurationData.ProtectEnvironmentVariables(EnvironmentVariableTarget.Process, $"TID_{Thread.CurrentThread.ManagedThreadId}");
 
             stopwatch.Step("Encrypted random environment variables");
 
@@ -832,6 +843,13 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var checkedEntries = CheckConfigurationEntriesAreEqual(configuration);
 
             stopwatch.Step($"Checked that {checkedEntries} entries are equal");
+
+            // Clean generated environment variables in order to speed up, they are shared between threads
+            foreach (String key in environmentVariables.Keys)
+            {
+                if (key.StartsWith($"TID_{Thread.CurrentThread.ManagedThreadId}"))
+                    Environment.SetEnvironmentVariable(key, null);
+            }
         }
         #endregion
 
@@ -839,15 +857,17 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
 
 
-        #region "In-Memory dictionary Tests and helper methods"
+            #region "In-Memory dictionary Tests and helper methods"
 
-        /// <summary>
-        /// Generates a random in-memory dictionary with random 2*NUMENTRIES in both datatype and value. In-memory dictionary can only contain string and it isn't hierarchical.
-        /// </summary>
-        /// <returns>the generated in-memory dictionary</returns>
-        protected Dictionary<String, String> GenerateRandomInMemoryDictionary()
+            /// <summary>
+            /// Generates a random in-memory dictionary with random 2*NUMENTRIES in both datatype and value. In-memory dictionary can only contain string and it isn't hierarchical.
+            /// </summary>
+            /// <returns>the generated in-memory dictionary</returns>
+        protected (Dictionary<String, String> InMemoryDictionary, int NumEntries, int NumValues) GenerateRandomInMemoryDictionary()
         {
             String subPurpose;
+
+            int numValues = 0;
 
             TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random in-memory dictionary with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
 
@@ -873,6 +893,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
                         currentNode[entryKey + "Plaintext"] = entryValue.Value?.ToString();
                         currentNode[entryKey + "Encrypted"] = CreateStringProtectValue(subPurpose, entryValue.DataType, entryValue.Value);
+
+                        numValues += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -887,6 +909,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
                         currentNode[entryKey + "Plaintext"] = firstValue;
                         currentNode[entryKey + "Encrypted"] = CreateStringProtectValue(subPurpose, entryValue.DataType, firstValue);
+
+                        numValues += Math.Max(((Array)entryValue.Value).Length, 1);   // note some ConfigurationProviders do not load all values (e.g. XML does not load empty / null elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
                         break;
                 }
             }
@@ -894,7 +918,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
             TestOutputHelper.WriteLine($"{DateTime.Now}: Starting test...");
 
-            return dictionary;
+            return (dictionary, NUMENTRIES, numValues);
         }
 
 
@@ -908,18 +932,18 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates random in-memory dictionary
-            var dictionary = GenerateRandomInMemoryDictionary();
+            var result = GenerateRandomInMemoryDictionary();
 
-            stopwatch.Step("Generated random in-memory dictionary");
+            stopwatch.Step($"Generated random in-memory dictionary (NumEntries {result.NumEntries} NumValues {result.NumValues})");
 
 
             // Encrypts the in-memory dictionary
-            ProtectProviderConfigurationData.ProtectConfigurationValue(dictionary);
+            ProtectProviderConfigurationData.ProtectConfigurationValue(result.InMemoryDictionary);
 
             stopwatch.Step("Encrypted random in-memory dictionary");
 
             // Checks that all entries of the in-memory dictioary are encrypted, e.g. do not match DefaultProtectRegexString
-            foreach (var entry in dictionary)
+            foreach (var entry in result.InMemoryDictionary)
             {
                 if (entry.Key.Contains("_Encrypted") && entry.Value != null)
                     if (ProtectProviderConfigurationData.ProtectRegex.IsMatch(entry.Value))
@@ -929,7 +953,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Checked that all random in-memory dictionary is encrypted");
 
             // Loads the in-memory dictionary with ProtectedConfigurationBuilder
-            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddInMemoryCollection(dictionary).Build();
+            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddInMemoryCollection(result.InMemoryDictionary).Build();
 
             stopwatch.Step("Loaded and decrypted random in-memory dictionary with ProtectedConfigurationBuilder");
 
@@ -951,12 +975,14 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// Generates command line arguments with random (4*NUMENTRIES) in both datatype and value. Command line arguments can only contain string and they aren't hierarchical.
         /// </summary>
         /// <returns>the generated arguments array</returns>
-        protected String[] GenerateRandomCommandLine()
+        protected (String[] CommandLine, int NumEntries, int NumValues) GenerateRandomCommandLine()
         {
             String subPurpose;
 
-            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random command line arguments with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
+            int numValues = 0;
 
+            TestOutputHelper.WriteLine($"{DateTime.Now}: Generating a random command line arguments with {NUMENTRIES} keys, autogenerated strings max length {STRINGMAXLENGTH} and autogenerated array max length {ARRAYMAXLENGTH}...");
+            
             var args = new String[4 * NUMENTRIES];
 
             for (int i = 0; i < NUMENTRIES; i++)
@@ -979,6 +1005,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         args[4 * i + 1] = entryValue.Value?.ToString();
                         args[4 * i + 2] = $"--{entryKey}Encrypted";
                         args[4 * i + 3] = CreateStringProtectValue(subPurpose, entryValue.DataType, entryValue.Value);
+
+                        numValues += 1;
                         break;
 
                     case DataTypes.StringArray:
@@ -995,6 +1023,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
                         args[4 * i + 1] = firstValue;
                         args[4 * i + 2] = $"--{entryKey}Encrypted";
                         args[4 * i + 3] = CreateStringProtectValue(subPurpose, entryValue.DataType, firstValue);
+
+                        numValues += Math.Max(((Array)entryValue.Value).Length, 1);   // note some ConfigurationProviders do not load all values (e.g. XML does not load empty / null elements like <empty />, see <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.Extensions.Configuration.Xml/src/XmlStreamConfigurationProvider.cs#L170-L176" />
                         break;
                 }
             }
@@ -1002,7 +1032,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
             TestOutputHelper.WriteLine($"{DateTime.Now}: Starting test...");
 
-            return args;
+            return (args, NUMENTRIES, numValues);
         }
 
 
@@ -1016,12 +1046,12 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
             // genererates random command line arguments
-            var args = GenerateRandomCommandLine();
+            var result = GenerateRandomCommandLine();
 
-            stopwatch.Step("Generated random comand line args");
+            stopwatch.Step($"Generated random comand line args (NumEntries {result.NumEntries} NumValues {result.NumValues})");
 
             // Encrypts the command line arguments
-            var encryptedArgs = ProtectProviderConfigurationData.ProtectConfigurationValue(args);
+            var encryptedArgs = ProtectProviderConfigurationData.ProtectConfigurationValue(result.CommandLine);
 
             stopwatch.Step("Encrypted random comand line args");
 

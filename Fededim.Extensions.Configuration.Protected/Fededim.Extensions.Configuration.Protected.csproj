@@ -102,7 +102,7 @@
       - Implemented a PassthroughProtectProvider and PassthroughProtectConfigurationData which does not encrypt / decrypt anything, useful for development and testing
       - Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
       - Implemented ProtectFile method in ConfigurationBuilderExtensions to encrypt just a single file (it was missing)
-      - Added new tests for the chain function and the PassthroughProtectProvider, implemented a ProcessSafeRandomId for running tests in parallel
+      - Improved and added new tests for the chain function and the PassthroughProtectProvider, implemented a ProcessSafeRandomId for running tests in parallel
       - Update all NuGet packages to the latest version
     </PackageReleaseNotes>
   </PropertyGroup>

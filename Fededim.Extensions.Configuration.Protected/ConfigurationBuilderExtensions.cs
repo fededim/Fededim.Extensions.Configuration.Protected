@@ -218,12 +218,12 @@ namespace Fededim.Extensions.Configuration.Protected
         /// </summary>
         /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="environmentTarget">a target EnvironmentVariableTarget (e.g. User, Machine, Process)</param>
-        public static void ProtectEnvironmentVariables(this IProtectProviderConfigurationData protectProviderConfigurationData, EnvironmentVariableTarget environmentTarget = EnvironmentVariableTarget.User)
+        public static void ProtectEnvironmentVariables(this IProtectProviderConfigurationData protectProviderConfigurationData, EnvironmentVariableTarget environmentTarget = EnvironmentVariableTarget.Process, String prefix = null)
         {
             var environmentVariables = Environment.GetEnvironmentVariables(environmentTarget);
 
             foreach (String key in environmentVariables.Keys)
-                if (key.StartsWith($"TID_{Thread.CurrentThread.ManagedThreadId}"))
+                if (String.IsNullOrEmpty(prefix) || key.StartsWith(prefix))
                     Environment.SetEnvironmentVariable(key, protectProviderConfigurationData.ProtectConfigurationValue(key, environmentVariables[key].ToString()), environmentTarget);
         }
 
