@@ -78,7 +78,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         protected static String RANDOMJSONFILENAME => $"random_{ProcessSafeRandomId()}.json";
         protected static String RANDOMXMLFILENAME => $"random_{ProcessSafeRandomId()}.xml";
 
-        protected static Random Random { get; } = new Random(ProcessSafeRandomId().GetHashCode());
+        protected Random Random { get; } = new Random(ProcessSafeRandomId().GetHashCode());
 
         protected DataTypes[] DataTypesValues = (DataTypes[])Enum.GetValues(typeof(DataTypes));
         protected LevelMove[] LevelMoveValues = (LevelMove[])Enum.GetValues(typeof(LevelMove));
