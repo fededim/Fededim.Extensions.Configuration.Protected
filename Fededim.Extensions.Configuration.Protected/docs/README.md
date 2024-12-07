@@ -288,6 +288,8 @@ v1.0.20
 - Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
 - Added new tests for the chain function and the PassthroughProtectProvider
 - Update all NuGet packages to the latest version
+- Added ProtectFile in ConfigurationBuilderExtensions to encrypt a single file
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.

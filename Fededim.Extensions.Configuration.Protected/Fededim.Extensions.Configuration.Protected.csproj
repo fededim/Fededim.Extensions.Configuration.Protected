@@ -103,6 +103,7 @@
       - Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
       - Added new tests for the chain function and the PassthroughProtectProvider
       - Update all NuGet packages to the latest version
+      - Added ProtectFile in ConfigurationBuilderExtensions to encrypt a single file
     </PackageReleaseNotes>
   </PropertyGroup>
 
