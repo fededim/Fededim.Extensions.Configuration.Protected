@@ -123,12 +123,25 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
 
+        /// <summary>
+        /// Encrypts the String value using the specified <see cref="protectProviderConfigurationData"/>
+        /// </summary>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
+        /// <param name="value">a String literal which needs to be encrypted</param>
+        /// <returns>the encrypted configuration value</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static String ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, String value)
+        {
+            return ProtectConfigurationValue(protectProviderConfigurationData, null, value);
+        }
+
 
 
         /// <summary>
         /// Encrypts the String value using the specified <see cref="protectProviderConfigurationData"/>
         /// </summary>
         /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
+        /// <param name="key">the configuration key which needs to be encrypted</param>
         /// <param name="value">a String literal which needs to be encrypted</param>
         /// <returns>the encrypted configuration value</returns>
         /// <exception cref="ArgumentException"></exception>

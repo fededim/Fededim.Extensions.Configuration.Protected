@@ -23,6 +23,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <summary>
         /// This methods create a new <see cref="IProtectProvider"/> for supporting per configuration value encryption subkey (e.g. "subpurposes")
         /// </summary>
+        /// <param name="key">the configuration key containing the encryption subkey</param>
         /// <param name="subkey">the per configuration value encryption subkey</param>
         /// <returns>a derived <see cref="IProtectProvider"/> based on the <see cref="subkey"/> parameter</returns>
         public IProtectProvider CreateNewProviderFromSubkey(String key, String subkey)
@@ -34,6 +35,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <summary>
         /// This method decrypts an encrypted string 
         /// </summary>
+        /// <param name="key">the configuration key which needs to be decrypted</param>
         /// <param name="encryptedValue">the encrypted string to be decrypted</param>
         /// <returns>the decrypted string</returns>
         public String Decrypt(String key, String encryptedValue)
@@ -45,6 +47,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPI
         /// <summary>
         /// This method encrypts a plain-text string 
         /// </summary>
+        /// <param name="key">the configuration key which needs to be encrypted</param>
         /// <param name="plainTextValue">the plain-text string to be encrypted</param>
         /// <returns>the encrypted string</returns>
         public String Encrypt(String key, String plainTextValue)
