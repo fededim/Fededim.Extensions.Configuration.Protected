@@ -3,32 +3,32 @@
 
 |||
 |:---|:---|
-| Generated on: | 12/8/2024 - 7:58:19 PM |
-| Coverage date: | 12/8/2024 - 7:57:14 PM - 12/8/2024 - 7:58:16 PM |
+| Generated on: | 12/8/2024 - 8:13:59 PM |
+| Coverage date: | 12/8/2024 - 8:13:21 PM - 12/8/2024 - 8:13:55 PM |
 | Parser: | MultiReport (2x Cobertura) |
 | Assemblies: | 2 |
 | Classes: | 14 |
 | Files: | 9 |
-| **Line coverage:** | 72% (247 of 343) |
+| **Line coverage:** | 71.8% (247 of 344) |
 | Covered lines: | 247 |
-| Uncovered lines: | 96 |
-| Coverable lines: | 343 |
-| Total lines: | 1470 |
+| Uncovered lines: | 97 |
+| Coverable lines: | 344 |
+| Total lines: | 1489 |
 | **Branch coverage:** | 50.5% (89 of 176) |
 | Covered branches: | 89 |
 | Total branches: | 176 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 69_12224786209 |
+| Tag: | 70_12224880118 |
 
 </details>
 
 ## Coverage
-<details><summary>Fededim.Extensions.Configuration.Protected - 73.2%</summary>
+<details><summary>Fededim.Extensions.Configuration.Protected - 73%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**Fededim.Extensions.Configuration.Protected**|**73.2%**|**49.3%**|
-|Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions|83.5%|70%|
+|**Fededim.Extensions.Configuration.Protected**|**73%**|**49.3%**|
+|Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions|82.3%|70%|
 |Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationDat<br/>a|76.4%|71.4%|
 |Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor|27.2%|8.3%|
 |Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProce<br/>ssor|95.6%|75%|
