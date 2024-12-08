@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft DataProtectionAPI provider for the encryption/decryption of configuration values using Fededim.Extensions.Configuration.Protected.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -51,13 +51,16 @@
       - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.19
       - Update all Nuget packages to latest version
       - Updated project to net8.0 due to incoming net6.0 EOL
+
+      v1.0.8
+      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.20
     </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.19" />-->
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
+    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.20" />-->
   </ItemGroup>
 
   <ItemGroup>

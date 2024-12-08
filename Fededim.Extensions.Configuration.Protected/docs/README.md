@@ -282,6 +282,14 @@ v1.0.19
 - Updated project to net8.0 due to incoming net6.0 EOL
 - Removed obsolete projects Fededim.Extensions.Configuration.ProtectedJson and Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest from solution
 
+v1.0.20
+- Improved IProtectProvider interface by including also the key being encrypted / decrypted
+- Implemented a PassthroughProtectProvider and PassthroughProtectConfigurationData which does not encrypt / decrypt anything, useful for development and testing
+- Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
+- Implemented ProtectFile method in ConfigurationBuilderExtensions to encrypt just a single file (it was missing)
+- Improved and added new tests for the chain function and the PassthroughProtectProvider, implemented a ProcessSafeRandomId for running tests in parallel
+- Update all NuGet packages to the latest version
+
 # Detailed guide
 
 You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.

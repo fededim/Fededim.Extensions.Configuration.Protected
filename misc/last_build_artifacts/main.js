@@ -221,22 +221,24 @@ var assemblies = [
   {
     "name": "Fededim.Extensions.Configuration.Protected",
     "classes": [
-      { "name": "Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions", "rp": "Fededim.Extensions.Configuration.Protected_ConfigurationBuilderExtensions.html", "cl": 52, "ucl": 5, "cal": 57, "tl": 225, "cb": 25, "tb": 32, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected_IProtectProviderConfigurationData.html", "cl": 12, "ucl": 4, "cal": 16, "tl": 144, "cb": 10, "tb": 14, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions", "rp": "Fededim.Extensions.Configuration.Protected_ConfigurationBuilderExtensions.html", "cl": 56, "ucl": 12, "cal": 68, "tl": 264, "cb": 28, "tb": 40, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected_IProtectProviderConfigurationData.html", "cl": 13, "ucl": 4, "cal": 17, "tl": 159, "cb": 10, "tb": 14, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor", "rp": "Fededim.Extensions.Configuration.Protected_JsonProtectFileProcessor.html", "cl": 9, "ucl": 24, "cal": 33, "tl": 322, "cb": 2, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProcessor", "rp": "Fededim.Extensions.Configuration.Protected_JsonWithCommentsProtectFileProcessor.html", "cl": 22, "ucl": 1, "cal": 23, "tl": 322, "cb": 3, "tb": 4, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.PassthroughProtectConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected_PassthroughProtectConfigurationData.html", "cl": 3, "ucl": 0, "cal": 3, "tl": 25, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.PassthroughProtectProvider", "rp": "Fededim.Extensions.Configuration.Protected_PassthroughProtectProvider.html", "cl": 5, "ucl": 0, "cal": 5, "tl": 54, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder", "rp": "Fededim.Extensions.Configuration.Protected_ProtectedConfigurationBuilder.html", "cl": 20, "ucl": 7, "cal": 27, "tl": 148, "cb": 5, "tb": 8, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider", "rp": "Fededim.Extensions.Configuration.Protected_ProtectedConfigurationProvider.html", "cl": 52, "ucl": 24, "cal": 76, "tl": 253, "cb": 12, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider", "rp": "Fededim.Extensions.Configuration.Protected_ProtectedConfigurationProvider.html", "cl": 52, "ucl": 24, "cal": 76, "tl": 253, "cb": 15, "tb": 32, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "Fededim.Extensions.Configuration.Protected.ProtectFileOptions", "rp": "Fededim.Extensions.Configuration.Protected_ProtectFileOptions.html", "cl": 6, "ucl": 0, "cal": 6, "tl": 322, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "Fededim.Extensions.Configuration.Protected.ProtectProviderConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected_ProtectProviderConfigurationData.html", "cl": 0, "ucl": 15, "cal": 15, "tl": 144, "cb": 0, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.ProtectProviderConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected_ProtectProviderConfigurationData.html", "cl": 9, "ucl": 6, "cal": 15, "tl": 159, "cb": 4, "tb": 24, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "Fededim.Extensions.Configuration.Protected.RawProtectFileProcessor", "rp": "Fededim.Extensions.Configuration.Protected_RawProtectFileProcessor.html", "cl": 0, "ucl": 2, "cal": 2, "tl": 322, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
       { "name": "Fededim.Extensions.Configuration.Protected.XmlProtectFileProcessor", "rp": "Fededim.Extensions.Configuration.Protected_XmlProtectFileProcessor.html", "cl": 24, "ucl": 1, "cal": 25, "tl": 322, "cb": 11, "tb": 12, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
   {
     "name": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI",
     "classes": [
-      { "name": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected.DataProataProtectionAPIProtectConfigurationData.html", "cl": 21, "ucl": 16, "cal": 37, "tl": 205, "cb": 11, "tb": 18, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
-      { "name": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectProvider", "rp": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI_DataProtectionAPIProtectProvider.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 55, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectConfigurationData", "rp": "Fededim.Extensions.Configuration.Protected.DataProataProtectionAPIProtectConfigurationData.html", "cl": 21, "ucl": 16, "cal": 37, "tl": 206, "cb": 11, "tb": 18, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
+      { "name": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectProvider", "rp": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI_DataProtectionAPIProtectProvider.html", "cl": 7, "ucl": 0, "cal": 7, "tl": 58, "cb": 0, "tb": 0, "cm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -251,31 +253,31 @@ var riskHotspotMetrics = [
 
 var riskHotspots = [
   {
-    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.ProtectProviderConfigurationData", "reportPath": "Fededim.Extensions.Configuration.Protected_ProtectProviderConfigurationData.html", "methodName": "Merge(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData)", "methodShortName": "Merge(...)", "fileIndex": 0, "line": 131,
+    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.ProtectProviderConfigurationData", "reportPath": "Fededim.Extensions.Configuration.Protected_ProtectProviderConfigurationData.html", "methodName": "Merge(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData)", "methodShortName": "Merge(...)", "fileIndex": 0, "line": 146,
     "metrics": [
       { "value": 420, "exceeded": true },
       { "value": 20, "exceeded": true },
     ]},
   {
-    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor", "reportPath": "Fededim.Extensions.Configuration.Protected_JsonProtectFileProcessor.html", "methodName": "ExtractAllStringNodes(System.Text.Json.Nodes.JsonNode,System.Text.RegularExpressions.Regex,System.Func`2<System.String,System.String>)", "methodShortName": "ExtractAllStringNodes(...)", "fileIndex": 0, "line": 157,
+    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor", "reportPath": "Fededim.Extensions.Configuration.Protected_JsonProtectFileProcessor.html", "methodName": "ExtractAllStringNodes(System.Text.Json.Nodes.JsonNode,System.Text.RegularExpressions.Regex,System.Func`3<System.String,System.String,System.String>)", "methodShortName": "ExtractAllStringNodes(...)", "fileIndex": 0, "line": 157,
     "metrics": [
       { "value": 210, "exceeded": true },
       { "value": 14, "exceeded": false },
     ]},
   {
-    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor", "reportPath": "Fededim.Extensions.Configuration.Protected_JsonProtectFileProcessor.html", "methodName": "ProtectFile(System.String,System.Text.RegularExpressions.Regex,System.Func`2<System.String,System.String>)", "methodShortName": "ProtectFile(...)", "fileIndex": 0, "line": 116,
+    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider", "reportPath": "Fededim.Extensions.Configuration.Protected_ProtectedConfigurationProvider.html", "methodName": "DecryptChildKeys(System.String)", "methodShortName": "DecryptChildKeys(...)", "fileIndex": 0, "line": 134,
+    "metrics": [
+      { "value": 88.19, "exceeded": true },
+      { "value": 22, "exceeded": true },
+    ]},
+  {
+    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor", "reportPath": "Fededim.Extensions.Configuration.Protected_JsonProtectFileProcessor.html", "methodName": "ProtectFile(System.String,System.Text.RegularExpressions.Regex,System.Func`3<System.String,System.String,System.String>)", "methodShortName": "ProtectFile(...)", "fileIndex": 0, "line": 116,
     "metrics": [
       { "value": 72, "exceeded": true },
       { "value": 8, "exceeded": false },
     ]},
   {
-    "assembly": "Fededim.Extensions.Configuration.Protected", "class": "Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider", "reportPath": "Fededim.Extensions.Configuration.Protected_ProtectedConfigurationProvider.html", "methodName": "DecryptChildKeys(System.String)", "methodShortName": "DecryptChildKeys(...)", "fileIndex": 0, "line": 134,
-    "metrics": [
-      { "value": 40.8, "exceeded": true },
-      { "value": 14, "exceeded": false },
-    ]},
-  {
-    "assembly": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI", "class": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectConfigurationData", "reportPath": "Fededim.Extensions.Configuration.Protected.DataProataProtectionAPIProtectConfigurationData.html", "methodName": ".ctor(System.String,System.String,System.String,System.IServiceProvider,System.Action`1<Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder>,System.String)", "methodShortName": ".ctor(...)", "fileIndex": 0, "line": 171,
+    "assembly": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI", "class": "Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectConfigurationData", "reportPath": "Fededim.Extensions.Configuration.Protected.DataProataProtectionAPIProtectConfigurationData.html", "methodName": ".ctor(System.String,System.String,System.String,System.IServiceProvider,System.Action`1<Microsoft.AspNetCore.DataProtection.IDataProtectionBuilder>,System.String)", "methodShortName": ".ctor(...)", "fileIndex": 0, "line": 173,
     "metrics": [
       { "value": 18.81, "exceeded": false },
       { "value": 16, "exceeded": true },

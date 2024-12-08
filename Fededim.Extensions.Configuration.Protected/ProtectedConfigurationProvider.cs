@@ -144,9 +144,9 @@ namespace Fededim.Extensions.Configuration.Protected
                             IProtectProvider protectProvider = ProtectProviderConfigurationData.ProtectProvider;
 
                             if (subPurposePresent)
-                                protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+                                protectProvider = protectProvider.CreateNewProviderFromSubkey(key, me.Groups["subPurpose"].Value);
 
-                            return protectProvider.Decrypt(me.Groups["protectedData"].Value);
+                            return protectProvider.Decrypt(key, me.Groups["protectedData"].Value);
                         }));
                 }
             }
@@ -166,9 +166,9 @@ namespace Fededim.Extensions.Configuration.Protected
                                 IProtectProvider protectProvider = ProtectProviderConfigurationData.ProtectProvider;
 
                                 if (subPurposePresent)
-                                    protectProvider = protectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+                                    protectProvider = protectProvider.CreateNewProviderFromSubkey(fullKey, me.Groups["subPurpose"].Value);
 
-                                return protectProvider.Decrypt(me.Groups["protectedData"].Value);
+                                return protectProvider.Decrypt(fullKey, me.Groups["protectedData"].Value);
                             }));
                     }
                     else DecryptChildKeys(fullKey);
@@ -220,8 +220,8 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// Calls the underlying provider Set method
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
+        /// <param name="key">the configuration key to update</param>
+        /// <param name="value">the value to be set in the configuration key</param>
         public void Set(String key, String value)
         {
             Provider.Set(key, value);
@@ -232,8 +232,8 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <summary>
         /// Calls the underlying provider TryGet method
         /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
+        /// <param name="key">the configuration key to retrieve</param>
+        /// <param name="value">the retrieved value of the configuration key</param>
         /// <returns><c>True</c> if a value for the specified key was found, otherwise <c>false</c>.</returns>
         public bool TryGet(String key, out String value)
         {

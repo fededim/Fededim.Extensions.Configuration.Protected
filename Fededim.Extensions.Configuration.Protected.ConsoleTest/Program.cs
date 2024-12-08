@@ -153,7 +153,7 @@ public class Program
         {
             // updates inside appsettings.<environment>.json the property "Int": <whatever>, --> "Int": "Protected:{<random number>},"
             var environmentAppSettings = File.ReadAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json");
-            environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{standardProtectConfigurationData.ProtectConfigurationValue($"Protect:{{{new Random().Next(0, 1000000)}}}")}\",");
+            environmentAppSettings = new Regex("\"Int\":.+?,").Replace(environmentAppSettings, $"\"Int\": \"{standardProtectConfigurationData.ProtectConfigurationValue($"\"Int\"", $"Protect:{{{new Random().Next(0, 1000000)}}}")}\",");
             File.WriteAllText($"appsettings.{Environment.GetEnvironmentVariable("DOTNETCORE_ENVIRONMENT")}.json", environmentAppSettings);
 
             // wait 5 seconds for the reload to take place, please check on this breakpoint that the value of "Int" property has changed in appSettings class and it is the same of appSettingsReloaded

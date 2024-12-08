@@ -9,10 +9,14 @@ using Xunit;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {
-
-    public class DataProtectionAPIProtectProviderTest : ProtectedConfigurationBuilderTest, IClassFixture<ProtectedConfigurationBuilderTestFixture>
+    public abstract class DataProtectionAPIProtectProviderBaseTest : ProtectedConfigurationBuilderTest, IClassFixture<ProtectedConfigurationBuilderTestFixture>
     {
-        private static void ConfigureDataProtection(IDataProtectionBuilder builder)
+        public DataProtectionAPIProtectProviderBaseTest(ProtectedConfigurationBuilderTestFixture context, ITestOutputHelper testOutputHelper, IProtectProviderConfigurationData protectProviderConfigurationData)
+            : base(context, testOutputHelper, protectProviderConfigurationData)
+        {
+        }
+
+        protected static void ConfigureDataProtection(IDataProtectionBuilder builder)
         {
             builder.UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration
             {
@@ -24,12 +28,6 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
 
 
-        public DataProtectionAPIProtectProviderTest(ProtectedConfigurationBuilderTestFixture context, ITestOutputHelper testOutputHelper) :base(context, testOutputHelper,new DataProtectionAPIProtectConfigurationData(ConfigureDataProtection))
-        {
-            
-        }
-
-
         protected override string TrimRegexCharsFromSubpurpose(string subpurpose)
         {
             return subpurpose.Replace(":", "*").Replace("}", "|");
@@ -39,6 +37,22 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         protected override string TrimRegexCharsFromProtectData(string value)
         {
             return value.Replace("}", "|");
+        }
+    }
+
+    public class DataProtectionAPIProtectProviderTest : DataProtectionAPIProtectProviderBaseTest
+    {
+        public DataProtectionAPIProtectProviderTest(ProtectedConfigurationBuilderTestFixture context, ITestOutputHelper testOutputHelper) : base(context, testOutputHelper, new DataProtectionAPIProtectConfigurationData(ConfigureDataProtection))
+        {
+        }
+    }
+
+
+
+    public class ReverseChainedDataProtectionAPIProtectProviderTest : DataProtectionAPIProtectProviderBaseTest
+    {
+        public ReverseChainedDataProtectionAPIProtectProviderTest(ProtectedConfigurationBuilderTestFixture context, ITestOutputHelper testOutputHelper) : base(context, testOutputHelper, new DataProtectionAPIProtectConfigurationData(ConfigureDataProtection).Chain(pp => new ReverseChainedProtectProvider(pp)))
+        {
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Fededim.Extensions.Configuration.Protected
 {
@@ -71,31 +72,12 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <exception cref="ArgumentException"></exception>
         public static IList<String> ProtectFiles(this IProtectProviderConfigurationData protectProviderConfigurationData, String path, String searchPattern = "*.json", SearchOption searchOption = SearchOption.TopDirectoryOnly, bool backupOriginalFile = true)
         {
-            protectProviderConfigurationData.CheckConfigurationIsValid();
-
             var result = new List<String>();
 
             foreach (var f in Directory.EnumerateFiles(path, searchPattern, searchOption))
             {
-                var fileContent = File.ReadAllText(f);
-                var replacedContent = fileContent;
-
-                foreach (var protectFileOption in ProtectFilesOptions)
-                    if (protectFileOption.FilenameRegex.Match(f).Success)
-                    {
-                        replacedContent = protectFileOption.ProtectFileProcessor.ProtectFile(fileContent, protectProviderConfigurationData.ProtectRegex, (value) => ProtectConfigurationValue(protectProviderConfigurationData, value));
-                        break;
-                    }
-
-                if (replacedContent != fileContent)
-                {
-                    if (backupOriginalFile)
-                        File.Copy(f, f + ".bak", true);
-
-                    File.WriteAllText(f, replacedContent);
-
+                if (protectProviderConfigurationData.ProtectFile(f, backupOriginalFile))
                     result.Add(f);
-                }
             }
 
             return result;
@@ -103,6 +85,41 @@ namespace Fededim.Extensions.Configuration.Protected
 
 
 
+
+        /// <summary>
+        /// Encrypts a single file using the specified <see cref="protectProviderConfigurationData"/>
+        /// </summary>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
+        /// <param name="path">the filename to encrypt</param>
+        /// <param name="backupOriginalFile">boolean which indicates whether to make a backupof original file with extension .bak</param>
+        /// <returns>true if filename has been successfully encrypted, false otherwise</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static bool ProtectFile(this IProtectProviderConfigurationData protectProviderConfigurationData, String filename, bool backupOriginalFile = true)
+        {
+            protectProviderConfigurationData.CheckConfigurationIsValid();
+
+            var fileContent = File.ReadAllText(filename);
+            var replacedContent = fileContent;
+
+            foreach (var protectFileOption in ProtectFilesOptions)
+                if (protectFileOption.FilenameRegex.Match(filename).Success)
+                {
+                    replacedContent = protectFileOption.ProtectFileProcessor.ProtectFile(fileContent, protectProviderConfigurationData.ProtectRegex, (key, value) => ProtectConfigurationValue(protectProviderConfigurationData, key, value));
+                    break;
+                }
+
+            if (replacedContent != fileContent)
+            {
+                if (backupOriginalFile)
+                    File.Copy(filename, filename + ".bak", true);
+
+                File.WriteAllText(filename, replacedContent);
+
+                return true;
+            }
+
+            return false;
+        }
 
 
 
@@ -115,7 +132,22 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <exception cref="ArgumentException"></exception>
         public static String ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, String value)
         {
-            return ProtectConfigurationValueInternal(protectProviderConfigurationData, value);
+            return ProtectConfigurationValue(protectProviderConfigurationData, null, value);
+        }
+
+
+
+        /// <summary>
+        /// Encrypts the String value using the specified <see cref="protectProviderConfigurationData"/>
+        /// </summary>
+        /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
+        /// <param name="key">the configuration key which needs to be encrypted</param>
+        /// <param name="value">a String literal which needs to be encrypted</param>
+        /// <returns>the encrypted configuration value</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static String ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, String key, String value)
+        {
+            return ProtectConfigurationValueInternal(protectProviderConfigurationData, key, value);
         }
 
 
@@ -126,7 +158,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="value">a String literal which needs to be encrypted</param>
         /// <returns></returns>
-        private static String ProtectConfigurationValueInternal(IProtectProviderConfigurationData protectProviderConfigurationData, String value)
+        private static String ProtectConfigurationValueInternal(IProtectProviderConfigurationData protectProviderConfigurationData, String key, String value)
         {
             if (value == null)
                 return null;
@@ -140,9 +172,15 @@ namespace Fededim.Extensions.Configuration.Protected
                 var protectProvider = protectProviderConfigurationData.ProtectProvider;
 
                 if (subPurposePresent)
-                    protectProvider = protectProviderConfigurationData.ProtectProvider.CreateNewProviderFromSubkey(me.Groups["subPurpose"].Value);
+                    protectProvider = protectProviderConfigurationData.ProtectProvider.CreateNewProviderFromSubkey(key, me.Groups["subPurpose"].Value);
 
-                return protectProviderConfigurationData.ProtectedReplaceString.Replace("${subPurposePattern}", subPurposePresent ? me.Groups["subPurposePattern"].Value : String.Empty).Replace("${protectedData}", protectProvider.Encrypt(me.Groups["protectData"].Value));
+                var encryptedValue = protectProvider.Encrypt(key, me.Groups["protectData"].Value);
+
+                // if the encryption function returns null or empty store the original value unencrypted
+                if (String.IsNullOrEmpty(encryptedValue))
+                    return me.Groups["protectData"].Value;
+                else
+                    return protectProviderConfigurationData.ProtectedReplaceString.Replace("${subPurposePattern}", subPurposePresent ? me.Groups["subPurposePattern"].Value : String.Empty).Replace("${protectedData}", encryptedValue);
             });
         }
 
@@ -157,7 +195,7 @@ namespace Fededim.Extensions.Configuration.Protected
         {
             if (initialData != null)
                 foreach (var key in initialData.Keys.ToList())
-                    initialData[key] = protectProviderConfigurationData.ProtectConfigurationValue(initialData[key]);
+                    initialData[key] = protectProviderConfigurationData.ProtectConfigurationValue(key, initialData[key]);
         }
 
 
@@ -170,7 +208,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <returns>a newer encrypted IEnumerable<String></returns>
         public static IEnumerable<String> ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, IEnumerable<String> arguments)
         {
-            return arguments?.Select(argument => protectProviderConfigurationData.ProtectConfigurationValue(argument));
+            return arguments?.Select(argument => protectProviderConfigurationData.ProtectConfigurationValue(String.Empty, argument));
         }
 
 
@@ -183,7 +221,7 @@ namespace Fededim.Extensions.Configuration.Protected
         /// <returns>a newer encrypted String[] array</returns>
         public static String[] ProtectConfigurationValue(this IProtectProviderConfigurationData protectProviderConfigurationData, String[] arguments)
         {
-            return arguments?.Select(argument => protectProviderConfigurationData.ProtectConfigurationValue(argument)).ToArray();
+            return arguments?.Select(argument => protectProviderConfigurationData.ProtectConfigurationValue(String.Empty, argument)).ToArray();
         }
 
 
@@ -193,12 +231,13 @@ namespace Fededim.Extensions.Configuration.Protected
         /// </summary>
         /// <param name="protectProviderConfigurationData">an IProtectProviderConfigurationData interface obtained from a one of the supported providers</param>
         /// <param name="environmentTarget">a target EnvironmentVariableTarget (e.g. User, Machine, Process)</param>
-        public static void ProtectEnvironmentVariables(this IProtectProviderConfigurationData protectProviderConfigurationData, EnvironmentVariableTarget environmentTarget = EnvironmentVariableTarget.User)
+        public static void ProtectEnvironmentVariables(this IProtectProviderConfigurationData protectProviderConfigurationData, EnvironmentVariableTarget environmentTarget = EnvironmentVariableTarget.Process, String prefix = null)
         {
             var environmentVariables = Environment.GetEnvironmentVariables(environmentTarget);
 
             foreach (String key in environmentVariables.Keys)
-                Environment.SetEnvironmentVariable(key, protectProviderConfigurationData.ProtectConfigurationValue(environmentVariables[key].ToString()),environmentTarget);
+                if (String.IsNullOrEmpty(prefix) || key.StartsWith(prefix))
+                    Environment.SetEnvironmentVariable(key, protectProviderConfigurationData.ProtectConfigurationValue(key, environmentVariables[key].ToString()), environmentTarget);
         }
 
 
