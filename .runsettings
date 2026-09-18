@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <RunConfiguration>
-    <!-- Mantiene attiva la console standard e la verbosità per raccogliere i log -->
   </RunConfiguration>
   
   <LoggerRunSettings>
     <Loggers>
-      <!-- Configurazione del Logger Console (mostra i log live nel terminale) -->
       <Logger friendlyName="console" enabled="true">
       </Logger>
       
-      <!-- Configurazione del Logger TRX con nome file custom -->
       <Logger friendlyName="trx" enabled="true">
         <Configuration>
           <LogFileName>VisualStudio.trx</LogFileName>
