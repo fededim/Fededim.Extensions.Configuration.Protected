@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Xunit.Abstractions;
+using Xunit;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {
