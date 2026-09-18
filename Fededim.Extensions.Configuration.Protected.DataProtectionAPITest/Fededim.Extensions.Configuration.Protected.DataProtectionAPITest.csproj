@@ -13,6 +13,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="coverlet.MTP" Version="10.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.12" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.12" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="10.0.12" />
@@ -24,10 +25,6 @@
 		<PackageReference Include="Microsoft.Testing.Platform" Version="2.4.1" />
 		<PackageReference Include="xunit.v3" Version="4.0.1" />
 		<PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="coverlet.collector" Version="10.0.1">
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
