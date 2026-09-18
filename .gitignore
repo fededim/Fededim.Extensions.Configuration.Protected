@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /Fededim.Extensions.Configuration.Protected.ConsoleTest/Keys
 /Fededim.Extensions.Configuration.Protected.DataProtectionAPITest/Keys/
 /Fededim.Extensions.Configuration.Protected.DataProtectionAPITest/GeneratedMSBuildEditorConfig.editorconfig
+/Fededim.Extensions.Configuration.Protected.DataProtectionAPI/GeneratedMSBuildEditorConfig.editorconfig
