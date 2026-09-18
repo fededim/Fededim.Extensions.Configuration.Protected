@@ -43,12 +43,11 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<!-- Reroute the editorconfig path to a shorter location -->
-		<GeneratedMSBuildEditorConfigFile>$(IntermediateOutputPath)GeneratedMSBuildEditorConfig.editorconfig</GeneratedMSBuildEditorConfigFile>
 		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
 	</PropertyGroup>
 
 	<PropertyGroup>
+		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<VSTestLogger>@(VSTestLogger)</VSTestLogger>
 	</PropertyGroup>
 
