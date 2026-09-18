@@ -1,5 +1,4 @@
-﻿using Xunit.Abstractions;
-using Xunit;
+﻿using Xunit;
 
 namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 {
