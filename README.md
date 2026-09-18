@@ -19,7 +19,7 @@ Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Mic
 
 You can find the source code here [Fededim.Extensions.Configuration.Protected.DataProtectionAPI](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
 
-You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected) explaning the origin, how to use it and the main point of the implementation.
+You can find a [detailed article on my personal homepage](https://fededim.github.io/Articles/Fededim.Extensions.Configuration.Protected.DataProtectionAPI.html) explaning the origin, how to use it and the main point of the implementation.
 
 
 # Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
@@ -39,4 +39,4 @@ Fededim.Extensions.Configuration.ProtectedJson is my first package and it is an 
 You can find the source code here [Fededim.Extensions.Configuration.ProtectedJson](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.ProtectedJson) but this package has
 become however obsolete in favour of the more versatile [Fededim.Extensions.Configuration.Protected.DataProtectionAPI](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected.DataProtectionAPI).
 
-You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5372873/ProtectedJson-Integrating-ASP-NET-Core-Configurati) explaning the origin, how to use it and the main point of the implementation.
+You can find a [detailed article on my personal homepage](https://fededim.github.io/Articles/ProtectedJson_%20Integrating%20ASP.NET%20Core%20Configuration%20and%20Data%20Protection-%20CodeProje.html) explaning the origin, how to use it and the main point of the implementation.
