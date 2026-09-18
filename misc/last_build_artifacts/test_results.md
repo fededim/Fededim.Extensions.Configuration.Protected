@@ -3,6 +3,108 @@
 
 ![Generic badge](https://img.shields.io/badge/24/24-PASSED-brightgreen.svg)
 <details>
+  <summary>Duration: 139.233 seconds</summary>
+  <table>
+    <tr>
+      <th>Start:</th>
+      <td><code>2026-09-18 01:19:57.577 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Creation:</th>
+      <td><code>2026-09-18 01:20:07.914 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Queuing:</th>
+      <td><code>2026-09-18 01:20:07.914 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Finish:</th>
+      <td><code>2026-09-18 01:22:16.810 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Duration:</th>
+      <td><code>139.233 seconds</code></td>
+    </tr>
+  </table>
+</details>
+<details>
+  <summary>Outcome: Completed | Total Tests: 24 | Passed: 24 | Failed: 0</summary>
+  <table>
+    <tr>
+      <th>Total:</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Executed:</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Passed:</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Failed:</th>
+      <td>0</td>
+    </tr>
+  </table>
+</details>
+
+
+# FEDEDIM.EXTENSIONS.CONFIGURATION.PROTECTED.DATAPROTECTIONAPITEST
+
+![Generic badge](https://img.shields.io/badge/24/24-PASSED-brightgreen.svg)
+<details>
+  <summary>Duration: 138.174 seconds</summary>
+  <table>
+    <tr>
+      <th>Start:</th>
+      <td><code>2026-09-18 01:19:57.092 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Creation:</th>
+      <td><code>2026-09-18 01:20:09.612 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Queuing:</th>
+      <td><code>2026-09-18 01:20:09.612 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Finish:</th>
+      <td><code>2026-09-18 01:22:15.266 UTC</code></td>
+    </tr>
+    <tr>
+      <th>Duration:</th>
+      <td><code>138.174 seconds</code></td>
+    </tr>
+  </table>
+</details>
+<details>
+  <summary>Outcome: Completed | Total Tests: 24 | Passed: 24 | Failed: 0</summary>
+  <table>
+    <tr>
+      <th>Total:</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Executed:</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Passed:</th>
+      <td>24</td>
+    </tr>
+    <tr>
+      <th>Failed:</th>
+      <td>0</td>
+    </tr>
+  </table>
+</details>
+
+
+# FEDEDIM.EXTENSIONS.CONFIGURATION.PROTECTED.DATAPROTECTIONAPITEST
+
+![Generic badge](https://img.shields.io/badge/24/24-PASSED-brightgreen.svg)
+<details>
   <summary>Duration: 85.583 seconds</summary>
   <table>
     <tr>
@@ -75,108 +177,6 @@
     <tr>
       <th>Duration:</th>
       <td><code>163.477 seconds</code></td>
-    </tr>
-  </table>
-</details>
-<details>
-  <summary>Outcome: Completed | Total Tests: 24 | Passed: 24 | Failed: 0</summary>
-  <table>
-    <tr>
-      <th>Total:</th>
-      <td>24</td>
-    </tr>
-    <tr>
-      <th>Executed:</th>
-      <td>24</td>
-    </tr>
-    <tr>
-      <th>Passed:</th>
-      <td>24</td>
-    </tr>
-    <tr>
-      <th>Failed:</th>
-      <td>0</td>
-    </tr>
-  </table>
-</details>
-
-
-# FEDEDIM.EXTENSIONS.CONFIGURATION.PROTECTED.DATAPROTECTIONAPITEST
-
-![Generic badge](https://img.shields.io/badge/24/24-PASSED-brightgreen.svg)
-<details>
-  <summary>Duration: 99.548 seconds</summary>
-  <table>
-    <tr>
-      <th>Start:</th>
-      <td><code>2026-09-18 00:45:58.750 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Creation:</th>
-      <td><code>2026-09-18 00:46:02.070 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Queuing:</th>
-      <td><code>2026-09-18 00:46:02.070 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Finish:</th>
-      <td><code>2026-09-18 00:47:38.298 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Duration:</th>
-      <td><code>99.548 seconds</code></td>
-    </tr>
-  </table>
-</details>
-<details>
-  <summary>Outcome: Completed | Total Tests: 24 | Passed: 24 | Failed: 0</summary>
-  <table>
-    <tr>
-      <th>Total:</th>
-      <td>24</td>
-    </tr>
-    <tr>
-      <th>Executed:</th>
-      <td>24</td>
-    </tr>
-    <tr>
-      <th>Passed:</th>
-      <td>24</td>
-    </tr>
-    <tr>
-      <th>Failed:</th>
-      <td>0</td>
-    </tr>
-  </table>
-</details>
-
-
-# FEDEDIM.EXTENSIONS.CONFIGURATION.PROTECTED.DATAPROTECTIONAPITEST
-
-![Generic badge](https://img.shields.io/badge/24/24-PASSED-brightgreen.svg)
-<details>
-  <summary>Duration: 126.224 seconds</summary>
-  <table>
-    <tr>
-      <th>Start:</th>
-      <td><code>2026-09-18 00:45:58.750 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Creation:</th>
-      <td><code>2026-09-18 00:46:11.577 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Queuing:</th>
-      <td><code>2026-09-18 00:46:11.577 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Finish:</th>
-      <td><code>2026-09-18 00:48:04.974 UTC</code></td>
-    </tr>
-    <tr>
-      <th>Duration:</th>
-      <td><code>126.224 seconds</code></td>
     </tr>
   </table>
 </details>
