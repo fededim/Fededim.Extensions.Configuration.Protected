@@ -1,75 +1,86 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
-    <ImplicitUsings>disable</ImplicitUsings>
+	<PropertyGroup>
+		<TargetFrameworks>net10.0;netstandard2.0;net462</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
 
-    <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.8</Version>
-    <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
-    <Description>Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft DataProtectionAPI provider for the encryption/decryption of configuration values using Fededim.Extensions.Configuration.Protected.</Description>
-    <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</PackageProjectUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <Title>$(AssemblyName)</Title>
-    <PackageTags>configuration;data;protection;appsettings;json;encrypted</PackageTags>
-    <IncludeContentInPack>true</IncludeContentInPack>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <PackageReleaseNotes>
-      v1.0.0
-      - Initial release: extracted Microsoft Data Protection API dependencies from Fededim.Extensions.Configuration.Protected version 1.0.11 into DataProtectionAPIProtectConfigurationData and DataProtectionAPIConfigurationBuilderExtensions and implemented DataProtectionAPIProtectProvider using the standard interface IProtectProvider.
+		<PublishSingleFile>true</PublishSingleFile>
+		<Version>1.0.9</Version>
+		<Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
+		<Description>Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft DataProtectionAPI provider for the encryption/decryption of configuration values using Fededim.Extensions.Configuration.Protected.</Description>
+		<Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PackageProjectUrl>https://github.com/fededim/Fededim.Extensions.Configuration.Protected</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<Title>$(AssemblyName)</Title>
+		<PackageTags>configuration;data;protection;appsettings;json;encrypted</PackageTags>
+		<IncludeContentInPack>true</IncludeContentInPack>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageReleaseNotes>
+			v1.0.0
+			- Initial release: extracted Microsoft Data Protection API dependencies from Fededim.Extensions.Configuration.Protected version 1.0.11 into DataProtectionAPIProtectConfigurationData and DataProtectionAPIConfigurationBuilderExtensions and implemented DataProtectionAPIProtectProvider using the standard interface IProtectProvider.
 
-      v1.0.1
-      - Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.13
+			v1.0.1
+			- Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.13
 
-      v1.0.2
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.14
-      - Breaking change: removed anymore needed DataProtectionAPIConfigurationBuilderExtensions
-      - Refinement: adapted DataProtectionAPIProtectConfigurationData according to the new IProtectProviderConfigurationData, streamlined its constructors and added missing comments
-      - Improvement: added unit testing project Fededim.Extensions.Configuration.Protected.DataProtectionAPITest with an extensive test on all existing configuration providers
+			v1.0.2
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.14
+			- Breaking change: removed anymore needed DataProtectionAPIConfigurationBuilderExtensions
+			- Refinement: adapted DataProtectionAPIProtectConfigurationData according to the new IProtectProviderConfigurationData, streamlined its constructors and added missing comments
+			- Improvement: added unit testing project Fededim.Extensions.Configuration.Protected.DataProtectionAPITest with an extensive test on all existing configuration providers
 
-      v1.0.3
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.15
-      - Improvement: improved testing output, timing all phases with a Stopwatch and made plaintext-decrypted value comparison unbelievably fast using the Data dictionary safe hacky method
+			v1.0.3
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.15
+			- Improvement: improved testing output, timing all phases with a Stopwatch and made plaintext-decrypted value comparison unbelievably fast using the Data dictionary safe hacky method
 
-      v1.0.4
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.16
+			v1.0.4
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.16
 
-      v1.0.5
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.17
+			v1.0.5
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.17
 
-      v1.0.6
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.18
+			v1.0.6
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.18
 
-      v1.0.7
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.19
-      - Update all Nuget packages to latest version
-      - Updated project to net8.0 due to incoming net6.0 EOL
+			v1.0.7
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.19
+			- Update all Nuget packages to latest version
+			- Updated project to net8.0 due to incoming net6.0 EOL
 
-      v1.0.8
-      - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.20
-    </PackageReleaseNotes>
-  </PropertyGroup>
+			v1.0.8
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.20
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-    <!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.20" />-->
-  </ItemGroup>
+			v1.0.9
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.21
+			- Updated project to net10.0 due to incoming net8.0 EOL
+			- Update all NuGet packages to the latest version
+			- Updated link to detailed article inside README since CodeProject website was completely shutted down
+		</PackageReleaseNotes>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="docs\README.md" Pack="true" PackagePath="\" />
-    <None Include="license\LICENSE.txt" Pack="true" PackagePath="\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection" Version="10.0.12" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+		<!--<PackageReference Include="Fededim.Extensions.Configuration.Protected" Version="1.0.20" />-->
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="docs\README.md" Pack="true" PackagePath="\" />
+		<None Include="license\LICENSE.txt" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<!-- Reroute the editorconfig path to a shorter location -->
+		<GeneratedMSBuildEditorConfigFile>$(IntermediateOutputPath)GeneratedMSBuildEditorConfig.editorconfig</GeneratedMSBuildEditorConfigFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.csproj" />
+	</ItemGroup>
 
 </Project>

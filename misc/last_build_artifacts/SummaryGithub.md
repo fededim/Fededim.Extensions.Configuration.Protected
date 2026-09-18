@@ -3,8 +3,8 @@
 
 |||
 |:---|:---|
-| Generated on: | 8/27/2025 - 1:17:40 AM |
-| Coverage date: | 8/27/2025 - 1:17:36 AM - 8/27/2025 - 1:17:37 AM |
+| Generated on: | 9/18/2026 - 12:48:09 AM |
+| Coverage date: | 9/18/2026 - 12:47:38 AM - 9/18/2026 - 12:48:05 AM |
 | Parser: | MultiReport (2x Cobertura) |
 | Assemblies: | 2 |
 | Classes: | 14 |
@@ -14,11 +14,11 @@
 | Uncovered lines: | 97 |
 | Coverable lines: | 344 |
 | Total lines: | 1489 |
-| **Branch coverage:** | 50.5% (89 of 176) |
-| Covered branches: | 89 |
+| **Branch coverage:** | 46% (81 of 176) |
+| Covered branches: | 81 |
 | Total branches: | 176 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 73_17254540593 |
+| Tag: | 77_35292435484 |
 
 </details>
 
@@ -27,15 +27,15 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**Fededim.Extensions.Configuration.Protected**|**73%**|**49.3%**|
-|Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions|82.3%|70%|
+|**Fededim.Extensions.Configuration.Protected**|**73%**|**45.5%**|
+|Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions|82.3%|67.5%|
 |Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationDat<br/>a|76.4%|71.4%|
-|Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor|27.2%|8.3%|
-|Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProce<br/>ssor|95.6%|75%|
+|Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor|27.2%|4.1%|
+|Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProce<br/>ssor|95.6%|50%|
 |Fededim.Extensions.Configuration.Protected.PassthroughProtectConfigurationD<br/>ata|100%||
 |Fededim.Extensions.Configuration.Protected.PassthroughProtectProvider|100%||
 |Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder|74%|62.5%|
-|Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider|68.4%|46.8%|
+|Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider|68.4%|37.5%|
 |Fededim.Extensions.Configuration.Protected.ProtectFileOptions|100%||
 |Fededim.Extensions.Configuration.Protected.ProtectProviderConfigurationData|60%|16.6%|
 |Fededim.Extensions.Configuration.Protected.RawProtectFileProcessor|0%||
@@ -46,8 +46,8 @@
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**Fededim.Extensions.Configuration.Protected.DataProtectionAPI**|**63.6%**|**61.1%**|
-|Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtection<br/>APIProtectConfigurationData|56.7%|61.1%|
+|**Fededim.Extensions.Configuration.Protected.DataProtectionAPI**|**63.6%**|**50%**|
+|Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtection<br/>APIProtectConfigurationData|56.7%|50%|
 |Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtection<br/>APIProtectProvider|100%||
 
 </details>

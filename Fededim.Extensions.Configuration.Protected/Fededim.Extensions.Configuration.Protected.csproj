@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>net10.0;netstandard2.0;net462</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
-    <Version>1.0.20</Version>
+    <Version>1.0.21</Version>
     <Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
     <Description>Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Basically, it implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found decrypts the enclosed encrypted data using a provider implementing a standard interface IProtectProvider.</Description>
     <Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -21,96 +21,101 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <PackageReleaseNotes>
-      v1.0.0
-      - Initial commit: it does not support re-decryption on configuration reload
+		v1.0.0
+		- Initial commit: it does not support re-decryption on configuration reload
 
-      v1.0.1
-      - Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
-      - Cleaned code and added documentation on most methods.
+		v1.0.1
+		- Added support for automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it.
+		- Cleaned code and added documentation on most methods.
 
-      v1.0.2
-      - Added more comments on code
-      - Enabled SourceLink support to GitHub for debugging
+		v1.0.2
+		- Added more comments on code
+		- Enabled SourceLink support to GitHub for debugging
 
-      v1.0.3
-      - SourceLink bugfix: removed SourceRevisionId tag in csproj
+		v1.0.3
+		- SourceLink bugfix: removed SourceRevisionId tag in csproj
 
-      v1.0.4
-      - Commented initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
+		v1.0.4
+		- Commented initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
 
-      v1.0.5
-      - Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
+		v1.0.5
+		- Commented other initial unneeded code inside CreateProtectedConfigurationProvider method of ProtectedConfigurationBuilder
 
-      v1.0.6
-      - Bugfix: the ProtectFiles method simply read the raw files which need to be encrypted using File.ReadAllText, whereas it should also decode the file according to its format. By default two decoders are now provided for both JSON and XML files and an extension point (FilesDecoding public property) if additional formats must be supported.
+		v1.0.6
+		- Bugfix: the ProtectFiles method simply read the raw files which need to be encrypted using File.ReadAllText, whereas it should also decode the file according to its format. By default two decoders are now provided for both JSON and XML files and an extension point (FilesDecoding public property) if additional formats must be supported.
 
-      v1.0.7
-      - Improvement: the ProtectedConfigurationProvider.RegisterReloadCallback now uses the framework standard static utility class ChangeToken.OnChange to register the underlying provider configuration changes
-      - Improvement: added two additional public static properties inside ConfigurationBuilderExtensions in order to allow them to be referenced if needed: JsonDecodingFunction and XmlDecodingFunction
+		v1.0.7
+		- Improvement: the ProtectedConfigurationProvider.RegisterReloadCallback now uses the framework standard static utility class ChangeToken.OnChange to register the underlying provider configuration changes
+		- Improvement: added two additional public static properties inside ConfigurationBuilderExtensions in order to allow them to be referenced if needed: JsonDecodingFunction and XmlDecodingFunction
 
-      v1.0.8
-      - Improvement: introduced FileProtectProcessor and IFileProtectProcessor interface for implementing a custom file protect processor used to read, encrypt and return the encrypted file as string. Json, Xml and Raw processors are provided by default.
-      - Improvement: added custom string parameter purposeString in ProtectedConfigurationBuilder constructor in order to specify a custom purpose string for encryption/decryption, besides the integer keyNumber parameter.
-      - Improvement: added subPurpose optional part in DefaultProtectRegexString, DefaultProtectedRegexString and DefaultProtectedReplaceString in order to allow an optional per key purpose string override.
-      - Improvement: added some data to json (one element in Nullable:DoubleArray of appsettings.development.json) and xml file (AutoRetryDelaySubPurpose under TransientFaultHandlingOptions) of Fededim.Extensions.Configuration.Protected.ConsoleTest in order to exemplify the per key purpose string override.
+		v1.0.8
+		- Improvement: introduced FileProtectProcessor and IFileProtectProcessor interface for implementing a custom file protect processor used to read, encrypt and return the encrypted file as string. Json, Xml and Raw processors are provided by default.
+		- Improvement: added custom string parameter purposeString in ProtectedConfigurationBuilder constructor in order to specify a custom purpose string for encryption/decryption, besides the integer keyNumber parameter.
+		- Improvement: added subPurpose optional part in DefaultProtectRegexString, DefaultProtectedRegexString and DefaultProtectedReplaceString in order to allow an optional per key purpose string override.
+		- Improvement: added some data to json (one element in Nullable:DoubleArray of appsettings.development.json) and xml file (AutoRetryDelaySubPurpose under TransientFaultHandlingOptions) of Fededim.Extensions.Configuration.Protected.ConsoleTest in order to exemplify the per key purpose string override.
 
-      v1.0.9
-      - No changes, just a rebuild due to a misalignment with symbols.
+		v1.0.9
+		- No changes, just a rebuild due to a misalignment with symbols.
 
-      v1.0.10
-      - Improvement: Allow the specification of JsonSerializationOptions for JsonFileProtectProcessor to tweak its settings (comments inside JSON files are now skipped by default)
-      - Improvement: Allow the specification of LoadOptions and SaveOptions for XmlFileProtectProcessor to tweak its settings
+		v1.0.10
+		- Improvement: Allow the specification of JsonSerializationOptions for JsonFileProtectProcessor to tweak its settings (comments inside JSON files are now skipped by default)
+		- Improvement: Allow the specification of LoadOptions and SaveOptions for XmlFileProtectProcessor to tweak its settings
 
-      v1.0.11
-      - Improvement: Implemented additional JsonWithCommentsFileProtectProcessor ("hacky" optional FilerProtectProcessor) to allow the preservation of JSON comments when encrypting files using ProtectFiles
-      - Improvement: Implemented UseJsonWithCommentsFileProtectOption extension method to replace JsonFileProtectProcessor (active by default for compliance with JSON standard of System.Text.Json) with JsonWithCommentsFileProtectProcessor
+		v1.0.11
+		- Improvement: Implemented additional JsonWithCommentsFileProtectProcessor ("hacky" optional FilerProtectProcessor) to allow the preservation of JSON comments when encrypting files using ProtectFiles
+		- Improvement: Implemented UseJsonWithCommentsFileProtectOption extension method to replace JsonFileProtectProcessor (active by default for compliance with JSON standard of System.Text.Json) with JsonWithCommentsFileProtectProcessor
 
-      v1.0.12
-      - Improvement: Allow encryption/decryption to be pluggable with providers using a new interface IProtectProvider. Therefore all DataProtectionAPI dependencies have been moved to a new package Fededim.Extensions.Configuration.Protected.DataProtectionAPI, you can just use this one which requires Fededim.Extensions.Configuration.Protected.
-      - Bugfix: Fixed a bug with the subPurpose section of the regexs which could lead to a greedy match instead of a lazy one.
+		v1.0.12
+		- Improvement: Allow encryption/decryption to be pluggable with providers using a new interface IProtectProvider. Therefore all DataProtectionAPI dependencies have been moved to a new package Fededim.Extensions.Configuration.Protected.DataProtectionAPI, you can just use this one which requires Fededim.Extensions.Configuration.Protected.
+		- Bugfix: Fixed a bug with the subPurpose section of the regexs which could lead to a greedy match instead of a lazy one.
 
-      v1.0.13
-      - Improvement: ProtectedConfigurationBuilder.CreateProtectedConfigurationProvider now raises an exception on invalid configuration instead of returning the original undecrypted provider.
-      - Improvement: Removed duplicated and streamlined validations on configuration converting IProtectProviderConfigurationData.IsValid property to a method CheckConfigurationIsValid raising exception with the details of the errors.
-      - Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
+		v1.0.13
+		- Improvement: ProtectedConfigurationBuilder.CreateProtectedConfigurationProvider now raises an exception on invalid configuration instead of returning the original undecrypted provider.
+		- Improvement: Removed duplicated and streamlined validations on configuration converting IProtectProviderConfigurationData.IsValid property to a method CheckConfigurationIsValid raising exception with the details of the errors.
+		- Refinement: Just renamed from FileProtect... classes to ProtectFile... for naming consistency among code
 
-      v1.0.14
-      - Improvement: added both ProtectRegex and ProtectedReplaceString to abstract class IProtectProviderConfigurationData in order to specify all configuration in a single point
-      - Breaking change: all ConfigurationBuilderExtensions.Protect... methods now extend the IProtectProviderConfigurationData abstract class instead of IProtectProvider interface, the parameters protectRegexString and protectedReplaceString have been removed since they are now specified inside IProtectProviderConfigurationData
-      - Refinement: moved IConfigurationBuilder.WithProtectedConfigurationOptions inside Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
+		v1.0.14
+		- Improvement: added both ProtectRegex and ProtectedReplaceString to abstract class IProtectProviderConfigurationData in order to specify all configuration in a single point
+		- Breaking change: all ConfigurationBuilderExtensions.Protect... methods now extend the IProtectProviderConfigurationData abstract class instead of IProtectProvider interface, the parameters protectRegexString and protectedReplaceString have been removed since they are now specified inside IProtectProviderConfigurationData
+		- Refinement: moved IConfigurationBuilder.WithProtectedConfigurationOptions inside Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions
 
-      v1.0.15
-      - Improvement: made child keys enumeration process unbelievably fast (if the provider is derived from ConfigurationProvider like all now existing providers, the child keys enumeration is now done with a safe hacky method accessing the Data dictionary through reflection which is unbelievably faster, otherwise the old method is used)
+		v1.0.15
+		- Improvement: made child keys enumeration process unbelievably fast (if the provider is derived from ConfigurationProvider like all now existing providers, the child keys enumeration is now done with a safe hacky method accessing the Data dictionary through reflection which is unbelievably faster, otherwise the old method is used)
 
-      v1.0.16
-      - Bugfix: environment target was not passed on ProtectEnvironmentVariables while setting the encrypted variables
+		v1.0.16
+		- Bugfix: environment target was not passed on ProtectEnvironmentVariables while setting the encrypted variables
 
-      v1.0.17
-      - Refinement: made ProtectedConfigurationProvider.ProviderData property safer using as instead of a direct cast
-      - Refinement: added virtual to various methods in order to allow extensibility
+		v1.0.17
+		- Refinement: made ProtectedConfigurationProvider.ProviderData property safer using as instead of a direct cast
+		- Refinement: added virtual to various methods in order to allow extensibility
 
-      v1.0.18
-      - Security fix: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
+		v1.0.18
+		- Security fix: updated System.Text.Json to 8.0.4 in order to fix the security issue CVE-2024-30105
 
-      v1.0.19
-      - Security fix: updated System.Text.Json to 8.0.5 in order to fix the security issue CVE-2024-43485
-      - Updated project to net8.0 due to incoming net6.0 EOL
-      - Removed obsolete projects Fededim.Extensions.Configuration.ProtectedJson and Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest from solution
+		v1.0.19
+		- Security fix: updated System.Text.Json to 8.0.5 in order to fix the security issue CVE-2024-43485
+		- Updated project to net8.0 due to incoming net6.0 EOL
+		- Removed obsolete projects Fededim.Extensions.Configuration.ProtectedJson and Fededim.Extensions.Configuration.ProtectedJson.ConsoleTest from solution
 
-      v1.0.20
-      - Improved IProtectProvider interface by including also the key being encrypted / decrypted
-      - Implemented a PassthroughProtectProvider and PassthroughProtectConfigurationData which does not encrypt / decrypt anything, useful for development and testing
-      - Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
-      - Implemented ProtectFile method in ConfigurationBuilderExtensions to encrypt just a single file (it was missing)
-      - Improved and added new tests for the chain function and the PassthroughProtectProvider, implemented a ProcessSafeRandomId for running tests in parallel
-      - Update all NuGet packages to the latest version
-    </PackageReleaseNotes>
+		v1.0.20
+		- Improved IProtectProvider interface by including also the key being encrypted / decrypted
+		- Implemented a PassthroughProtectProvider and PassthroughProtectConfigurationData which does not encrypt / decrypt anything, useful for development and testing
+		- Implemented a chain function in order to customize the behaviour of a IProtectProvider (e.g. try / catch to skip decryption exceptions, etc.)
+		- Implemented ProtectFile method in ConfigurationBuilderExtensions to encrypt just a single file (it was missing)
+		- Improved and added new tests for the chain function and the PassthroughProtectProvider, implemented a ProcessSafeRandomId for running tests in parallel
+		- Update all NuGet packages to the latest version
+
+		v1.0.21
+		- Updated project to net10.0 due to incoming net8.0 EOL
+		- Update all NuGet packages to the latest version
+		- Updated link to detailed article inside README since CodeProject website was completely shutted down
+	</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.401" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.12" />
+    <PackageReference Include="System.Text.Json" Version="10.0.12" />
   </ItemGroup>
 
   <ItemGroup>

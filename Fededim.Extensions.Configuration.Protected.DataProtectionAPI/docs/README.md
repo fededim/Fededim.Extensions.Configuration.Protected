@@ -6,7 +6,7 @@ Fededim.Extensions.Configuration.Protected.DataProtectionAPI is an improved Conf
 - Works with any existing and (hopefully) future ConfigurationSource and ConfigurationProvider (tested with CommandLine, EnvironmentVariables, Json, Xml and InMemoryCollection)
 - Trasparent in memory decryption of encrypted values without almost any additional line of code
 - Supports a global configuration and an eventual custom override for any ConfigurationSource
-- Supports almost any NET framework (net8.0, netstandard2.0 and net462)
+- Supports almost any NET framework (net10.0, netstandard2.0 and net462)
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
 - Supports per configuration value encryption derived subkey (called "subpurposes")
@@ -231,9 +231,15 @@ v1.0.7
 v1.0.8
 - Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.20
 
+v1.0.9
+- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.21
+- Updated project to net10.0 due to incoming net8.0 EOL
+- Update all NuGet packages to the latest version
+- Updated link to detailed article inside README since CodeProject website was completely shutted down
+
 # Detailed guide
 
-You can find a [detailed article on CodeProject](https://www.codeproject.com/Articles/5374311/Fededim-Extensions-Configuration-Protected-the-ult) explaning the origin, how to use it and the main point of the implementation.
+You can find a [detailed article on my personal homepage](https://fededim.github.io/Articles/Fededim.Extensions.Configuration.Protected.DataProtectionAPI.html) explaning the origin, how to use it and the main point of the implementation.
 
 
 # Feedback & Contributing
