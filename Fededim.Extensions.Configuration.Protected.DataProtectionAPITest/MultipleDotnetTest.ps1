@@ -31,7 +31,7 @@ dotnet build -c $Configuration
 for ($i = 1; $i -le $Iterations; $i++) {
     Write-Host "-> Executing test $i of $Iterations..." -ForegroundColor Green
     
-	dotnet test -c "$Configuration" --results-directory "$OutputDirectory" -- --report-trx --report-trx-filename "{tfm}-{arch}\test_$i.trx" --report-html --report-html-filename "{tfm}-{arch}\test_$i.html"
+	dotnet test -c "$Configuration" --results-directory "$OutputDirectory" -- --report-trx --report-trx-filename "{tfm}-{arch}\testrun_$i.trx" --report-html --report-html-filename "{tfm}-{arch}\testrun_$i.html"
 }
 
 #Write-Host "-> Merging TRX files..." -ForegroundColor Green
