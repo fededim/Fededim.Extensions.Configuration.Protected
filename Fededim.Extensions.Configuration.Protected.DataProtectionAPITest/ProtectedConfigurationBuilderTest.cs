@@ -812,7 +812,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         {
             var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
-            var currentTestrunId = TestContext.Current.Test?.UniqueID ?? Guid.NewGuid().ToString();
+            var currentTestrunId = ProcessSafeRandomId().ToString().Replace("-", String.Empty);
             var environmentVariablePrefix = $"TRID_{currentTestrunId}";
             // genererates random environment variables
             var result = GenerateRandomEnvironmentVariables(EnvironmentVariableTarget.Process, currentTestrunId);
