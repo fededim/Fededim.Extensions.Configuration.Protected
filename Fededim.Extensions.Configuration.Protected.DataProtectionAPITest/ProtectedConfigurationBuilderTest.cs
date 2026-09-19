@@ -743,7 +743,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         /// Generates random environment variables with (2*NUMENTRIES) in both datatype and value. Environment variables can only contain string and they aren't hierarchical.
         /// </summary>
         /// <returns>the number of entries generated</returns>
-        protected (int NumEntries, int NumValues) GenerateRandomEnvironmentVariables(EnvironmentVariableTarget environmentVariableTarget)
+        protected (int NumEntries, int NumValues) GenerateRandomEnvironmentVariables(EnvironmentVariableTarget environmentVariableTarget, string environmentVariablePrefix)
         {
             String subPurpose;
 
@@ -756,7 +756,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             for (int i = 0; i < numberOfEntries; i++)
             {
                 var entryValue = GenerateRandomValue();
-                var entryKey = $"TID_{Thread.CurrentThread.ManagedThreadId}_Entry_{i + 1}_{entryValue.DataType}_";
+                var entryKey = $"{environmentVariablePrefix}_Entry_{i + 1}_{entryValue.DataType}_";
 
                 switch (entryValue.DataType)
                 {
@@ -804,7 +804,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
 
         /// <summary>
         /// Generates random process environment variables with <see cref="NUMENTRIES"/> entries, encrypts them, loads them into IConfigurationRoot using a ProtectedConfigurationBuilder and tests that all decrypted key are equal to plaintext ones.
-        /// Note that environment variables are not thread-safe so in order to avoid issues when tests are running in parallel each entry is prefix with TID_{Thread.CurrentThread.ManagedThreadId}
+        /// Note that environment variables are not thread-safe so in order to avoid issues when tests are running in parallel each entry is prefix with TRID_<unique_testrun_id>
         /// </summary>
         /// <exception cref="InvalidDataException"></exception>
         [Fact]
@@ -812,13 +812,15 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
         {
             var stopwatch = new ExtendedStopwatch(start: true, testOutputHelper: TestOutputHelper);
 
+            var currentTestrunId = TestContext.Current.Test?.UniqueID ?? Guid.NewGuid().ToString();
+            var environmentVariablePrefix = $"TRID_{currentTestrunId}";
             // genererates random environment variables
-            var result = GenerateRandomEnvironmentVariables(EnvironmentVariableTarget.Process);
+            var result = GenerateRandomEnvironmentVariables(EnvironmentVariableTarget.Process, currentTestrunId);
 
-            stopwatch.Step($"Generated random environment variables (NumEntries {result.NumEntries} NumValues {result.NumValues} TID {Thread.CurrentThread.ManagedThreadId}, note that Windows has a maximum size of 32KB for all environment variables, so not all {NUMENTRIES} keys could be created)");
+            stopwatch.Step($"Generated random environment variables (NumEntries {result.NumEntries} NumValues {result.NumValues} Prefix {environmentVariablePrefix}, note that Windows has a maximum size of 32KB for all environment variables, so not all {NUMENTRIES} keys could be created)");
 
             // Encrypts the environment variables
-            ProtectProviderConfigurationData.ProtectEnvironmentVariables(EnvironmentVariableTarget.Process, $"TID_{Thread.CurrentThread.ManagedThreadId}");
+            ProtectProviderConfigurationData.ProtectEnvironmentVariables(EnvironmentVariableTarget.Process, environmentVariablePrefix);
 
             stopwatch.Step("Encrypted random environment variables");
 
@@ -826,7 +828,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             var environmentVariables = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
             foreach (String key in environmentVariables.Keys)
             {
-                if (key.StartsWith($"TID_{Thread.CurrentThread.ManagedThreadId}") && key.Contains("_Encrypted") && environmentVariables[key] != null)
+                if (key.StartsWith(environmentVariablePrefix) && key.Contains("_Encrypted") && environmentVariables[key] != null)
                     if (ProtectProviderConfigurationData.ProtectRegex.IsMatch(environmentVariables[key].ToString()))
                         throw new InvalidDataException($"Found an invalid un-encrypted environment variable {key} Value {environmentVariables[key]}!");
             }
@@ -834,7 +836,7 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             stopwatch.Step("Checked that all random environment variables are encrypted");
 
             // Loads the XML with ProtectedConfigurationBuilder
-            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddEnvironmentVariables($"TID_{Thread.CurrentThread.ManagedThreadId}").Build();
+            var configuration = new ProtectedConfigurationBuilder(ProtectProviderConfigurationData).AddEnvironmentVariables(environmentVariablePrefix).Build();
 
             stopwatch.Step("Loaded and decrypted random environment variables with ProtectedConfigurationBuilder");
 
@@ -846,8 +848,8 @@ namespace Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
             // Clean generated environment variables in order to speed up, they are shared between threads
             foreach (String key in environmentVariables.Keys)
             {
-                if (key.StartsWith($"TID_{Thread.CurrentThread.ManagedThreadId}"))
-                    Environment.SetEnvironmentVariable(key, null);
+                if (key.StartsWith(environmentVariablePrefix))
+                    Environment.SetEnvironmentVariable(key, null, EnvironmentVariableTarget.Process);
             }
         }
         #endregion
