@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.7180232558139535" branch-rate="0.4602272727272727" lines-covered="247" lines-valid="344" branches-covered="81" branches-valid="176" complexity="236" version="0" timestamp="1789736238">
+<coverage line-rate="0.694006309148265" branch-rate="0.43037974683544306" lines-covered="220" lines-valid="317" branches-covered="68" branches-valid="158" complexity="197" version="0" timestamp="1789776301">
   <sources>
     <source>D:/a/Fededim.Extensions.Configuration.Protected/Fededim.Extensions.Configuration.Protected/</source>
+    <source>D:/a/Fededim.Extensions.Configuration.Protected/Fededim.Extensions.Configuration.Protected/Fededim.Extensions.Configuration.Protected.DataProtectionAPI/</source>
   </sources>
   <packages>
-    <package name="Fededim.Extensions.Configuration.Protected" line-rate="0.73" branch-rate="0.45569620253164556" complexity="204">
+    <package name="Fededim.Extensions.Configuration.Protected" line-rate="0.7043795620437956" branch-rate="0.42142857142857143" complexity="166">
       <classes>
-        <class name="Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ConfigurationBuilderExtensions.cs" line-rate="0.8235294117647058" branch-rate="0.675" complexity="45">
+        <class name="Fededim.Extensions.Configuration.Protected.ConfigurationBuilderExtensions" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ConfigurationBuilderExtensions.cs" line-rate="0.7903225806451613" branch-rate="0.5625" complexity="36">
           <methods>
-            <method name="get_ProtectFilesOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="44" hits="42" branch="false" />
-              </lines>
-            </method>
             <method name="UseJsonWithCommentsProtectFileOption" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="57" hits="8" branch="false" />
-                <line number="58" hits="8" branch="false" />
-                <line number="59" hits="8" branch="false" />
+                <line number="57" hits="4" branch="false" />
+                <line number="58" hits="4" branch="false" />
+                <line number="59" hits="4" branch="false" />
               </lines>
             </method>
             <method name="ProtectFiles" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.String,System.String,System.IO.SearchOption,System.Boolean)" line-rate="0" branch-rate="0" complexity="4">
@@ -32,18 +28,18 @@
             </method>
             <method name="ProtectFile" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.String,System.Boolean)" line-rate="0.9230769230769231" branch-rate="0.7" complexity="10">
               <lines>
-                <line number="99" hits="24" branch="false" />
-                <line number="101" hits="24" branch="false" />
-                <line number="102" hits="24" branch="false" />
-                <line number="104" hits="124" branch="true" condition-coverage="50% (1/2)" />
-                <line number="105" hits="50" branch="true" condition-coverage="100% (2/2)" />
-                <line number="107" hits="4795794" branch="true" condition-coverage="100% (2/2)" />
-                <line number="108" hits="24" branch="false" />
-                <line number="111" hits="24" branch="true" condition-coverage="50% (1/2)" />
-                <line number="113" hits="24" branch="true" condition-coverage="50% (1/2)" />
-                <line number="114" hits="24" branch="false" />
-                <line number="116" hits="24" branch="false" />
-                <line number="118" hits="24" branch="false" />
+                <line number="99" hits="12" branch="false" />
+                <line number="101" hits="12" branch="false" />
+                <line number="102" hits="12" branch="false" />
+                <line number="104" hits="46" branch="true" condition-coverage="50% (1/2)" />
+                <line number="105" hits="17" branch="true" condition-coverage="100% (2/2)" />
+                <line number="107" hits="12" branch="true" condition-coverage="100% (2/2)" />
+                <line number="108" hits="12" branch="false" />
+                <line number="111" hits="12" branch="true" condition-coverage="50% (1/2)" />
+                <line number="113" hits="12" branch="true" condition-coverage="50% (1/2)" />
+                <line number="114" hits="12" branch="false" />
+                <line number="116" hits="12" branch="false" />
+                <line number="118" hits="12" branch="false" />
                 <line number="121" hits="0" branch="false" />
               </lines>
             </method>
@@ -54,39 +50,39 @@
             </method>
             <method name="ProtectConfigurationValue" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="150" hits="9621367" branch="false" />
+                <line number="150" hits="4794148" branch="false" />
               </lines>
             </method>
-            <method name="ProtectConfigurationValueInternal" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.String,System.String)" line-rate="1" branch-rate="0.9" complexity="10">
+            <method name="ProtectConfigurationValueInternal" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.String,System.String)" line-rate="1" branch-rate="1" complexity="2">
               <lines>
-                <line number="163" hits="9621367" branch="true" condition-coverage="100% (2/2)" />
-                <line number="164" hits="641272" branch="false" />
-                <line number="166" hits="8980095" branch="false" />
-                <line number="168" hits="8980095" branch="false" />
-                <line number="169" hits="8980095" branch="false" />
-                <line number="170" hits="6087945" branch="true" condition-coverage="50% (1/2)" />
-                <line number="171" hits="8980095" branch="false" />
-                <line number="172" hits="6087945" branch="false" />
-                <line number="173" hits="8980095" branch="false" />
-                <line number="174" hits="6087945" branch="true" condition-coverage="100% (2/2)" />
-                <line number="175" hits="1522177" branch="false" />
-                <line number="176" hits="8980095" branch="false" />
-                <line number="177" hits="6087945" branch="false" />
-                <line number="178" hits="8980095" branch="false" />
-                <line number="179" hits="8980095" branch="false" />
-                <line number="180" hits="6087945" branch="true" condition-coverage="100% (2/2)" />
-                <line number="181" hits="6714" branch="false" />
-                <line number="182" hits="8980095" branch="false" />
-                <line number="183" hits="6081231" branch="true" condition-coverage="100% (2/2)" />
-                <line number="184" hits="8980095" branch="false" />
+                <line number="163" hits="4794148" branch="true" condition-coverage="100% (2/2)" />
+                <line number="164" hits="320818" branch="false" />
+                <line number="166" hits="4473330" branch="false" />
+                <line number="168" hits="4473330" branch="false" />
+                <line number="169" hits="4473330" branch="false" />
+                <line number="170" hits="4473330" branch="false" />
+                <line number="171" hits="4473330" branch="false" />
+                <line number="172" hits="4473330" branch="false" />
+                <line number="173" hits="4473330" branch="false" />
+                <line number="174" hits="4473330" branch="false" />
+                <line number="175" hits="4473330" branch="false" />
+                <line number="176" hits="4473330" branch="false" />
+                <line number="177" hits="4473330" branch="false" />
+                <line number="178" hits="4473330" branch="false" />
+                <line number="179" hits="4473330" branch="false" />
+                <line number="180" hits="4473330" branch="false" />
+                <line number="181" hits="4473330" branch="false" />
+                <line number="182" hits="4473330" branch="false" />
+                <line number="183" hits="4473330" branch="false" />
+                <line number="184" hits="4473330" branch="false" />
               </lines>
             </method>
             <method name="ProtectConfigurationValue" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.Collections.Generic.Dictionary`2&lt;System.String,System.String&gt;)" line-rate="1" branch-rate="1" complexity="4">
               <lines>
-                <line number="196" hits="8" branch="true" condition-coverage="100% (2/2)" />
-                <line number="197" hits="3200016" branch="true" condition-coverage="100% (2/2)" />
-                <line number="198" hits="1600000" branch="false" />
-                <line number="199" hits="8" branch="false" />
+                <line number="196" hits="4" branch="true" condition-coverage="100% (2/2)" />
+                <line number="197" hits="1600008" branch="true" condition-coverage="100% (2/2)" />
+                <line number="198" hits="800000" branch="false" />
+                <line number="199" hits="4" branch="false" />
               </lines>
             </method>
             <method name="ProtectConfigurationValue" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.Collections.Generic.IEnumerable`1&lt;System.String&gt;)" line-rate="0" branch-rate="0" complexity="2">
@@ -96,16 +92,16 @@
             </method>
             <method name="ProtectConfigurationValue" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.String[])" line-rate="1" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="224" hits="3200008" branch="true" condition-coverage="50% (1/2)" />
+                <line number="224" hits="4" branch="true" condition-coverage="50% (1/2)" />
               </lines>
             </method>
-            <method name="ProtectEnvironmentVariables" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.EnvironmentVariableTarget,System.String)" line-rate="1" branch-rate="1" complexity="6">
+            <method name="ProtectEnvironmentVariables" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData,System.EnvironmentVariableTarget,System.String)" line-rate="0.8" branch-rate="0.6666666666666666" complexity="6">
               <lines>
-                <line number="236" hits="8" branch="false" />
-                <line number="238" hits="53746" branch="true" condition-coverage="100% (2/2)" />
-                <line number="239" hits="26865" branch="true" condition-coverage="100% (4/4)" />
-                <line number="240" hits="25597" branch="false" />
-                <line number="241" hits="8" branch="false" />
+                <line number="236" hits="4" branch="false" />
+                <line number="238" hits="65734" branch="true" condition-coverage="100% (2/2)" />
+                <line number="239" hits="32863" branch="true" condition-coverage="50% (2/4)" />
+                <line number="240" hits="0" branch="false" />
+                <line number="241" hits="4" branch="false" />
               </lines>
             </method>
             <method name="WithProtectedConfigurationOptions" signature="(Microsoft.Extensions.Configuration.IConfigurationBuilder,Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData)" line-rate="0" branch-rate="0" complexity="2">
@@ -118,171 +114,120 @@
             </method>
             <method name=".cctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="19" hits="2" branch="false" />
-                <line number="24" hits="2" branch="false" />
-                <line number="29" hits="2" branch="false" />
-                <line number="34" hits="2" branch="false" />
-                <line number="44" hits="42" branch="false" />
-                <line number="45" hits="2" branch="false" />
-                <line number="46" hits="2" branch="false" />
-                <line number="47" hits="2" branch="false" />
-                <line number="48" hits="2" branch="false" />
-                <line number="49" hits="2" branch="false" />
+                <line number="19" hits="1" branch="false" />
+                <line number="24" hits="1" branch="false" />
+                <line number="29" hits="1" branch="false" />
+                <line number="34" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="19" hits="2" branch="false" />
-            <line number="24" hits="2" branch="false" />
-            <line number="29" hits="2" branch="false" />
-            <line number="34" hits="2" branch="false" />
-            <line number="44" hits="42" branch="false" />
-            <line number="45" hits="2" branch="false" />
-            <line number="46" hits="2" branch="false" />
-            <line number="47" hits="2" branch="false" />
-            <line number="48" hits="2" branch="false" />
-            <line number="49" hits="2" branch="false" />
-            <line number="57" hits="8" branch="false" />
-            <line number="58" hits="8" branch="false" />
-            <line number="59" hits="8" branch="false" />
+            <line number="19" hits="1" branch="false" />
+            <line number="24" hits="1" branch="false" />
+            <line number="29" hits="1" branch="false" />
+            <line number="34" hits="1" branch="false" />
+            <line number="57" hits="4" branch="false" />
+            <line number="58" hits="4" branch="false" />
+            <line number="59" hits="4" branch="false" />
             <line number="75" hits="0" branch="false" />
             <line number="77" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="79" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="80" hits="0" branch="false" />
             <line number="83" hits="0" branch="false" />
-            <line number="99" hits="24" branch="false" />
-            <line number="101" hits="24" branch="false" />
-            <line number="102" hits="24" branch="false" />
-            <line number="104" hits="124" branch="true" condition-coverage="50% (1/2)" />
-            <line number="105" hits="50" branch="true" condition-coverage="100% (2/2)" />
-            <line number="107" hits="4795794" branch="true" condition-coverage="100% (2/2)" />
-            <line number="108" hits="24" branch="false" />
-            <line number="111" hits="24" branch="true" condition-coverage="50% (1/2)" />
-            <line number="113" hits="24" branch="true" condition-coverage="50% (1/2)" />
-            <line number="114" hits="24" branch="false" />
-            <line number="116" hits="24" branch="false" />
-            <line number="118" hits="24" branch="false" />
+            <line number="99" hits="12" branch="false" />
+            <line number="101" hits="12" branch="false" />
+            <line number="102" hits="12" branch="false" />
+            <line number="104" hits="46" branch="true" condition-coverage="50% (1/2)" />
+            <line number="105" hits="17" branch="true" condition-coverage="100% (2/2)" />
+            <line number="107" hits="12" branch="true" condition-coverage="100% (2/2)" />
+            <line number="108" hits="12" branch="false" />
+            <line number="111" hits="12" branch="true" condition-coverage="50% (1/2)" />
+            <line number="113" hits="12" branch="true" condition-coverage="50% (1/2)" />
+            <line number="114" hits="12" branch="false" />
+            <line number="116" hits="12" branch="false" />
+            <line number="118" hits="12" branch="false" />
             <line number="121" hits="0" branch="false" />
             <line number="135" hits="0" branch="false" />
-            <line number="150" hits="9621367" branch="false" />
-            <line number="163" hits="9621367" branch="true" condition-coverage="100% (2/2)" />
-            <line number="164" hits="641272" branch="false" />
-            <line number="166" hits="8980095" branch="false" />
-            <line number="168" hits="8980095" branch="false" />
-            <line number="169" hits="8980095" branch="false" />
-            <line number="170" hits="6087945" branch="true" condition-coverage="50% (1/2)" />
-            <line number="171" hits="8980095" branch="false" />
-            <line number="172" hits="6087945" branch="false" />
-            <line number="173" hits="8980095" branch="false" />
-            <line number="174" hits="6087945" branch="true" condition-coverage="100% (2/2)" />
-            <line number="175" hits="1522177" branch="false" />
-            <line number="176" hits="8980095" branch="false" />
-            <line number="177" hits="6087945" branch="false" />
-            <line number="178" hits="8980095" branch="false" />
-            <line number="179" hits="8980095" branch="false" />
-            <line number="180" hits="6087945" branch="true" condition-coverage="100% (2/2)" />
-            <line number="181" hits="6714" branch="false" />
-            <line number="182" hits="8980095" branch="false" />
-            <line number="183" hits="6081231" branch="true" condition-coverage="100% (2/2)" />
-            <line number="184" hits="8980095" branch="false" />
-            <line number="196" hits="8" branch="true" condition-coverage="100% (2/2)" />
-            <line number="197" hits="3200016" branch="true" condition-coverage="100% (2/2)" />
-            <line number="198" hits="1600000" branch="false" />
-            <line number="199" hits="8" branch="false" />
+            <line number="150" hits="4794148" branch="false" />
+            <line number="163" hits="4794148" branch="true" condition-coverage="100% (2/2)" />
+            <line number="164" hits="320818" branch="false" />
+            <line number="166" hits="4473330" branch="false" />
+            <line number="168" hits="4473330" branch="false" />
+            <line number="169" hits="4473330" branch="false" />
+            <line number="170" hits="4473330" branch="false" />
+            <line number="171" hits="4473330" branch="false" />
+            <line number="172" hits="4473330" branch="false" />
+            <line number="173" hits="4473330" branch="false" />
+            <line number="174" hits="4473330" branch="false" />
+            <line number="175" hits="4473330" branch="false" />
+            <line number="176" hits="4473330" branch="false" />
+            <line number="177" hits="4473330" branch="false" />
+            <line number="178" hits="4473330" branch="false" />
+            <line number="179" hits="4473330" branch="false" />
+            <line number="180" hits="4473330" branch="false" />
+            <line number="181" hits="4473330" branch="false" />
+            <line number="182" hits="4473330" branch="false" />
+            <line number="183" hits="4473330" branch="false" />
+            <line number="184" hits="4473330" branch="false" />
+            <line number="196" hits="4" branch="true" condition-coverage="100% (2/2)" />
+            <line number="197" hits="1600008" branch="true" condition-coverage="100% (2/2)" />
+            <line number="198" hits="800000" branch="false" />
+            <line number="199" hits="4" branch="false" />
             <line number="211" hits="0" branch="true" condition-coverage="0% (0/2)" />
-            <line number="224" hits="3200008" branch="true" condition-coverage="50% (1/2)" />
-            <line number="236" hits="8" branch="false" />
-            <line number="238" hits="53746" branch="true" condition-coverage="100% (2/2)" />
-            <line number="239" hits="26865" branch="true" condition-coverage="100% (4/4)" />
-            <line number="240" hits="25597" branch="false" />
-            <line number="241" hits="8" branch="false" />
+            <line number="224" hits="4" branch="true" condition-coverage="50% (1/2)" />
+            <line number="236" hits="4" branch="false" />
+            <line number="238" hits="65734" branch="true" condition-coverage="100% (2/2)" />
+            <line number="239" hits="32863" branch="true" condition-coverage="50% (2/4)" />
+            <line number="240" hits="0" branch="false" />
+            <line number="241" hits="4" branch="false" />
             <line number="255" hits="0" branch="false" />
             <line number="257" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="258" hits="0" branch="false" />
             <line number="260" hits="0" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectProviderConfigurationData.cs" line-rate="0.7647058823529411" branch-rate="0.7142857142857143" complexity="19">
+        <class name="Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectProviderConfigurationData.cs" line-rate="0.6923076923076923" branch-rate="0.7142857142857143" complexity="15">
           <methods>
-            <method name="get_ProtectProvider" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="53" hits="22671688" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProtectedRegex" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="58" hits="48674688" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProtectRegex" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="64" hits="38040034" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProtectedReplaceString" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="70" hits="42002235" branch="false" />
-              </lines>
-            </method>
             <method name="CheckConfigurationIsValid" signature="()" line-rate="0.6666666666666666" branch-rate="0.7142857142857143" complexity="14">
               <lines>
-                <line number="78" hits="8980239" branch="true" condition-coverage="100% (2/2)" />
-                <line number="79" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+                <line number="78" hits="4473402" branch="true" condition-coverage="100% (2/2)" />
+                <line number="79" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
                 <line number="80" hits="0" branch="false" />
-                <line number="82" hits="8980239" branch="true" condition-coverage="100% (2/2)" />
-                <line number="83" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+                <line number="82" hits="4473402" branch="true" condition-coverage="100% (2/2)" />
+                <line number="83" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
                 <line number="84" hits="0" branch="false" />
-                <line number="86" hits="8980239" branch="true" condition-coverage="100% (2/2)" />
-                <line number="87" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+                <line number="86" hits="4473402" branch="true" condition-coverage="100% (2/2)" />
+                <line number="87" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
                 <line number="88" hits="0" branch="false" />
-                <line number="90" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+                <line number="90" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
                 <line number="91" hits="0" branch="false" />
-                <line number="92" hits="8980239" branch="false" />
+                <line number="92" hits="4473402" branch="false" />
               </lines>
             </method>
             <method name="Chain" signature="(System.Func`2&lt;Fededim.Extensions.Configuration.Protected.IProtectProvider,Fededim.Extensions.Configuration.Protected.IProtectProvider&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="102" hits="24" branch="false" />
+                <line number="102" hits="12" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="53" hits="22671688" branch="false" />
-            <line number="58" hits="48674688" branch="false" />
-            <line number="64" hits="38040034" branch="false" />
-            <line number="70" hits="42002235" branch="false" />
-            <line number="78" hits="8980239" branch="true" condition-coverage="100% (2/2)" />
-            <line number="79" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+            <line number="78" hits="4473402" branch="true" condition-coverage="100% (2/2)" />
+            <line number="79" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
             <line number="80" hits="0" branch="false" />
-            <line number="82" hits="8980239" branch="true" condition-coverage="100% (2/2)" />
-            <line number="83" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+            <line number="82" hits="4473402" branch="true" condition-coverage="100% (2/2)" />
+            <line number="83" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
             <line number="84" hits="0" branch="false" />
-            <line number="86" hits="8980239" branch="true" condition-coverage="100% (2/2)" />
-            <line number="87" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+            <line number="86" hits="4473402" branch="true" condition-coverage="100% (2/2)" />
+            <line number="87" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
             <line number="88" hits="0" branch="false" />
-            <line number="90" hits="8980239" branch="true" condition-coverage="50% (1/2)" />
+            <line number="90" hits="4473402" branch="true" condition-coverage="50% (1/2)" />
             <line number="91" hits="0" branch="false" />
-            <line number="92" hits="8980239" branch="false" />
-            <line number="102" hits="24" branch="false" />
+            <line number="92" hits="4473402" branch="false" />
+            <line number="102" hits="12" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="0.2727272727272727" branch-rate="0.041666666666666664" complexity="27">
+        <class name="Fededim.Extensions.Configuration.Protected.JsonProtectFileProcessor" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="0.2" branch-rate="0.041666666666666664" complexity="24">
           <methods>
-            <method name="get_JsonSerializerOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="83" hits="2" branch="false" />
-              </lines>
-            </method>
-            <method name="get_JsonNodeOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="84" hits="2" branch="false" />
-              </lines>
-            </method>
-            <method name="get_JsonDocumentOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="85" hits="2" branch="false" />
-              </lines>
-            </method>
             <method name="ProtectFile" signature="(System.String,System.Text.RegularExpressions.Regex,System.Func`3&lt;System.String,System.String,System.String&gt;)" line-rate="0" branch-rate="0" complexity="8">
               <lines>
                 <line number="116" hits="0" branch="false" />
@@ -317,25 +262,22 @@
             </method>
             <method name=".ctor" signature="(System.Text.Json.JsonSerializerOptions)" line-rate="1" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="96" hits="2" branch="false" />
-                <line number="98" hits="2" branch="true" condition-coverage="50% (1/2)" />
-                <line number="100" hits="2" branch="false" />
-                <line number="101" hits="2" branch="false" />
-                <line number="102" hits="2" branch="false" />
-                <line number="103" hits="2" branch="false" />
+                <line number="96" hits="1" branch="false" />
+                <line number="98" hits="1" branch="true" condition-coverage="50% (1/2)" />
+                <line number="100" hits="1" branch="false" />
+                <line number="101" hits="1" branch="false" />
+                <line number="102" hits="1" branch="false" />
+                <line number="103" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="83" hits="2" branch="false" />
-            <line number="84" hits="2" branch="false" />
-            <line number="85" hits="2" branch="false" />
-            <line number="96" hits="2" branch="false" />
-            <line number="98" hits="2" branch="true" condition-coverage="50% (1/2)" />
-            <line number="100" hits="2" branch="false" />
-            <line number="101" hits="2" branch="false" />
-            <line number="102" hits="2" branch="false" />
-            <line number="103" hits="2" branch="false" />
+            <line number="96" hits="1" branch="false" />
+            <line number="98" hits="1" branch="true" condition-coverage="50% (1/2)" />
+            <line number="100" hits="1" branch="false" />
+            <line number="101" hits="1" branch="false" />
+            <line number="102" hits="1" branch="false" />
+            <line number="103" hits="1" branch="false" />
             <line number="116" hits="0" branch="false" />
             <line number="120" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="122" hits="0" branch="false" />
@@ -362,171 +304,138 @@
             <line number="178" hits="0" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProcessor" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="0.9565217391304348" branch-rate="0.5" complexity="7">
+        <class name="Fededim.Extensions.Configuration.Protected.JsonWithCommentsProtectFileProcessor" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="1" branch-rate="0.5" complexity="3">
           <methods>
-            <method name="get_JsonSerializerOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
+            <method name="ProtectFile" signature="(System.String,System.Text.RegularExpressions.Regex,System.Func`3&lt;System.String,System.String,System.String&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="189" hits="10" branch="false" />
-              </lines>
-            </method>
-            <method name="get_JsonReaderOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="190" hits="3201339" branch="false" />
-              </lines>
-            </method>
-            <method name="get_JsonWriterOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="191" hits="3201339" branch="false" />
-              </lines>
-            </method>
-            <method name="ProtectFile" signature="(System.String,System.Text.RegularExpressions.Regex,System.Func`3&lt;System.String,System.String,System.String&gt;)" line-rate="0.9333333333333333" branch-rate="0.5" complexity="2">
-              <lines>
-                <line number="218" hits="16" branch="false" />
-                <line number="219" hits="16" branch="false" />
-                <line number="220" hits="3201337" branch="false" />
-                <line number="221" hits="3201337" branch="false" />
-                <line number="222" hits="3201337" branch="false" />
-                <line number="223" hits="16" branch="false" />
-                <line number="224" hits="3201337" branch="true" condition-coverage="50% (1/2)" />
-                <line number="225" hits="16" branch="false" />
-                <line number="226" hits="3201337" branch="false" />
-                <line number="227" hits="3201337" branch="false" />
-                <line number="228" hits="3201337" branch="false" />
-                <line number="229" hits="16" branch="false" />
-                <line number="230" hits="16" branch="false" />
-                <line number="231" hits="0" branch="false" />
-                <line number="232" hits="16" branch="false" />
+                <line number="218" hits="8" branch="false" />
+                <line number="219" hits="8" branch="false" />
+                <line number="220" hits="8" branch="false" />
+                <line number="221" hits="8" branch="false" />
+                <line number="222" hits="8" branch="false" />
+                <line number="223" hits="8" branch="false" />
+                <line number="224" hits="8" branch="false" />
+                <line number="225" hits="8" branch="false" />
+                <line number="226" hits="8" branch="false" />
+                <line number="227" hits="8" branch="false" />
+                <line number="228" hits="8" branch="false" />
+                <line number="229" hits="8" branch="false" />
+                <line number="230" hits="8" branch="false" />
+                <line number="231" hits="8" branch="false" />
+                <line number="232" hits="8" branch="false" />
               </lines>
             </method>
             <method name=".ctor" signature="(System.Text.Json.JsonSerializerOptions)" line-rate="1" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="201" hits="2" branch="false" />
-                <line number="203" hits="2" branch="true" condition-coverage="50% (1/2)" />
-                <line number="204" hits="2" branch="false" />
-                <line number="205" hits="2" branch="false" />
-                <line number="206" hits="2" branch="false" />
+                <line number="201" hits="1" branch="false" />
+                <line number="203" hits="1" branch="true" condition-coverage="50% (1/2)" />
+                <line number="204" hits="1" branch="false" />
+                <line number="205" hits="1" branch="false" />
+                <line number="206" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="189" hits="10" branch="false" />
-            <line number="190" hits="3201339" branch="false" />
-            <line number="191" hits="3201339" branch="false" />
-            <line number="201" hits="2" branch="false" />
-            <line number="203" hits="2" branch="true" condition-coverage="50% (1/2)" />
-            <line number="204" hits="2" branch="false" />
-            <line number="205" hits="2" branch="false" />
-            <line number="206" hits="2" branch="false" />
-            <line number="218" hits="16" branch="false" />
-            <line number="219" hits="16" branch="false" />
-            <line number="220" hits="3201337" branch="false" />
-            <line number="221" hits="3201337" branch="false" />
-            <line number="222" hits="3201337" branch="false" />
-            <line number="223" hits="16" branch="false" />
-            <line number="224" hits="3201337" branch="true" condition-coverage="50% (1/2)" />
-            <line number="225" hits="16" branch="false" />
-            <line number="226" hits="3201337" branch="false" />
-            <line number="227" hits="3201337" branch="false" />
-            <line number="228" hits="3201337" branch="false" />
-            <line number="229" hits="16" branch="false" />
-            <line number="230" hits="16" branch="false" />
-            <line number="231" hits="0" branch="false" />
-            <line number="232" hits="16" branch="false" />
+            <line number="201" hits="1" branch="false" />
+            <line number="203" hits="1" branch="true" condition-coverage="50% (1/2)" />
+            <line number="204" hits="1" branch="false" />
+            <line number="205" hits="1" branch="false" />
+            <line number="206" hits="1" branch="false" />
+            <line number="218" hits="8" branch="false" />
+            <line number="219" hits="8" branch="false" />
+            <line number="220" hits="8" branch="false" />
+            <line number="221" hits="8" branch="false" />
+            <line number="222" hits="8" branch="false" />
+            <line number="223" hits="8" branch="false" />
+            <line number="224" hits="8" branch="false" />
+            <line number="225" hits="8" branch="false" />
+            <line number="226" hits="8" branch="false" />
+            <line number="227" hits="8" branch="false" />
+            <line number="228" hits="8" branch="false" />
+            <line number="229" hits="8" branch="false" />
+            <line number="230" hits="8" branch="false" />
+            <line number="231" hits="8" branch="false" />
+            <line number="232" hits="8" branch="false" />
           </lines>
         </class>
         <class name="Fededim.Extensions.Configuration.Protected.PassthroughProtectConfigurationData" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\PassthroughProtectConfigurationData.cs" line-rate="1" branch-rate="1" complexity="2">
           <methods>
             <method name="get_CreateInstance" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="10" hits="24" branch="false" />
+                <line number="10" hits="12" branch="false" />
               </lines>
             </method>
             <method name=".ctor" signature="(System.String,System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="20" hits="24" branch="false" />
-                <line number="23" hits="24" branch="false" />
+                <line number="20" hits="12" branch="false" />
+                <line number="23" hits="12" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="10" hits="24" branch="false" />
-            <line number="20" hits="24" branch="false" />
-            <line number="23" hits="24" branch="false" />
+            <line number="10" hits="12" branch="false" />
+            <line number="20" hits="12" branch="false" />
+            <line number="23" hits="12" branch="false" />
           </lines>
         </class>
         <class name="Fededim.Extensions.Configuration.Protected.PassthroughProtectProvider" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\PassthroughProtectProvider.cs" line-rate="1" branch-rate="1" complexity="4">
           <methods>
             <method name="CreateNewProviderFromSubkey" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="26" hits="1520581" branch="false" />
+                <line number="26" hits="755987" branch="false" />
               </lines>
             </method>
             <method name="Decrypt" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="38" hits="3037837" branch="false" />
+                <line number="38" hits="1511683" branch="false" />
               </lines>
             </method>
             <method name="Encrypt" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="50" hits="3044551" branch="false" />
+                <line number="50" hits="1514906" branch="false" />
               </lines>
             </method>
             <method name=".ctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="14" hits="24" branch="false" />
-                <line number="16" hits="24" branch="false" />
+                <line number="14" hits="12" branch="false" />
+                <line number="16" hits="12" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="14" hits="24" branch="false" />
-            <line number="16" hits="24" branch="false" />
-            <line number="26" hits="1520581" branch="false" />
-            <line number="38" hits="3037837" branch="false" />
-            <line number="50" hits="3044551" branch="false" />
+            <line number="14" hits="12" branch="false" />
+            <line number="16" hits="12" branch="false" />
+            <line number="26" hits="755987" branch="false" />
+            <line number="38" hits="1511683" branch="false" />
+            <line number="50" hits="1514906" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectedConfigurationBuilder.cs" line-rate="0.7407407407407407" branch-rate="0.625" complexity="14">
+        <class name="Fededim.Extensions.Configuration.Protected.ProtectedConfigurationBuilder" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectedConfigurationBuilder.cs" line-rate="0.7083333333333334" branch-rate="0.625" complexity="11">
           <methods>
-            <method name="get_ProtectedProviderGlobalConfigurationData" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="30" hits="48" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProtectProviderLocalConfigurationData" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="35" hits="144" branch="false" />
-              </lines>
-            </method>
             <method name="get_Sources" signature="()" line-rate="0" branch-rate="1" complexity="1">
               <lines>
                 <line number="56" hits="0" branch="false" />
               </lines>
             </method>
-            <method name="get_Properties" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="64" hits="96" branch="false" />
-              </lines>
-            </method>
             <method name="Add" signature="(Microsoft.Extensions.Configuration.IConfigurationSource)" line-rate="0.75" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="76" hits="48" branch="true" condition-coverage="50% (1/2)" />
+                <line number="76" hits="24" branch="true" condition-coverage="50% (1/2)" />
                 <line number="77" hits="0" branch="false" />
-                <line number="79" hits="48" branch="false" />
-                <line number="80" hits="48" branch="false" />
+                <line number="79" hits="24" branch="false" />
+                <line number="80" hits="24" branch="false" />
               </lines>
             </method>
             <method name="Build" signature="()" line-rate="0.7777777777777778" branch-rate="0.75" complexity="4">
               <lines>
-                <line number="91" hits="48" branch="false" />
-                <line number="92" hits="192" branch="true" condition-coverage="100% (2/2)" />
-                <line number="94" hits="48" branch="false" />
-                <line number="97" hits="48" branch="false" />
-                <line number="98" hits="48" branch="true" condition-coverage="50% (1/2)" />
+                <line number="91" hits="24" branch="false" />
+                <line number="92" hits="96" branch="true" condition-coverage="100% (2/2)" />
+                <line number="94" hits="24" branch="false" />
+                <line number="97" hits="24" branch="false" />
+                <line number="98" hits="24" branch="true" condition-coverage="50% (1/2)" />
                 <line number="100" hits="0" branch="false" />
                 <line number="101" hits="0" branch="false" />
-                <line number="104" hits="48" branch="false" />
-                <line number="106" hits="48" branch="false" />
+                <line number="104" hits="24" branch="false" />
+                <line number="106" hits="24" branch="false" />
               </lines>
             </method>
             <method name="Fededim.Extensions.Configuration.Protected.IProtectedConfigurationBuilder.WithProtectedConfigurationOptions" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData)" line-rate="0" branch-rate="1" complexity="1">
@@ -538,124 +447,106 @@
             </method>
             <method name="CreateProtectedConfigurationProvider" signature="(Microsoft.Extensions.Configuration.IConfigurationProvider)" line-rate="1" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="142" hits="48" branch="true" condition-coverage="50% (1/2)" />
-                <line number="145" hits="48" branch="false" />
+                <line number="142" hits="24" branch="true" condition-coverage="50% (1/2)" />
+                <line number="145" hits="24" branch="false" />
               </lines>
             </method>
             <method name=".ctor" signature="(Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="38" hits="48" branch="false" />
-                <line number="45" hits="48" branch="false" />
-                <line number="47" hits="48" branch="false" />
-                <line number="48" hits="48" branch="false" />
-                <line number="49" hits="48" branch="false" />
+                <line number="38" hits="24" branch="false" />
+                <line number="45" hits="24" branch="false" />
+                <line number="47" hits="24" branch="false" />
+                <line number="48" hits="24" branch="false" />
+                <line number="49" hits="24" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="30" hits="48" branch="false" />
-            <line number="35" hits="144" branch="false" />
-            <line number="38" hits="48" branch="false" />
-            <line number="45" hits="48" branch="false" />
-            <line number="47" hits="48" branch="false" />
-            <line number="48" hits="48" branch="false" />
-            <line number="49" hits="48" branch="false" />
+            <line number="38" hits="24" branch="false" />
+            <line number="45" hits="24" branch="false" />
+            <line number="47" hits="24" branch="false" />
+            <line number="48" hits="24" branch="false" />
+            <line number="49" hits="24" branch="false" />
             <line number="56" hits="0" branch="false" />
-            <line number="64" hits="96" branch="false" />
-            <line number="76" hits="48" branch="true" condition-coverage="50% (1/2)" />
+            <line number="76" hits="24" branch="true" condition-coverage="50% (1/2)" />
             <line number="77" hits="0" branch="false" />
-            <line number="79" hits="48" branch="false" />
-            <line number="80" hits="48" branch="false" />
-            <line number="91" hits="48" branch="false" />
-            <line number="92" hits="192" branch="true" condition-coverage="100% (2/2)" />
-            <line number="94" hits="48" branch="false" />
-            <line number="97" hits="48" branch="false" />
-            <line number="98" hits="48" branch="true" condition-coverage="50% (1/2)" />
+            <line number="79" hits="24" branch="false" />
+            <line number="80" hits="24" branch="false" />
+            <line number="91" hits="24" branch="false" />
+            <line number="92" hits="96" branch="true" condition-coverage="100% (2/2)" />
+            <line number="94" hits="24" branch="false" />
+            <line number="97" hits="24" branch="false" />
+            <line number="98" hits="24" branch="true" condition-coverage="50% (1/2)" />
             <line number="100" hits="0" branch="false" />
             <line number="101" hits="0" branch="false" />
-            <line number="104" hits="48" branch="false" />
-            <line number="106" hits="48" branch="false" />
+            <line number="104" hits="24" branch="false" />
+            <line number="106" hits="24" branch="false" />
             <line number="118" hits="0" branch="false" />
             <line number="119" hits="0" branch="false" />
             <line number="121" hits="0" branch="false" />
-            <line number="142" hits="48" branch="true" condition-coverage="50% (1/2)" />
-            <line number="145" hits="48" branch="false" />
+            <line number="142" hits="24" branch="true" condition-coverage="50% (1/2)" />
+            <line number="145" hits="24" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectedConfigurationProvider.cs" line-rate="0.6842105263157895" branch-rate="0.375" complexity="43">
+        <class name="Fededim.Extensions.Configuration.Protected.ProtectedConfigurationProvider" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectedConfigurationProvider.cs" line-rate="0.6712328767123288" branch-rate="0.375" complexity="32">
           <methods>
-            <method name="get_Provider" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="19" hits="21734427" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProtectProviderConfigurationData" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="20" hits="27815154" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProviderReloadTokenRegistration" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="24" hits="48" branch="false" />
-              </lines>
-            </method>
             <method name="RegisterReloadCallback" signature="()" line-rate="1" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="43" hits="48" branch="true" condition-coverage="50% (1/2)" />
-                <line number="46" hits="48" branch="false" />
-                <line number="49" hits="120" branch="false" />
-                <line number="50" hits="48" branch="false" />
+                <line number="43" hits="24" branch="true" condition-coverage="50% (1/2)" />
+                <line number="46" hits="24" branch="false" />
+                <line number="49" hits="24" branch="false" />
+                <line number="50" hits="24" branch="false" />
                 <line number="51" hits="24" branch="false" />
-                <line number="52" hits="48" branch="false" />
-                <line number="53" hits="48" branch="false" />
+                <line number="52" hits="24" branch="false" />
+                <line number="53" hits="24" branch="false" />
                 <line number="54" hits="24" branch="false" />
-                <line number="55" hits="48" branch="false" />
-                <line number="56" hits="48" branch="false" />
+                <line number="55" hits="24" branch="false" />
+                <line number="56" hits="24" branch="false" />
                 <line number="57" hits="24" branch="false" />
-                <line number="58" hits="72" branch="false" />
-                <line number="60" hits="48" branch="false" />
+                <line number="58" hits="24" branch="false" />
+                <line number="60" hits="24" branch="false" />
               </lines>
             </method>
             <method name="OnReload" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="69" hits="24" branch="false" />
-                <line number="70" hits="24" branch="false" />
-                <line number="71" hits="24" branch="false" />
+                <line number="69" hits="12" branch="false" />
+                <line number="70" hits="12" branch="false" />
+                <line number="71" hits="12" branch="false" />
               </lines>
             </method>
             <method name="get_ProviderDataReadOnly" signature="()" line-rate="0.75" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="90" hits="96" branch="false" />
-                <line number="92" hits="96" branch="true" condition-coverage="50% (1/2)" />
-                <line number="93" hits="96" branch="false" />
+                <line number="90" hits="48" branch="false" />
+                <line number="92" hits="48" branch="true" condition-coverage="50% (1/2)" />
+                <line number="93" hits="48" branch="false" />
                 <line number="95" hits="0" branch="false" />
               </lines>
             </method>
             <method name="get_ProviderData" signature="()" line-rate="1" branch-rate="0.5" complexity="4">
               <lines>
-                <line number="109" hits="168" branch="false" />
-                <line number="111" hits="168" branch="true" condition-coverage="50% (2/4)" />
-                <line number="112" hits="168" branch="false" />
-                <line number="114" hits="168" branch="false" />
+                <line number="109" hits="84" branch="false" />
+                <line number="111" hits="84" branch="true" condition-coverage="50% (2/4)" />
+                <line number="112" hits="84" branch="false" />
+                <line number="114" hits="84" branch="false" />
               </lines>
             </method>
-            <method name="DecryptChildKeys" signature="(System.String)" line-rate="0.48484848484848486" branch-rate="0.36363636363636365" complexity="22">
+            <method name="DecryptChildKeys" signature="(System.String)" line-rate="0.48484848484848486" branch-rate="0.35714285714285715" complexity="14">
               <lines>
-                <line number="134" hits="72" branch="true" condition-coverage="50% (1/2)" />
-                <line number="136" hits="51373598" branch="true" condition-coverage="100% (2/2)" />
-                <line number="138" hits="25686727" branch="true" condition-coverage="100% (2/2)" />
-                <line number="139" hits="21733923" branch="false" />
-                <line number="140" hits="21733923" branch="false" />
-                <line number="141" hits="21733923" branch="false" />
-                <line number="142" hits="6081231" branch="true" condition-coverage="50% (1/2)" />
-                <line number="143" hits="21733923" branch="false" />
-                <line number="144" hits="6081231" branch="false" />
-                <line number="145" hits="21733923" branch="false" />
-                <line number="146" hits="6081231" branch="true" condition-coverage="100% (2/2)" />
-                <line number="147" hits="1520534" branch="false" />
-                <line number="148" hits="21733923" branch="false" />
-                <line number="149" hits="6081231" branch="false" />
-                <line number="150" hits="21733923" branch="false" />
+                <line number="134" hits="36" branch="true" condition-coverage="50% (1/2)" />
+                <line number="136" hits="25620960" branch="true" condition-coverage="100% (2/2)" />
+                <line number="138" hits="12810444" branch="true" condition-coverage="100% (2/2)" />
+                <line number="139" hits="10839494" branch="false" />
+                <line number="140" hits="10839494" branch="false" />
+                <line number="141" hits="10839494" branch="false" />
+                <line number="142" hits="10839494" branch="false" />
+                <line number="143" hits="10839494" branch="false" />
+                <line number="144" hits="10839494" branch="false" />
+                <line number="145" hits="10839494" branch="false" />
+                <line number="146" hits="10839494" branch="false" />
+                <line number="147" hits="10839494" branch="false" />
+                <line number="148" hits="10839494" branch="false" />
+                <line number="149" hits="10839494" branch="false" />
+                <line number="150" hits="10839494" branch="false" />
                 <line number="155" hits="0" branch="true" condition-coverage="0% (0/2)" />
                 <line number="157" hits="0" branch="true" condition-coverage="0% (0/2)" />
                 <line number="158" hits="0" branch="true" condition-coverage="0% (0/2)" />
@@ -663,29 +554,29 @@
                 <line number="161" hits="0" branch="false" />
                 <line number="162" hits="0" branch="false" />
                 <line number="163" hits="0" branch="false" />
-                <line number="164" hits="0" branch="true" condition-coverage="0% (0/2)" />
+                <line number="164" hits="0" branch="false" />
                 <line number="165" hits="0" branch="false" />
                 <line number="166" hits="0" branch="false" />
                 <line number="167" hits="0" branch="false" />
-                <line number="168" hits="0" branch="true" condition-coverage="0% (0/2)" />
+                <line number="168" hits="0" branch="false" />
                 <line number="169" hits="0" branch="false" />
                 <line number="170" hits="0" branch="false" />
                 <line number="171" hits="0" branch="false" />
                 <line number="172" hits="0" branch="false" />
                 <line number="174" hits="0" branch="false" />
-                <line number="177" hits="72" branch="false" />
+                <line number="177" hits="36" branch="false" />
               </lines>
             </method>
             <method name="GetReloadToken" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="187" hits="48" branch="false" />
+                <line number="187" hits="24" branch="false" />
               </lines>
             </method>
             <method name="Load" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="197" hits="48" branch="false" />
-                <line number="200" hits="48" branch="false" />
-                <line number="201" hits="48" branch="false" />
+                <line number="197" hits="24" branch="false" />
+                <line number="200" hits="24" branch="false" />
+                <line number="201" hits="24" branch="false" />
               </lines>
             </method>
             <method name="GetChildKeys" signature="(System.Collections.Generic.IEnumerable`1&lt;System.String&gt;,System.String)" line-rate="0" branch-rate="1" complexity="1">
@@ -712,68 +603,65 @@
             </method>
             <method name=".ctor" signature="(Microsoft.Extensions.Configuration.IConfigurationProvider,Fededim.Extensions.Configuration.Protected.IProtectProviderConfigurationData)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="27" hits="48" branch="false" />
-                <line number="29" hits="48" branch="false" />
-                <line number="30" hits="48" branch="false" />
-                <line number="32" hits="48" branch="false" />
-                <line number="33" hits="48" branch="false" />
+                <line number="27" hits="24" branch="false" />
+                <line number="29" hits="24" branch="false" />
+                <line number="30" hits="24" branch="false" />
+                <line number="32" hits="24" branch="false" />
+                <line number="33" hits="24" branch="false" />
               </lines>
             </method>
             <method name=".cctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="79" hits="2" branch="false" />
+                <line number="79" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="19" hits="21734427" branch="false" />
-            <line number="20" hits="27815154" branch="false" />
-            <line number="24" hits="48" branch="false" />
-            <line number="27" hits="48" branch="false" />
-            <line number="29" hits="48" branch="false" />
-            <line number="30" hits="48" branch="false" />
-            <line number="32" hits="48" branch="false" />
-            <line number="33" hits="48" branch="false" />
-            <line number="43" hits="48" branch="true" condition-coverage="50% (1/2)" />
-            <line number="46" hits="48" branch="false" />
-            <line number="49" hits="120" branch="false" />
-            <line number="50" hits="48" branch="false" />
+            <line number="27" hits="24" branch="false" />
+            <line number="29" hits="24" branch="false" />
+            <line number="30" hits="24" branch="false" />
+            <line number="32" hits="24" branch="false" />
+            <line number="33" hits="24" branch="false" />
+            <line number="43" hits="24" branch="true" condition-coverage="50% (1/2)" />
+            <line number="46" hits="24" branch="false" />
+            <line number="49" hits="24" branch="false" />
+            <line number="50" hits="24" branch="false" />
             <line number="51" hits="24" branch="false" />
-            <line number="52" hits="48" branch="false" />
-            <line number="53" hits="48" branch="false" />
+            <line number="52" hits="24" branch="false" />
+            <line number="53" hits="24" branch="false" />
             <line number="54" hits="24" branch="false" />
-            <line number="55" hits="48" branch="false" />
-            <line number="56" hits="48" branch="false" />
+            <line number="55" hits="24" branch="false" />
+            <line number="56" hits="24" branch="false" />
             <line number="57" hits="24" branch="false" />
-            <line number="58" hits="72" branch="false" />
-            <line number="60" hits="48" branch="false" />
-            <line number="69" hits="24" branch="false" />
-            <line number="70" hits="24" branch="false" />
-            <line number="71" hits="24" branch="false" />
-            <line number="79" hits="2" branch="false" />
-            <line number="90" hits="96" branch="false" />
-            <line number="92" hits="96" branch="true" condition-coverage="50% (1/2)" />
-            <line number="93" hits="96" branch="false" />
+            <line number="58" hits="24" branch="false" />
+            <line number="60" hits="24" branch="false" />
+            <line number="69" hits="12" branch="false" />
+            <line number="70" hits="12" branch="false" />
+            <line number="71" hits="12" branch="false" />
+            <line number="79" hits="1" branch="false" />
+            <line number="90" hits="48" branch="false" />
+            <line number="92" hits="48" branch="true" condition-coverage="50% (1/2)" />
+            <line number="93" hits="48" branch="false" />
             <line number="95" hits="0" branch="false" />
-            <line number="109" hits="168" branch="false" />
-            <line number="111" hits="168" branch="true" condition-coverage="50% (2/4)" />
-            <line number="112" hits="168" branch="false" />
-            <line number="114" hits="168" branch="false" />
-            <line number="134" hits="72" branch="true" condition-coverage="50% (1/2)" />
-            <line number="136" hits="51373598" branch="true" condition-coverage="100% (2/2)" />
-            <line number="138" hits="25686727" branch="true" condition-coverage="100% (2/2)" />
-            <line number="139" hits="21733923" branch="false" />
-            <line number="140" hits="21733923" branch="false" />
-            <line number="141" hits="21733923" branch="false" />
-            <line number="142" hits="6081231" branch="true" condition-coverage="50% (1/2)" />
-            <line number="143" hits="21733923" branch="false" />
-            <line number="144" hits="6081231" branch="false" />
-            <line number="145" hits="21733923" branch="false" />
-            <line number="146" hits="6081231" branch="true" condition-coverage="100% (2/2)" />
-            <line number="147" hits="1520534" branch="false" />
-            <line number="148" hits="21733923" branch="false" />
-            <line number="149" hits="6081231" branch="false" />
-            <line number="150" hits="21733923" branch="false" />
+            <line number="109" hits="84" branch="false" />
+            <line number="111" hits="84" branch="true" condition-coverage="50% (2/4)" />
+            <line number="112" hits="84" branch="false" />
+            <line number="114" hits="84" branch="false" />
+            <line number="134" hits="36" branch="true" condition-coverage="50% (1/2)" />
+            <line number="136" hits="25620960" branch="true" condition-coverage="100% (2/2)" />
+            <line number="138" hits="12810444" branch="true" condition-coverage="100% (2/2)" />
+            <line number="139" hits="10839494" branch="false" />
+            <line number="140" hits="10839494" branch="false" />
+            <line number="141" hits="10839494" branch="false" />
+            <line number="142" hits="10839494" branch="false" />
+            <line number="143" hits="10839494" branch="false" />
+            <line number="144" hits="10839494" branch="false" />
+            <line number="145" hits="10839494" branch="false" />
+            <line number="146" hits="10839494" branch="false" />
+            <line number="147" hits="10839494" branch="false" />
+            <line number="148" hits="10839494" branch="false" />
+            <line number="149" hits="10839494" branch="false" />
+            <line number="150" hits="10839494" branch="false" />
             <line number="155" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="157" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="158" hits="0" branch="true" condition-coverage="0% (0/2)" />
@@ -781,21 +669,21 @@
             <line number="161" hits="0" branch="false" />
             <line number="162" hits="0" branch="false" />
             <line number="163" hits="0" branch="false" />
-            <line number="164" hits="0" branch="true" condition-coverage="0% (0/2)" />
+            <line number="164" hits="0" branch="false" />
             <line number="165" hits="0" branch="false" />
             <line number="166" hits="0" branch="false" />
             <line number="167" hits="0" branch="false" />
-            <line number="168" hits="0" branch="true" condition-coverage="0% (0/2)" />
+            <line number="168" hits="0" branch="false" />
             <line number="169" hits="0" branch="false" />
             <line number="170" hits="0" branch="false" />
             <line number="171" hits="0" branch="false" />
             <line number="172" hits="0" branch="false" />
             <line number="174" hits="0" branch="false" />
-            <line number="177" hits="72" branch="false" />
-            <line number="187" hits="48" branch="false" />
-            <line number="197" hits="48" branch="false" />
-            <line number="200" hits="48" branch="false" />
-            <line number="201" hits="48" branch="false" />
+            <line number="177" hits="36" branch="false" />
+            <line number="187" hits="24" branch="false" />
+            <line number="197" hits="24" branch="false" />
+            <line number="200" hits="24" branch="false" />
+            <line number="201" hits="24" branch="false" />
             <line number="215" hits="0" branch="false" />
             <line number="227" hits="0" branch="false" />
             <line number="228" hits="0" branch="false" />
@@ -804,34 +692,22 @@
             <line number="251" hits="0" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.ProtectFileOptions" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="1" branch-rate="1" complexity="3">
+        <class name="Fededim.Extensions.Configuration.Protected.ProtectFileOptions" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
-            <method name="get_FilenameRegex" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="39" hits="58" branch="false" />
-              </lines>
-            </method>
-            <method name="get_ProtectFileProcessor" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="44" hits="32" branch="false" />
-              </lines>
-            </method>
             <method name=".ctor" signature="(System.Text.RegularExpressions.Regex,Fededim.Extensions.Configuration.Protected.IProtectFileProcessor)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="47" hits="8" branch="false" />
-                <line number="49" hits="8" branch="false" />
-                <line number="50" hits="8" branch="false" />
-                <line number="51" hits="8" branch="false" />
+                <line number="47" hits="4" branch="false" />
+                <line number="49" hits="4" branch="false" />
+                <line number="50" hits="4" branch="false" />
+                <line number="51" hits="4" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="39" hits="58" branch="false" />
-            <line number="44" hits="32" branch="false" />
-            <line number="47" hits="8" branch="false" />
-            <line number="49" hits="8" branch="false" />
-            <line number="50" hits="8" branch="false" />
-            <line number="51" hits="8" branch="false" />
+            <line number="47" hits="4" branch="false" />
+            <line number="49" hits="4" branch="false" />
+            <line number="50" hits="4" branch="false" />
+            <line number="51" hits="4" branch="false" />
           </lines>
         </class>
         <class name="Fededim.Extensions.Configuration.Protected.ProtectProviderConfigurationData" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectProviderConfigurationData.cs" line-rate="0.6" branch-rate="0.16666666666666666" complexity="24">
@@ -848,28 +724,28 @@
             </method>
             <method name=".ctor" signature="(System.String,System.String,System.String,Fededim.Extensions.Configuration.Protected.IProtectProvider)" line-rate="1" branch-rate="1" complexity="4">
               <lines>
-                <line number="122" hits="48" branch="false" />
-                <line number="124" hits="48" branch="true" condition-coverage="100% (2/2)" />
-                <line number="125" hits="24" branch="false" />
-                <line number="127" hits="48" branch="true" condition-coverage="100% (2/2)" />
-                <line number="128" hits="24" branch="false" />
-                <line number="130" hits="48" branch="false" />
-                <line number="131" hits="48" branch="false" />
-                <line number="134" hits="48" branch="false" />
-                <line number="135" hits="48" branch="false" />
+                <line number="122" hits="24" branch="false" />
+                <line number="124" hits="24" branch="true" condition-coverage="100% (2/2)" />
+                <line number="125" hits="12" branch="false" />
+                <line number="127" hits="24" branch="true" condition-coverage="100% (2/2)" />
+                <line number="128" hits="12" branch="false" />
+                <line number="130" hits="24" branch="false" />
+                <line number="131" hits="24" branch="false" />
+                <line number="134" hits="24" branch="false" />
+                <line number="135" hits="24" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="122" hits="48" branch="false" />
-            <line number="124" hits="48" branch="true" condition-coverage="100% (2/2)" />
-            <line number="125" hits="24" branch="false" />
-            <line number="127" hits="48" branch="true" condition-coverage="100% (2/2)" />
-            <line number="128" hits="24" branch="false" />
-            <line number="130" hits="48" branch="false" />
-            <line number="131" hits="48" branch="false" />
-            <line number="134" hits="48" branch="false" />
-            <line number="135" hits="48" branch="false" />
+            <line number="122" hits="24" branch="false" />
+            <line number="124" hits="24" branch="true" condition-coverage="100% (2/2)" />
+            <line number="125" hits="12" branch="false" />
+            <line number="127" hits="24" branch="true" condition-coverage="100% (2/2)" />
+            <line number="128" hits="12" branch="false" />
+            <line number="130" hits="24" branch="false" />
+            <line number="131" hits="24" branch="false" />
+            <line number="134" hits="24" branch="false" />
+            <line number="135" hits="24" branch="false" />
             <line number="146" hits="0" branch="true" condition-coverage="0% (0/2)" />
             <line number="147" hits="0" branch="false" />
             <line number="149" hits="0" branch="true" condition-coverage="0% (0/2)" />
@@ -892,85 +768,73 @@
             <line number="72" hits="0" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.XmlProtectFileProcessor" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="0.96" branch-rate="0.9166666666666666" complexity="15">
+        <class name="Fededim.Extensions.Configuration.Protected.XmlProtectFileProcessor" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\ProtectFileProcessors.cs" line-rate="0.9565217391304348" branch-rate="0.9166666666666666" complexity="13">
           <methods>
-            <method name="get_LoadOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="243" hits="10" branch="false" />
-              </lines>
-            </method>
-            <method name="get_SaveOptions" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="244" hits="10" branch="false" />
-              </lines>
-            </method>
             <method name="ProtectFile" signature="(System.String,System.Text.RegularExpressions.Regex,System.Func`3&lt;System.String,System.String,System.String&gt;)" line-rate="0.875" branch-rate="0.5" complexity="2">
               <lines>
-                <line number="270" hits="8" branch="false" />
-                <line number="272" hits="8" branch="false" />
-                <line number="275" hits="8" branch="false" />
-                <line number="277" hits="8" branch="true" condition-coverage="50% (1/2)" />
+                <line number="270" hits="4" branch="false" />
+                <line number="272" hits="4" branch="false" />
+                <line number="275" hits="4" branch="false" />
+                <line number="277" hits="4" branch="true" condition-coverage="50% (1/2)" />
                 <line number="278" hits="0" branch="false" />
-                <line number="280" hits="8" branch="false" />
-                <line number="282" hits="8" branch="false" />
-                <line number="284" hits="8" branch="false" />
+                <line number="280" hits="4" branch="false" />
+                <line number="282" hits="4" branch="false" />
+                <line number="284" hits="4" branch="false" />
               </lines>
             </method>
             <method name="ProtectXmlNodes" signature="(System.Xml.Linq.XElement,System.Text.RegularExpressions.Regex,System.Func`3&lt;System.String,System.String,System.String&gt;)" line-rate="1" branch-rate="1" complexity="10">
               <lines>
-                <line number="300" hits="9188528" branch="true" condition-coverage="100% (2/2)" />
-                <line number="302" hits="334512" branch="false" />
-                <line number="303" hits="334512" branch="true" condition-coverage="100% (2/2)" />
-                <line number="304" hits="147146" branch="false" />
-                <line number="307" hits="4259752" branch="true" condition-coverage="100% (2/2)" />
-                <line number="310" hits="9718204" branch="true" condition-coverage="100% (2/2)" />
-                <line number="311" hits="4259744" branch="false" />
-                <line number="316" hits="3660394" branch="false" />
-                <line number="317" hits="3660394" branch="true" condition-coverage="100% (2/2)" />
-                <line number="318" hits="1447287" branch="false" />
-                <line number="320" hits="4259752" branch="false" />
+                <line number="300" hits="4591916" branch="true" condition-coverage="100% (2/2)" />
+                <line number="302" hits="166547" branch="false" />
+                <line number="303" hits="166547" branch="true" condition-coverage="100% (2/2)" />
+                <line number="304" hits="73659" branch="false" />
+                <line number="307" hits="2129411" branch="true" condition-coverage="100% (2/2)" />
+                <line number="310" hits="4858806" branch="true" condition-coverage="100% (2/2)" />
+                <line number="311" hits="2129407" branch="false" />
+                <line number="316" hits="1829415" branch="false" />
+                <line number="317" hits="1829415" branch="true" condition-coverage="100% (2/2)" />
+                <line number="318" hits="722703" branch="false" />
+                <line number="320" hits="2129411" branch="false" />
               </lines>
             </method>
             <method name=".ctor" signature="(System.Xml.Linq.LoadOptions,System.Nullable`1&lt;System.Xml.Linq.SaveOptions&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="254" hits="2" branch="false" />
-                <line number="256" hits="2" branch="false" />
-                <line number="257" hits="2" branch="false" />
-                <line number="258" hits="2" branch="false" />
+                <line number="254" hits="1" branch="false" />
+                <line number="256" hits="1" branch="false" />
+                <line number="257" hits="1" branch="false" />
+                <line number="258" hits="1" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="243" hits="10" branch="false" />
-            <line number="244" hits="10" branch="false" />
-            <line number="254" hits="2" branch="false" />
-            <line number="256" hits="2" branch="false" />
-            <line number="257" hits="2" branch="false" />
-            <line number="258" hits="2" branch="false" />
-            <line number="270" hits="8" branch="false" />
-            <line number="272" hits="8" branch="false" />
-            <line number="275" hits="8" branch="false" />
-            <line number="277" hits="8" branch="true" condition-coverage="50% (1/2)" />
+            <line number="254" hits="1" branch="false" />
+            <line number="256" hits="1" branch="false" />
+            <line number="257" hits="1" branch="false" />
+            <line number="258" hits="1" branch="false" />
+            <line number="270" hits="4" branch="false" />
+            <line number="272" hits="4" branch="false" />
+            <line number="275" hits="4" branch="false" />
+            <line number="277" hits="4" branch="true" condition-coverage="50% (1/2)" />
             <line number="278" hits="0" branch="false" />
-            <line number="280" hits="8" branch="false" />
-            <line number="282" hits="8" branch="false" />
-            <line number="284" hits="8" branch="false" />
-            <line number="300" hits="9188528" branch="true" condition-coverage="100% (2/2)" />
-            <line number="302" hits="334512" branch="false" />
-            <line number="303" hits="334512" branch="true" condition-coverage="100% (2/2)" />
-            <line number="304" hits="147146" branch="false" />
-            <line number="307" hits="4259752" branch="true" condition-coverage="100% (2/2)" />
-            <line number="310" hits="9718204" branch="true" condition-coverage="100% (2/2)" />
-            <line number="311" hits="4259744" branch="false" />
-            <line number="316" hits="3660394" branch="false" />
-            <line number="317" hits="3660394" branch="true" condition-coverage="100% (2/2)" />
-            <line number="318" hits="1447287" branch="false" />
-            <line number="320" hits="4259752" branch="false" />
+            <line number="280" hits="4" branch="false" />
+            <line number="282" hits="4" branch="false" />
+            <line number="284" hits="4" branch="false" />
+            <line number="300" hits="4591916" branch="true" condition-coverage="100% (2/2)" />
+            <line number="302" hits="166547" branch="false" />
+            <line number="303" hits="166547" branch="true" condition-coverage="100% (2/2)" />
+            <line number="304" hits="73659" branch="false" />
+            <line number="307" hits="2129411" branch="true" condition-coverage="100% (2/2)" />
+            <line number="310" hits="4858806" branch="true" condition-coverage="100% (2/2)" />
+            <line number="311" hits="2129407" branch="false" />
+            <line number="316" hits="1829415" branch="false" />
+            <line number="317" hits="1829415" branch="true" condition-coverage="100% (2/2)" />
+            <line number="318" hits="722703" branch="false" />
+            <line number="320" hits="2129411" branch="false" />
           </lines>
         </class>
       </classes>
     </package>
-    <package name="Fededim.Extensions.Configuration.Protected.DataProtectionAPI" line-rate="0.6363636363636364" branch-rate="0.5" complexity="32">
+    <package name="Fededim.Extensions.Configuration.Protected.DataProtectionAPI" line-rate="0.627906976744186" branch-rate="0.5" complexity="31">
       <classes>
         <class name="Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectConfigurationData" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.DataProtectionAPI\DataProtectionAPIProtectConfigurationData.cs" line-rate="0.5675675675675675" branch-rate="0.5" complexity="27">
           <methods>
@@ -1096,44 +960,38 @@
             <line number="204" hits="24" branch="false" />
           </lines>
         </class>
-        <class name="Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectProvider" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.DataProtectionAPI\DataProtectionAPIProtectProvider.cs" line-rate="1" branch-rate="1" complexity="5">
+        <class name="Fededim.Extensions.Configuration.Protected.DataProtectionAPI.DataProtectionAPIProtectProvider" filename="D:\a\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected\Fededim.Extensions.Configuration.Protected.DataProtectionAPI\DataProtectionAPIProtectProvider.cs" line-rate="1" branch-rate="1" complexity="4">
           <methods>
-            <method name="get_DataProtector" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines>
-                <line number="11" hits="7608918" branch="false" />
-              </lines>
-            </method>
             <method name="CreateNewProviderFromSubkey" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="31" hits="1522130" branch="false" />
+                <line number="31" hits="1521414" branch="false" />
               </lines>
             </method>
             <method name="Decrypt" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="43" hits="3043394" branch="false" />
+                <line number="43" hits="3038178" branch="false" />
               </lines>
             </method>
             <method name="Encrypt" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="55" hits="3043394" branch="false" />
+                <line number="55" hits="3038178" branch="false" />
               </lines>
             </method>
             <method name=".ctor" signature="(Microsoft.AspNetCore.DataProtection.IDataProtector)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="18" hits="1522154" branch="false" />
-                <line number="20" hits="1522154" branch="false" />
-                <line number="21" hits="1522154" branch="false" />
+                <line number="18" hits="1521438" branch="false" />
+                <line number="20" hits="1521438" branch="false" />
+                <line number="21" hits="1521438" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="11" hits="7608918" branch="false" />
-            <line number="18" hits="1522154" branch="false" />
-            <line number="20" hits="1522154" branch="false" />
-            <line number="21" hits="1522154" branch="false" />
-            <line number="31" hits="1522130" branch="false" />
-            <line number="43" hits="3043394" branch="false" />
-            <line number="55" hits="3043394" branch="false" />
+            <line number="18" hits="1521438" branch="false" />
+            <line number="20" hits="1521438" branch="false" />
+            <line number="21" hits="1521438" branch="false" />
+            <line number="31" hits="1521414" branch="false" />
+            <line number="43" hits="3038178" branch="false" />
+            <line number="55" hits="3038178" branch="false" />
           </lines>
         </class>
       </classes>
