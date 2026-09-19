@@ -49,13 +49,13 @@ jobs:
 
 
       - name: "Restore/Build/Test"
-        run: dotnet test --configuration Release --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=TestResults/
+        run: dotnet test --configuration Release --coverlet --verbosity normal 
 
 
       - name: "Generate reports From Code Coverage"
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
         with:
-          reports: "**/*.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+          reports: "**/*.cobertura.*.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
           targetdir: "${{ github.workspace }}/misc/last_build_artifacts" # REQUIRED # The directory where the generated report should be saved.
           reporttypes: Html;Cobertura;MarkdownSummaryGithub;Badges # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, Html_Dark, Html_Light, Html_BlueRed, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlInline_AzurePipelines_Light, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MarkdownSummary, MarkdownSummaryGithub, MarkdownDeltaSummary, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, TextDeltaSummary, Xml, XmlSummary
           verbosity: "Info" # The verbosity level of the log messages. Values: Verbose, Info, Warning, Error, Off
