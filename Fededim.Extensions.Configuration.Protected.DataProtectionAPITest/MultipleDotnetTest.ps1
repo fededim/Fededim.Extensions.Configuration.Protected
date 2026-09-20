@@ -31,7 +31,11 @@ dotnet build -c $Configuration
 for ($i = 1; $i -le $Iterations; $i++) {
     Write-Host "-> Executing test $i of $Iterations..." -ForegroundColor Green
     
-	dotnet test -c "$Configuration" --results-directory "$OutputDirectory" -- --report-trx --report-trx-filename "{tfm}-{arch}\testrun_$i.trx" --report-html --report-html-filename "{tfm}-{arch}\testrun_$i.html"
+    # split test separately using --framework option, because launching dotnet test without it went into a deadlock after a few hundred tests
+    # there is even a bug on GitHub https://github.com/xunit/xunit/issues/864 which has been closed, attributing the culprit to async / await code in the tests
+    # unfortunately none of this code uses any async or await, except for a global mutex, which is perfect :-) Probably it will be reopened and fixed in the fixture
+	dotnet test -c "$Configuration" --framework net48 --results-directory "$OutputDirectory" -- --report-trx --report-trx-filename "{tfm}-{arch}\testrun_$i.trx" --report-html --report-html-filename "{tfm}-{arch}\testrun_$i.html"
+	dotnet test -c "$Configuration" --framework net10.0 --results-directory "$OutputDirectory" -- --report-trx --report-trx-filename "{tfm}-{arch}\testrun_$i.trx" --report-html --report-html-filename "{tfm}-{arch}\testrun_$i.html"
 }
 
 #Write-Host "-> Merging TRX files..." -ForegroundColor Green
