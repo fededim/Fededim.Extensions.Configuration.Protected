@@ -23,17 +23,23 @@ You can find a [detailed article on my personal homepage](https://fededim.github
 
 
 # Fededim.Extensions.Configuration.Protected.DataProtectionAPITest
-This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (10000), one in plaintext with random datatype and value and another with the same value but encrypted. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. For example a test case on the JsonConfigurationProvider generated a plain-text file with a total size of 60MB and an encrypted file with a total size of 91MB, the test has ended in around 10 seconds for generating the random JSON file, encrypting it, decrypting it using the ProtectedConfigurationBuilder (in order to decrypt 250k encrypted values this step took around 5 seconds in .Net462 and around 3 seconds in net6.0 which is faster) and checking that every decrypted key was equal to the plaintext one. Moreover all the whole set of five test cases was repeated for 1000 iterations (Test Explorer Run Until Failure, unluckily it is not available for all tests, I had to do it separately for the two frameworks), both for net462 (total runtime 705 minutes) and net8.0 (total runtime 9097 minutes) without raising any error as you can see in the pictures below.
+This a xUnit test project which tests thoroughly the two above packages in order to improve the reliability and the code quality. It creates sample data for all ConfigurationSources provided by Microsoft .NET (a JSON file, a XML file, environment variables, an in-memory dictionary and command line arguments) containing a 2\*fixed set of entries (100000, except for environment variables limited up to 2000 for technical reasons), one in plaintext with random datatype and value, and another with the same value but encrypted. Arrays are generated with a random number of elements, while XML and JSON files are generated with a random number of hierarchical levels, consisting of an approximate size from 60 MB up to 100 MB each. It loads then the sample data with ProtectedConfigurationBuilder in order to decrypt it and tests that all plaintext values are the same as those that have been decrypted. For example a test case on the JsonConfigurationProvider generated a plain-text file with a total size of 60MB and an encrypted file with a total size of 91MB, the test has ended in around 10 seconds for generating the random JSON file, encrypting it, decrypting it using the ProtectedConfigurationBuilder, and checking that every decrypted key was equal to the plaintext one. Moreover all the whole set of five test cases was repeated for 1000 iterations (Test Explorer --> Run Until Failure, unluckily it is not available for all tests, I had to do it separately for the two frameworks), both for net48 (total runtime 3318 minutes) and net10.0 (total runtime 2336 minutes) without raising any error as you can see in the pictures below.
 
+<!---
 **Net462 Endurance Test**
 ![image](https://github.com/user-attachments/assets/7675c2aa-b24f-4e09-8422-55f531e6ca30)
+-->
 
+**Net48 Endurance Test**
+<img alt="image" src="https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net48_endurance_test.png" />
+
+<!---
 **Net8.0 Endurance Test**
 <img alt="image" src="https://github.com/user-attachments/assets/36fe482a-1400-489a-83e8-cf0c88118e2c" />
+-->
 
 **Net10.0 Endurance Test**
-<img alt="image" src="https://github.com/user-attachments/assets/65b8a515-2b7a-441d-8c0d-0720a3ea3064" />
-
+<img alt="image" src="https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net10.0_endurance_test.png" />
 
 # Fededim.Extensions.Configuration.ProtectedJson (OBSOLETE PLEASE USE Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
 
