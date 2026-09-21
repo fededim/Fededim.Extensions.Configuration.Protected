@@ -28,12 +28,14 @@ This a xUnit test project which tests thoroughly the two above packages in order
 **Net462 Endurance Test**
 ![image](https://github.com/user-attachments/assets/7675c2aa-b24f-4e09-8422-55f531e6ca30)
 
+**Net48 Endurance Test**
+<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/bcc78b0e-2ecd-4c66-89db-d8001b3769fe" />
+
 **Net8.0 Endurance Test**
 <img alt="image" src="https://github.com/user-attachments/assets/36fe482a-1400-489a-83e8-cf0c88118e2c" />
 
 **Net10.0 Endurance Test**
 <img alt="image" src="https://github.com/user-attachments/assets/65b8a515-2b7a-441d-8c0d-0720a3ea3064" />
-
 
 # Fededim.Extensions.Configuration.ProtectedJson (OBSOLETE PLEASE USE Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
 
