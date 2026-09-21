@@ -29,7 +29,7 @@ This a xUnit test project which tests thoroughly the two above packages in order
 ![image](https://github.com/user-attachments/assets/7675c2aa-b24f-4e09-8422-55f531e6ca30)
 
 **Net48 Endurance Test**
-<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/bcc78b0e-2ecd-4c66-89db-d8001b3769fe" />
+<img alt="image" src="https://github.com/user-attachments/assets/11bc85b4-22e5-44a0-8ec7-f96db0ff3193" />
 
 **Net8.0 Endurance Test**
 <img alt="image" src="https://github.com/user-attachments/assets/36fe482a-1400-489a-83e8-cf0c88118e2c" />
