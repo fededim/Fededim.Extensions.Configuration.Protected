@@ -30,15 +30,15 @@ This a xUnit test project which tests thoroughly the two above packages in order
 ![image](https://github.com/user-attachments/assets/7675c2aa-b24f-4e09-8422-55f531e6ca30)
 -->
 
-**Net48 Endurance Test**
+**Net48 Endurance Test** 
 <img alt="image" src="https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net48_endurance_test.png" />
 
 <!---
-**Net8.0 Endurance Test**
+**Net8.0 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net8.0-x64.zip)
 <img alt="image" src="https://github.com/user-attachments/assets/36fe482a-1400-489a-83e8-cf0c88118e2c" />
 -->
 
-**Net10.0 Endurance Test**
+**Net10.0 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net10.0-x64.zip)
 <img alt="image" src="https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net10.0_endurance_test.png" />
 
 # Fededim.Extensions.Configuration.ProtectedJson (OBSOLETE PLEASE USE Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
