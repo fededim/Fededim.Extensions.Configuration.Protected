@@ -31,10 +31,10 @@ This a xUnit test project which tests thoroughly the two above packages in order
 -->
 
 **Net48 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net48-x64.zip)
-![image](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net48_endurance_test.png")
+![image](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net48_endurance_test.png)
 
 **Net8.0 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net8.0-x64.zip)
-Updated image coming soon
+<br/>Updated image coming soon
 <!---
 ![image](https://github.com/user-attachments/assets/36fe482a-1400-489a-83e8-cf0c88118e2c)
 -->
