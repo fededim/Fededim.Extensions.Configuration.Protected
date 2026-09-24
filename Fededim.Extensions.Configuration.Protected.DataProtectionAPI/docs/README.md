@@ -239,8 +239,8 @@ v1.0.9
 
 v1.0.10
 - updated minimum framework to net472 due to XUnit V3 requirements (net462 apps can still use netstandard2.0 version of the package)
-- removed net6.0 as target framework due to package compatibility not guaranteed (net6.0 apps can still use netstandard2.0 version of the package)
-- added missing net48 as target framework
+- readded net8.0 as target framework (net6.0 was not possible due to updated package compatibility issues, however net6.0 apps can still use netstandard2.0 version of the package)
+- added net48 as target framework
 
 # Detailed guide
 
