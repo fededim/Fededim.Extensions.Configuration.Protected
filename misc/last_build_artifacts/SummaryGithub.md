@@ -3,9 +3,9 @@
 
 |||
 |:---|:---|
-| Generated on: | 9/21/2026 - 8:45:04 AM |
-| Coverage date: | 9/21/2026 - 8:44:28 AM - 9/21/2026 - 8:45:01 AM |
-| Parser: | MultiReport (2x Cobertura) |
+| Generated on: | 9/24/2026 - 3:20:12 PM |
+| Coverage date: | 9/24/2026 - 3:19:13 PM - 9/24/2026 - 3:20:05 PM |
+| Parser: | MultiReport (3x Cobertura) |
 | Assemblies: | 2 |
 | Classes: | 14 |
 | Files: | 9 |
@@ -18,7 +18,7 @@
 | Covered branches: | 68 |
 | Total branches: | 158 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
-| Tag: | 99_35579164049 |
+| Tag: | 101_36018722625 |
 
 </details>
 
