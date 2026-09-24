@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0;net8.0;netstandard2.0;net48;net462</TargetFrameworks>
+    <TargetFrameworks>net10.0;net8.0;netstandard2.0;net48;net472</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
 
     <PublishSingleFile>true</PublishSingleFile>
