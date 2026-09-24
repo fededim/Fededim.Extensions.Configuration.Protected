@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0;netstandard2.0;net462</TargetFrameworks>
+		<TargetFrameworks>net10.0;net8.0;netstandard2.0;net48;net472</TargetFrameworks>
 		<ImplicitUsings>disable</ImplicitUsings>
 
 		<PublishSingleFile>true</PublishSingleFile>
-		<Version>1.0.9</Version>
+		<Version>1.0.10</Version>
 		<Authors>Federico Di Marco &lt;fededim@gmail.com&gt;</Authors>
 		<Description>Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft DataProtectionAPI provider for the encryption/decryption of configuration values using Fededim.Extensions.Configuration.Protected.</Description>
 		<Copyright>$([System.DateTime]::UtcNow.Year)</Copyright>
@@ -60,6 +60,12 @@
 			- Updated project to net10.0 due to incoming net8.0 EOL
 			- Update all NuGet packages to the latest version
 			- Updated link to detailed article inside README since CodeProject website was completely shutted down
+
+			v1.0.10
+			- Dependency: requires at least Fededim.Extensions.Configuration.Protected version 1.0.22
+			- updated minimum framework to net472 due to XUnit V3 requirements (net462 apps can still use netstandard2.0 version of the package)
+			- removed net6.0 as target framework due to package compatibility not guaranteed (net6.0 apps can still use netstandard2.0 version of the package)
+			- added missing net48 as target framework
 		</PackageReleaseNotes>
 	</PropertyGroup>
 
