@@ -6,7 +6,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 - Works with any existing and (hopefully) future ConfigurationSource and ConfigurationProvider (tested with CommandLine, EnvironmentVariables, Json, Xml and InMemoryCollection)
 - Trasparent in memory decryption of encrypted values without almost any additional line of code
 - Supports a global configuration and an eventual custom override for any ConfigurationSource
-- Supports almost any NET framework (net10.0, netstandard2.0 and net462)
+- Supports almost any NET framework (net10.0, net8.0, net472, net48 and netstandard2.0)
 - Pluggable into any project with almost no changes to original NET / NET Core.
 - Supports automatic re-decryption on configuration reload if underlying IConfigurationProvider supports it
 - Supports per configuration value encryption derived subkey (called "subpurposes")
@@ -294,6 +294,11 @@ v1.0.21
 - Updated project to net10.0 due to incoming net8.0 EOL
 - Update all NuGet packages to the latest version
 - Updated link to detailed article inside README since CodeProject website was completely shutted down
+
+v1.0.22
+- updated minimum framework to net472 due to XUnit V3 requirements (net462 apps can still use netstandard2.0 version of the package)
+- removed net6.0 as target framework due to package compatibility not guaranteed (net6.0 apps can still use netstandard2.0 version of the package)
+- added missing net48 as target framework
 
 # Detailed guide
 
