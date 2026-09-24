@@ -16,7 +16,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 		<Title>$(AssemblyName)</Title>
-		<PackageTags>configuration;data;protection;appsettings;json;encrypted</PackageTags>
+		<PackageTags>configuration;values;data;protection;appsettings;json;xml;enviroment;variables;command line;arguments;dictionary;decrypt;decryption;encrypt;encryption;digital;sign;signature</PackageTags>
 		<IncludeContentInPack>true</IncludeContentInPack>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
