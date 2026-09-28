@@ -31,18 +31,17 @@ This a **xUnit test project** which tests thoroughly the two above packages in o
 
 **Moreover all the whole set of five test cases was repeated for 1000 iterations** (**Test Explorer --> Run Until Failure in Visual Studio**, unluckily it is not available for multi target tests, so I had to execute each of them separately for each supported framework). On **net48** it run for a **total time 3318 minutes**, on **net10.0** for a **total time of 2336 minutes**, without raising any error as you can see in the pictures below (the full set of test trace file are downloadble as zip archive).
 
-<!---
-**Net472 Endurance Test**
-![image](https://github.com/user-attachments/assets/7675c2aa-b24f-4e09-8422-55f531e6ca30)
--->
+**Net472 Endurance Test** [Endurance test trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net472-x64.zip)
+<br/> Coming soon
+<!--![image](https://github.com/user-attachments/assets/7675c2aa-b24f-4e09-8422-55f531e6ca30)-->
 
-**Net48 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net48-x64.zip)
+**Net48 Endurance Test** [Endurance test trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net48-x64.zip)
 ![image](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net48_endurance_test.png)
 
-**Net8.0 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net8.0-x64.zip)
+**Net8.0 Endurance Test** [Endurance test trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net8.0-x64.zip)
 ![image](https://github.com/user-attachments/assets/36fe482a-1400-489a-83e8-cf0c88118e2c)
 
-**Net10.0 Endurance Test** [Test results trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net10.0-x64.zip)
+**Net10.0 Endurance Test** [Endurance test trace files](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/endurance_test_results_net10.0-x64.zip)
 ![image](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/net10.0_endurance_test.png)
 
 # Fededim.Extensions.Configuration.ProtectedJson (OBSOLETE PLEASE USE Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
