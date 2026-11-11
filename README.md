@@ -5,7 +5,8 @@ In this repository you will find the source code of my NuGet package: Fededim.Ex
 [![Build status](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/actions/workflows/dotnet.yml/badge.svg)](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/actions/workflows/dotnet.yml?query=branch%3Amaster)
 [![Test Coverage](https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/last_build_artifacts/badge_combined.svg)](https://htmlpreview.github.io/?https://raw.githubusercontent.com/fededim/Fededim.Extensions.Configuration.Protected/master/misc/last_build_artifacts/index.html)
 
-# Fededim.Extensions.Configuration.Protected ![NuGet Version](https://img.shields.io/nuget/v/Fededim.Extensions.Configuration.Protected) ![NuGet Downloads](https://img.shields.io/nuget/dt/Fededim.Extensions.Configuration.Protected)
+# Fededim.Extensions.Configuration.Protected [![NuGet Version](https://img.shields.io/nuget/v/Fededim.Extensions.Configuration.Protected)](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected/) [![NuGet Downloads](https://img.shields.io/nuget/dt/Fededim.Extensions.Configuration.Protected)](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected/)
+
 
 
 Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder which allows partial or full encryption of configuration values stored inside any possible ConfigurationSource and fully integrated in the ASP.NET Core architecture. Fededim.Extensions.Configuration.Protected implements a custom ConfigurationBuilder and a custom ConfigurationProvider defining a custom tokenization tag which whenever found inside a configuration value decrypts the enclosed encrypted data using a pluggable encryption/decryption provider (a default one based on ASP.NET Core Data Protection API is provided).
@@ -13,7 +14,7 @@ Fededim.Extensions.Configuration.Protected is an improved ConfigurationBuilder w
 You can find the source code here [Fededim.Extensions.Configuration.Protected](https://github.com/fededim/Fededim.Extensions.Configuration.Protected/tree/master/Fededim.Extensions.Configuration.Protected)
 
 
-# Fededim.Extensions.Configuration.Protected.DataProtectionAPI ![NuGet Version](https://img.shields.io/nuget/v/Fededim.Extensions.Configuration.Protected.DataProtectionAPI) ![NuGet Downloads](https://img.shields.io/nuget/dt/Fededim.Extensions.Configuration.Protected.DataProtectionAPI)
+# Fededim.Extensions.Configuration.Protected.DataProtectionAPI [![NuGet Version](https://img.shields.io/nuget/v/Fededim.Extensions.Configuration.Protected.DataProtectionAPI)](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected.DataProtectionAPI/) [![NuGet Downloads](https://img.shields.io/nuget/dt/Fededim.Extensions.Configuration.Protected.DataProtectionAPI)](https://www.nuget.org/packages/Fededim.Extensions.Configuration.Protected.DataProtectionAPI/)
 
 Fededim.Extensions.Configuration.Protected.DataProtectionAPI is the standard Microsoft Data Protection API encryption/decryption provider for Fededim.Extensions.Configuration.Protected
 
